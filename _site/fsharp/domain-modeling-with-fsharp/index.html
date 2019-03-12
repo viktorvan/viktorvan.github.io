@@ -1,0 +1,929 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Why you should model your domain with F# - Viktor Andersson</title>
+<meta name="description" content="Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. I wish I was coding in F#.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Viktor Andersson">
+<meta property="og:title" content="Why you should model your domain with F#">
+<meta property="og:url" content="http://localhost:4000/fsharp/domain-modeling-with-fsharp/">
+
+
+  <meta property="og:description" content="Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. I wish I was coding in F#.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/ny_skyline2.jpg">
+
+
+
+  <meta name="twitter:site" content="@Emmet_Ray">
+  <meta name="twitter:title" content="Why you should model your domain with F#">
+  <meta name="twitter:description" content="Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. I wish I was coding in F#.">
+  <meta name="twitter:url" content="http://localhost:4000/fsharp/domain-modeling-with-fsharp/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/ny_skyline2.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2019-03-12T22:47:02+01:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/fsharp/domain-modeling-with-fsharp/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Viktor Andersson",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">Viktor Andersson</a>
+        <ul class="visible-links"></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(242, 19, 104, 0.2), rgba(242, 19, 104, 0.2)), url('/assets/images/ny_skyline2.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          Why you should model your domain with F#
+
+        
+      </h1>
+      
+        <p class="page__lead">Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. <em>I wish I was coding in F#.</em>
+
+</p>
+      
+      
+        <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  12 minute read
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio-photo.jpg" alt="Viktor Andersson" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Viktor Andersson</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Software developer and F# enthusiast
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Stockholm, Sweden</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:v.andersson@me.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/viktorvan" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/viktorand/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Why you should model your domain with F#">
+    <meta itemprop="description" content="Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. I wish I was coding in F#.">
+    <meta itemprop="datePublished" content="March 12, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> </h4></header>
+              <ul class="toc__menu">
+  <li><a href="#the-requirements">The requirements</a></li>
+  <li><a href="#using-c">Using C#</a>
+    <ul>
+      <li><a href="#entities">Entities</a></li>
+      <li><a href="#domain-logic">Domain logic</a></li>
+      <li><a href="#testing-the-c-code">Testing the C# code</a></li>
+    </ul>
+  </li>
+  <li><a href="#using-f">Using F#</a>
+    <ul>
+      <li><a href="#make-invalid-states-impossible">Make invalid states impossible</a></li>
+      <li><a href="#customer-states">Customer states</a></li>
+      <li><a href="#testing-the-f-code">Testing the F# code</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusions">Conclusions</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. <em>I wish I was coding in F#.</em></p>
+
+<p>Why? Let’s do the exercise of implementing a feature in both languages and see how it turns out…</p>
+
+<h1 id="the-requirements">The requirements</h1>
+<p>To simplify the model a bit, and keep the client anonymous, let’s say these are our requirements:</p>
+
+<ul>
+  <li>A <code class="highlighter-rouge">manager</code> can <code class="highlighter-rouge">invite</code> a customer by registering a customers <code class="highlighter-rouge">email</code>.</li>
+  <li>A customer can <code class="highlighter-rouge">create</code> (and <code class="highlighter-rouge">update</code>) their <code class="highlighter-rouge">contact information</code> and <code class="highlighter-rouge">address</code>
+    <ul>
+      <li><code class="highlighter-rouge">contact information</code> has <strong>required</strong> fields: <code class="highlighter-rouge">first name</code>, <code class="highlighter-rouge">last name</code> and <code class="highlighter-rouge">email</code><br />
+   and an <strong>optional</strong> field: <code class="highlighter-rouge">phone number</code></li>
+      <li><code class="highlighter-rouge">address</code> has <strong>required</strong> fields <code class="highlighter-rouge">street address 1</code>, <code class="highlighter-rouge">zipcode</code>, <code class="highlighter-rouge">city</code>, <code class="highlighter-rouge">country</code><br />
+  and an <strong>optional</strong> field <code class="highlighter-rouge">street address 2</code></li>
+    </ul>
+  </li>
+  <li>A customer can <code class="highlighter-rouge">accept GDPR</code></li>
+  <li>A customer can <code class="highlighter-rouge">check in</code></li>
+  <li>When a customer has done all of the above, an <code class="highlighter-rouge">administrator</code> can <code class="highlighter-rouge">verify</code> their registration.</li>
+</ul>
+
+<p>For the sake of simplicity we will not be doing any validation of contact information and addresses other than to check that they are not empty.</p>
+
+<h1 id="using-c">Using C#</h1>
+
+<p>A naive C# model could very well look something like this<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+
+<h2 id="entities">Entities</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">ContactInformation</span> <span class="n">ContactInformation</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">SwedishPersonalIdentityNumber</span> <span class="n">PersonalIdentityNumber</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">Address</span> <span class="n">Address</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">AcceptedGDPR</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">CheckedIn</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">Verified</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">ContactInformation</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">FirstName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">LastName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Email</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">PhoneNumber</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Address</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">StreetAddress1</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">StreetAddress2</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">ZipCode</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">City</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Country</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="domain-logic">Domain logic</h2>
+<p>And a <code class="highlighter-rouge">CustomerService</code> with our domain logic to handle the requirements.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerService</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IDatabase</span> <span class="n">database</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">CustomerService</span><span class="p">(</span><span class="n">IDatabase</span> <span class="n">database</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_database</span> <span class="p">=</span> <span class="n">database</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">InviteCustomer</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">,</span> <span class="kt">string</span> <span class="n">email</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nf">ValidateId</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">email</span><span class="p">))</span> 
+        <span class="p">{</span> 
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentException</span><span class="p">(</span><span class="s">"Invite email cannot be empty"</span><span class="p">);</span> 
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Customer</span>
+        <span class="p">{</span>
+            <span class="n">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">,</span>
+            <span class="n">ContactInformation</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ContactInformation</span>
+            <span class="p">{</span>
+                <span class="n">Email</span> <span class="p">=</span> <span class="n">email</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="k">await</span> <span class="n">_database</span><span class="p">.</span><span class="nf">CreateCustomer</span><span class="p">(</span><span class="n">customer</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">UpdateCustomerDetails</span><span class="p">(</span>
+        <span class="n">Guid</span> <span class="n">id</span><span class="p">,</span>
+        <span class="n">ContactInformation</span> <span class="n">contactInformation</span><span class="p">,</span>
+        <span class="n">Address</span> <span class="n">address</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nf">ValidateId</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="nf">ValidateContactInformation</span><span class="p">(</span><span class="n">contactInformation</span><span class="p">);</span>
+        <span class="nf">ValidateAddress</span><span class="p">(</span><span class="n">address</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">AssureCustomer</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+
+        <span class="n">customer</span><span class="p">.</span><span class="n">ContactInformation</span> <span class="p">=</span> <span class="n">contactInformation</span><span class="p">;</span>
+        <span class="n">customer</span><span class="p">.</span><span class="n">Address</span> <span class="p">=</span> <span class="n">address</span><span class="p">;</span>
+
+        <span class="k">await</span> <span class="n">_database</span><span class="p">.</span><span class="nf">UpdateCustomer</span><span class="p">(</span><span class="n">customer</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">AcceptGDPR</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nf">ValidateId</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="k">await</span> <span class="nf">AssureCustomer</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+
+        <span class="k">await</span> <span class="n">_database</span><span class="p">.</span><span class="nf">SetAcceptedGDPR</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">CheckInCustomer</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nf">ValidateId</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="k">await</span> <span class="nf">AssureCustomer</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+
+        <span class="k">await</span> <span class="n">_database</span><span class="p">.</span><span class="nf">SetCustomerCheckedIn</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">VerifyCustomer</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nf">ValidateId</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">AssureCustomer</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">customer</span><span class="p">.</span><span class="n">AcceptedGDPR</span><span class="p">.</span><span class="n">HasValue</span><span class="p">)</span> 
+        <span class="p">{</span> 
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">InvalidOperationException</span><span class="p">(</span>
+                <span class="s">"Cannot verify customer if not accepted GDPR"</span><span class="p">);</span> 
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">existing</span><span class="p">.</span><span class="n">CheckedIn</span><span class="p">.</span><span class="n">HasValue</span><span class="p">)</span> 
+        <span class="p">{</span> 
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">InvalidOperationException</span><span class="p">(</span>
+                <span class="s">"Cannot verify customer if not checked in"</span><span class="p">);</span> 
+        <span class="p">}</span>
+
+        <span class="k">await</span> <span class="n">_database</span><span class="p">.</span><span class="nf">SetCustomerVerified</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ValidateId</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="n">Guid</span><span class="p">.</span><span class="n">Empty</span><span class="p">)</span> 
+        <span class="p">{</span> 
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentException</span><span class="p">(</span><span class="s">"Must provide id"</span><span class="p">);</span> 
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ValidateContactInformation</span><span class="p">(</span><span class="n">ContactInformation</span> <span class="n">contactInformation</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">contactInformation</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> 
+        <span class="p">{</span> 
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentNullException</span><span class="p">(</span><span class="k">nameof</span><span class="p">(</span><span class="n">contactInformation</span><span class="p">));</span> 
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">contactInformation</span><span class="p">.</span><span class="n">Email</span><span class="p">)</span> <span class="p">||</span>
+            <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">contactInformation</span><span class="p">.</span><span class="n">FirstName</span><span class="p">)</span> <span class="p">||</span>
+            <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">contactInformation</span><span class="p">.</span><span class="n">LastName</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentException</span><span class="p">(</span><span class="s">"Missing contact information"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ValidateAddress</span><span class="p">(</span><span class="n">Address</span> <span class="n">address</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">address</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentNullException</span><span class="p">(</span><span class="k">nameof</span><span class="p">(</span><span class="n">address</span><span class="p">));</span> <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">address</span><span class="p">.</span><span class="n">StreetAddress1</span><span class="p">)</span> <span class="p">||</span>
+            <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">address</span><span class="p">.</span><span class="n">ZipCode</span><span class="p">)</span> <span class="p">||</span>
+            <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">address</span><span class="p">.</span><span class="n">City</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentException</span><span class="p">(</span><span class="s">"Missing address information"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;</span> <span class="nf">AssureCustomer</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">existing</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_database</span><span class="p">.</span><span class="nf">GetCustomer</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">existing</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> 
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">InvalidOperationException</span><span class="p">(</span>
+                <span class="s">"Customer not found, operation requires an customer"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">existing</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Lovely, look at all those validations! Actually half of that code is validations.</p>
+
+<p><em>I wish I was coding in F#</em></p>
+
+<h2 id="testing-the-c-code">Testing the C# code</h2>
+
+<p>These are the tests I had to write, by the way. I’ll only list the test names, but they should be pretty self explanatory. It ended up being almost 300 lines of code.</p>
+
+<p><sub>
+    <em>InviteCustomer_ShouldSetCustomerEmail</em><br />
+    <em>InviteCustomer_WithEmptyEmail_Throws</em><br />
+    <em>InviteCustomer_WithInvalidId_Throws</em><br />
+    <em>UpdateCustomerDetails_ShouldUpdateDetails</em><br />
+    <em>UpdateCustomerDetails_WhenNotExists_Throws</em><br />
+    <em>UpdateCustomerDetails_WithInvalidId_Throws</em><br />
+    <em>UpdateCustomerDetails_WithInvalidContactInformation_Throws</em><br />
+    <em>UpdateCustomerDetails_WithoutContactInformation_Throws</em><br />
+    <em>UpdateCustomerDetails_WithInvalidAddress_Throws</em><br />
+    <em>UpdateCustomerDetails_WithoutAddress_Throws</em><br />
+    <em>CheckInCustomer_ShouldSetCheckedIn</em><br />
+    <em>CheckInCustomer_WhenNotExists_Throws</em><br />
+    <em>CheckInCustomer_WithInvalidId_Throws</em><br />
+    <em>AcceptGDPRCustomer_ShouldSetAcceptedGDPR</em><br />
+    <em>AcceptGDPRCustomer_WhenNotExists_Throws</em><br />
+    <em>AcceptGDPRCustomer_WithInvalidId_Throws</em><br />
+    <em>SetVerifiedCustomer_ShouldSetVerified</em><br />
+    <em>SetVerifiedCustomer_WhenNotExists_Throws</em><br />
+    <em>SetVerifiedCustomer_WithInvalidId_Throws</em><br />
+    <em>SetVerifiedCustomer_WhenNotCheckedIn_Throws</em><br />
+    <em>SetVerifiedCustomer_WhenNotAcceptedGDPR_Throws</em><br />
+</sub></p>
+
+<h1 id="using-f">Using F#</h1>
+
+<h2 id="make-invalid-states-impossible">Make invalid states impossible</h2>
+
+<p>Ok, enough of that, let’s model this in F# instead and see what we gain.</p>
+
+<p>We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is. Most of the types will just be one-liners.</p>
+
+<p>Let’s start with creating some basic constrained types to prevent users from creating invalid values:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">NoneEmptyString</span> <span class="p">=</span> <span class="k">private</span> <span class="nc">NoneEmptyString</span> <span class="k">of</span> <span class="kt">string</span>
+<span class="k">module</span> <span class="nc">NoneEmptyString</span> <span class="p">=</span>
+    <span class="k">let</span> <span class="n">create</span> <span class="n">str</span> <span class="p">=</span>
+        <span class="k">if</span> <span class="nn">String</span><span class="p">.</span><span class="nc">IsNullOrWhiteSpace</span> <span class="n">str</span> <span class="k">then</span> <span class="s2">"Cannot be empty"</span> <span class="p">|&gt;</span> <span class="nc">Error</span>
+        <span class="k">else</span> <span class="n">str</span> <span class="p">|&gt;</span> <span class="nc">NoneEmptyString</span> <span class="p">|&gt;</span> <span class="nc">Ok</span>
+
+<span class="k">type</span> <span class="nc">CustomerId</span> <span class="p">=</span> <span class="k">private</span> <span class="nc">CustomerId</span> <span class="k">of</span> <span class="nc">Guid</span>
+<span class="k">module</span> <span class="nc">CustomerId</span> <span class="p">=</span>
+    <span class="k">let</span> <span class="n">create</span> <span class="n">id</span> <span class="p">=</span>
+        <span class="k">if</span> <span class="n">id</span> <span class="p">=</span> <span class="nn">Guid</span><span class="p">.</span><span class="nc">Empty</span> <span class="k">then</span> <span class="s2">"Cannot be empty"</span> <span class="p">|&gt;</span> <span class="nc">Error</span>
+        <span class="k">else</span> <span class="n">id</span> <span class="p">|&gt;</span> <span class="nc">CustomerId</span> <span class="p">|&gt;</span> <span class="nc">Ok</span>
+</code></pre></div></div>
+
+<p>The constructors are marked as private, so you cannot create the types without calling the <code class="highlighter-rouge">create</code> functions.</p>
+
+<p>We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn’t an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">Email</span> <span class="p">=</span> <span class="nc">Email</span> <span class="k">of</span> <span class="nc">NoneEmptyString</span>
+<span class="k">type</span> <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="nc">CheckInDate</span> <span class="k">of</span> <span class="nc">DateTime</span>
+<span class="k">type</span> <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="nc">AcceptedDate</span> <span class="k">of</span> <span class="nc">DateTime</span>
+<span class="k">type</span> <span class="nc">VerifiedDate</span> <span class="p">=</span> <span class="nc">VerifiedDate</span> <span class="k">of</span> <span class="nc">DateTime</span>
+</code></pre></div></div>
+
+<p>Now we can create the types for ContactInformation and Address, and let’s create a ContactDetails type to group them together:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ContactInformation</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="nc">FirstName</span><span class="p">:</span> <span class="nc">NoneEmptyString</span>
+      <span class="nc">LastName</span><span class="p">:</span> <span class="nc">NoneEmptyString</span>
+      <span class="nc">Email</span><span class="p">:</span> <span class="nc">Email</span>
+      <span class="nc">PhoneNumber</span><span class="p">:</span> <span class="nc">NoneEmptyString</span> <span class="n">option</span> <span class="p">}</span> 
+
+<span class="k">type</span> <span class="nc">Address</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="nc">StreetAddress1</span><span class="p">:</span> <span class="nc">NoneEmptyString</span>
+      <span class="nc">StreetAddress2</span><span class="p">:</span> <span class="nc">NoneEmptyString</span> <span class="n">option</span>
+      <span class="nc">ZipCode</span><span class="p">:</span> <span class="nc">NoneEmptyString</span> 
+      <span class="nc">City</span><span class="p">:</span> <span class="nc">NoneEmptyString</span>
+      <span class="nc">Country</span><span class="p">:</span> <span class="nc">NoneEmptyString</span> <span class="p">}</span>
+
+<span class="k">type</span> <span class="nc">CustomerDetails</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="nc">ContactInformation</span><span class="p">:</span> <span class="nc">ContactInformation</span> 
+      <span class="nc">Address</span><span class="p">:</span> <span class="nc">Address</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Done! A nice feature of F# records is that all their fields are required. This means that when we get passed a ContactInformation or Address we know it must be valid, and we don’t need to do any validation on our end. Or write any tests for it.</p>
+
+<h2 id="customer-states">Customer states</h2>
+
+<p>If we consider the requirements we can see that customer can actually have only a few valid states:</p>
+<ul>
+  <li>First they are <code class="highlighter-rouge">invited</code></li>
+  <li>Then can have <code class="highlighter-rouge">details only</code></li>
+  <li>They can have <code class="highlighter-rouge">accepted GDPR</code></li>
+  <li>They can be <code class="highlighter-rouge">checked in</code></li>
+  <li>They can be <strong>both</strong> checked in and have accepted GDPR, let´s call that <code class="highlighter-rouge">complete</code></li>
+  <li>Finally they can be <code class="highlighter-rouge">verified</code></li>
+</ul>
+
+<p>In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the model that prevent us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.</p>
+
+<p>In F# we can model just the valid states:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">InvitedCustomer</span> <span class="p">=</span> 
+    <span class="k">private</span> 
+        <span class="p">{</span> <span class="nc">Id</span><span class="p">:</span> <span class="nc">CustomerId</span>
+          <span class="nc">Email</span><span class="p">:</span> <span class="nc">Email</span> <span class="p">}</span>
+<span class="k">type</span> <span class="nc">DetailsOnly</span> <span class="p">=</span> 
+    <span class="k">private</span> 
+        <span class="p">{</span> <span class="nc">Id</span><span class="p">:</span> <span class="nc">CustomerId</span>
+          <span class="nc">Details</span><span class="p">:</span> <span class="nc">CustomerDetails</span> <span class="p">}</span>
+<span class="k">type</span> <span class="nc">AcceptedGDPR</span> <span class="p">=</span> 
+    <span class="k">private</span> 
+        <span class="p">{</span> <span class="nc">Id</span><span class="p">:</span> <span class="nc">CustomerId</span>
+          <span class="nc">AcceptDate</span><span class="p">:</span> <span class="nc">AcceptDate</span>
+          <span class="nc">Details</span><span class="p">:</span> <span class="nc">CustomerDetails</span> <span class="p">}</span>
+<span class="k">type</span> <span class="nc">CheckedIn</span> <span class="p">=</span> 
+    <span class="k">private</span> 
+        <span class="p">{</span> <span class="nc">Id</span><span class="p">:</span> <span class="nc">CustomerId</span>
+          <span class="nc">CheckInDate</span><span class="p">:</span> <span class="nc">CheckInDate</span>
+          <span class="nc">Details</span><span class="p">:</span> <span class="nc">CustomerDetails</span> <span class="p">}</span>
+<span class="k">type</span> <span class="nc">Complete</span> <span class="p">=</span> 
+    <span class="k">private</span> 
+        <span class="p">{</span> <span class="nc">Id</span><span class="p">:</span> <span class="nc">CustomerId</span>
+          <span class="nc">AcceptDate</span><span class="p">:</span> <span class="nc">AcceptDate</span>
+          <span class="nc">CheckInDate</span><span class="p">:</span> <span class="nc">CheckInDate</span>
+          <span class="nc">Details</span><span class="p">:</span> <span class="nc">CustomerDetails</span> <span class="p">}</span>
+<span class="k">type</span> <span class="nc">VerifiedCustomer</span> <span class="p">=</span> 
+    <span class="k">private</span> 
+        <span class="p">{</span> <span class="nc">Id</span><span class="p">:</span> <span class="nc">CustomerId</span>
+          <span class="nc">AcceptDate</span><span class="p">:</span> <span class="nc">AcceptDate</span>
+          <span class="nc">CheckedInDate</span><span class="p">:</span> <span class="nc">CheckInDate</span>
+          <span class="nc">VerifiedDate</span><span class="p">:</span> <span class="nc">VerifiedDate</span>
+          <span class="nc">Details</span><span class="p">:</span> <span class="nc">CustomerDetails</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">private</code> keyword in this case is making the constructors to our types private, not the types themselves. This means that it is possible for users of our code to use our types, but they cannot create them. I.e. a user cannot create a VerifiedCustomer in any other way than calling our <code class="highlighter-rouge">verify</code> function (that we will define shortly).</p>
+
+<p>Additionally we want to be able to distinguish customers that are verified, unverified and active, like this:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ActiveCustomer</span> <span class="p">=</span>
+    <span class="k">private</span> 
+        <span class="p">|</span> <span class="nc">DetailsOnly</span> <span class="k">of</span> <span class="nc">DetailsOnly</span>
+        <span class="p">|</span> <span class="nc">AcceptedGDPR</span> <span class="k">of</span> <span class="nc">AcceptedGDPR</span>
+        <span class="p">|</span> <span class="nc">CheckedIn</span> <span class="k">of</span> <span class="nc">CheckedIn</span>
+        <span class="p">|</span> <span class="nc">Complete</span> <span class="k">of</span> <span class="nc">Complete</span>
+
+<span class="k">type</span> <span class="nc">UnverifiedCustomer</span> <span class="p">=</span>
+    <span class="k">private</span>
+        <span class="p">|</span> <span class="nc">Invited</span> <span class="k">of</span> <span class="nc">InvitedCustomer</span>
+        <span class="p">|</span> <span class="nc">Active</span> <span class="k">of</span> <span class="nc">ActiveCustomer</span>
+</code></pre></div></div>
+
+<p>Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>. It won’t be a “Service” in F# though, just a group of functions in a module. Let’s go through them each in turn.</p>
+
+<p>I have added the type signatures above the functions because I think it really helps to see what’s going on.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// CustomerId -&gt; Email -&gt; InvitedCustomer</span>
+<span class="k">let</span> <span class="n">invite</span> <span class="n">id</span> <span class="n">email</span> <span class="p">=</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span> <span class="nc">Email</span> <span class="p">=</span> <span class="n">email</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>From the signature we can see that <code class="highlighter-rouge">invite</code> takes one <code class="highlighter-rouge">CustomerId</code>, one <code class="highlighter-rouge">Email</code> and returns an <code class="highlighter-rouge">InvitedCustomer</code>. Not much that can go wrong there, and no validation required.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// UnverifiedCustomer -&gt; CustomerDetails -&gt; ActiveCustomer</span>
+<span class="k">let</span> <span class="n">updateDetails</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">UnverifiedCustomer</span><span class="p">)</span> <span class="n">details</span> <span class="p">=</span>
+    <span class="k">match</span> <span class="n">customer</span> <span class="k">with</span>
+    <span class="p">|</span> <span class="nc">Invited</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">id</span> <span class="p">}</span> <span class="p">-&gt;</span> <span class="nc">DetailsOnly</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span> <span class="nc">Details</span> <span class="p">=</span> <span class="n">details</span> <span class="p">}</span>
+    <span class="p">|</span> <span class="nc">Active</span> <span class="n">activeCustomer</span> <span class="p">-&gt;</span>
+        <span class="k">match</span> <span class="n">activeCustomer</span> <span class="k">with</span>
+        <span class="p">|</span> <span class="nc">DetailsOnly</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">DetailsOnly</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">Details</span> <span class="p">=</span> <span class="n">details</span> <span class="p">}</span>
+        <span class="p">|</span> <span class="nc">AcceptedGDPR</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">AcceptedGDPR</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">Details</span> <span class="p">=</span> <span class="n">details</span> <span class="p">}</span>
+        <span class="p">|</span> <span class="nc">CheckedIn</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">CheckedIn</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">Details</span> <span class="p">=</span> <span class="n">details</span> <span class="p">}</span>
+        <span class="p">|</span> <span class="nc">Complete</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">Details</span> <span class="p">=</span> <span class="n">details</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is a bit more code, but from the signatur we can see that <code class="highlighter-rouge">updateDetails</code> takes an <code class="highlighter-rouge">UnverifiedCustomer</code> some <code class="highlighter-rouge">CustomerDetails</code> and returns a customer that we now know to be in the <code class="highlighter-rouge">ActiveCustomer</code> state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will tell us if we have forgotten to handle any states.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ActiveCustomer -&gt; AcceptDate -&gt; ActiveCustomer</span>
+<span class="k">let</span> <span class="n">acceptGDPR</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">ActiveCustomer</span><span class="p">)</span> <span class="n">date</span> <span class="p">=</span>
+    <span class="k">match</span> <span class="n">customer</span> <span class="k">with</span>
+    <span class="p">|</span> <span class="nc">DetailsOnly</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">AcceptedGDPR</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Id</span>
+                                        <span class="nc">Details</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Details</span>
+                                        <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+    <span class="p">|</span> <span class="nc">AcceptedGDPR</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">AcceptedGDPR</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+    <span class="p">|</span> <span class="nc">CheckedIn</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Id</span>
+                                <span class="nc">Details</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Details</span>
+                                <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">CheckInDate</span>
+                                <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+    <span class="p">|</span> <span class="nc">Complete</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>By now it should be pretty clear from the function signature what is happening here. We take an <code class="highlighter-rouge">ActiveCustomer</code>, apply an <code class="highlighter-rouge">AcceptDate</code> and are given back a new <code class="highlighter-rouge">ActiveCustomer</code>. Again we are forced to handle all possible states.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ActiveCustomer -&gt; CheckInDate -&gt; ActiveCustomer</span>
+<span class="k">let</span> <span class="n">checkIn</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">ActiveCustomer</span><span class="p">)</span> <span class="n">date</span> <span class="p">=</span>
+    <span class="k">match</span> <span class="n">customer</span> <span class="k">with</span>
+    <span class="p">|</span> <span class="nc">DetailsOnly</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">CheckedIn</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Id</span>
+                                    <span class="nc">Details</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Details</span>
+                                    <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+    <span class="p">|</span> <span class="nc">AcceptedGDPR</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Id</span>
+                                    <span class="nc">Details</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">Details</span>
+                                    <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="nc">AcceptDate</span>
+                                    <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+    <span class="p">|</span> <span class="nc">CheckedIn</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">CheckedIn</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+    <span class="p">|</span> <span class="nc">Complete</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>CheckIn has almost the same signature as acceptGDPR since they are almost doing the same thing. Good thing we made separate types for <code class="highlighter-rouge">AcceptDate</code> and <code class="highlighter-rouge">CheckInDate</code> so we don’t accidentally mix them up. We couldn’t do that now without getting a compiler error.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ActiveCustomer -&gt; VerifiedDate -&gt; VerifiedCustomer</span>
+<span class="k">let</span> <span class="n">verify</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">Complete</span><span class="p">)</span> <span class="n">date</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="nc">Id</span>
+      <span class="nc">Details</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="nc">Details</span>
+      <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="nc">AcceptDate</span>
+      <span class="nc">CheckedInDate</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="nc">CheckInDate</span>
+      <span class="nc">VerifiedDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>And finally <code class="highlighter-rouge">verify</code>, it takes a <code class="highlighter-rouge">Complete</code> customer and a <code class="highlighter-rouge">VerifiedDate</code> and returns a <code class="highlighter-rouge">VerifiedCustomer</code>. Our requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don’t need any tests to verify that because we cannot even call this function unless we have a <code class="highlighter-rouge">Complete</code> customer.</p>
+
+<h2 id="testing-the-f-code">Testing the F# code</h2>
+<p>Actually, the only tests that we now need to write will be very focused on the requirements, we no longer need to worry about stuff like empty strings, or that customers must be in the correct state. The type system is enforcing all that for us.</p>
+
+<p>We need some tests for our constrained types:<br />
+<sub>
+    <em>Can create NoneEmptyString</em><br />
+    <em>Cannot create NoneEmptyString with invalid input</em><br />
+    <em>Can create CustomerId</em><br />
+    <em>Cannot create CustomerId with Empty Guid</em><br />
+</sub></p>
+
+<p>And then for the domain logic:<br />
+<sub>
+    <em>invite returns an Invited Customer</em><br />
+    <em>update transitions Invited Customer to DetailsOnly</em><br />
+    <em>update does not change state for DetailsOnly customer</em><br />
+    <em>update does not change state for AcceptedGDPR customer</em><br />
+    <em>update does not change state for CheckedIn customer</em><br />
+    <em>update does not change state for Complete customer</em><br />
+    <em>acceptGDPR transitions Details customer to AcceptedGDPR</em><br />
+    <em>acceptGDPR does not change state for AcceptedGDPR customer</em><br />
+    <em>acceptGDPR transitions CheckedIn customer to Complete</em><br />
+    <em>acceptGDPR does not change state for Complete customer</em><br />
+    <em>checkIn transitions DetailsOnly customer to CheckedIn</em><br />
+    <em>checkIn transitions AcceptedGDPR customer to Complete</em><br />
+    <em>checkIn does not change state for CheckedIn customer</em><br />
+    <em>checkIn dose not change state for Complete customer</em><br />
+    <em>verify returns VerifiedCustomer</em>
+</sub></p>
+
+<h1 id="conclusions">Conclusions</h1>
+<p>To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. But we are accomplishing <strong>so much more</strong> in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.</p>
+
+<p>By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling <code class="highlighter-rouge">invite</code> will have to provide us with a valid id and email. And they will have to deal with the fact that they get an <code class="highlighter-rouge">InvitedCustomer</code> back. Or that you cannot call <code class="highlighter-rouge">verify</code> without a <code class="highlighter-rouge">Complete</code> customer. And since the constructor for the <code class="highlighter-rouge">Complete</code> state is private, the only way you can get a <code class="highlighter-rouge">Complete</code> customer is by calling our functions <code class="highlighter-rouge">updateDetails</code>, <code class="highlighter-rouge">acceptGDPR</code> and <code class="highlighter-rouge">checkIn</code>. Hopefully you can see the benefits of all this.</p>
+
+<p>And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Sure this code can be improved quite a bit, and be made more like the proposed F# solution with immutability and similar Customer states, but I want to write <strong>less</strong> code, not more. I will leave this as an exercise to the reader 😉. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>Mark Seemann refers to this as Dependency Rejection, you really should read his <a href="https://blog.ploeh.dk/2017/02/02/dependency-rejection/">series of posts</a> on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possibly. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-03-12T22:47:02+01:00">March 12, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=Emmet_Ray&text=Why+you+should+model+your+domain+with+F%23%20http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fdomain-modeling-with-fsharp%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fdomain-modeling-with-fsharp%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fdomain-modeling-with-fsharp%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+            
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>
