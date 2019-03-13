@@ -14,23 +14,23 @@ Recently when working on a feature for a client, writing the normal barrage of C
 Why? Let's do the exercise of implementing a feature in both languages and see how it turns out...
 
 # The requirements
-To simplify the model a bit, and keep the client anonymous, let's say these are our requirements:
+Let's say these are our requirements:
 
-- A `manager` can `invite` a customer by registering a customers `email`.
+- A manager can `invite` a customer by registering a customer's `email`.
 - A customer can `create` (and `update`) their `contact information` and `address`
-    - `contact information` has **required** fields: `first name`, `last name` and `email`  
+    - `contact information` has **required** fields: `firstName`, `lastName` and `email`  
      and an **optional** field: `phone number`
-    - `address` has **required** fields `street address 1`, `zipcode`, `city`, `country`  
-    and an **optional** field `street address 2`
-- A customer can `accept GDPR`
-- A customer can `check in`
-- When a customer has done all of the above, an `administrator` can `verify` their registration.
+    - `address` has **required** fields `streetAddress1`, `zipcode`, `city`, `country`  
+    and an **optional** field `streetAddress2`
+- A customer can `acceptGDPR`
+- A customer can `checkIn`
+- When a customer has done all of the above, an administrator can `verify` their registration.
 
 For the sake of simplicity we will not be doing any validation of contact information and addresses other than to check that they are not empty.
 
 # Using C#
 
-A naive C# model could very well look something like this[^1]. 
+Let's make a simple C# implementation[^1]: 
 
 ## Entities
 ```csharp
@@ -64,7 +64,7 @@ public class Address
 ```
 
 ## Domain logic
-And a `CustomerService` with our domain logic to handle the requirements.
+And a `CustomerService` with our domain logic to handle the requirements:
 
 ```csharp
 public class CustomerService
@@ -227,9 +227,9 @@ These are the tests I had to write, by the way. I'll only list the test names, b
 
 # Using F#
 
-## Make invalid states impossible
+## Making invalid states impossible
 
-Ok, enough of that, let's model this in F# instead and see what we gain.
+Let's try with F#.
 
 We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is. Most of the types will just be one-liners. 
 
@@ -250,7 +250,7 @@ module CustomerId =
 
 The constructors are marked as private, so you cannot create the types without calling the `create` functions.
 
-We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn't an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc.
+We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn't an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc[^2].
 
 ```fsharp
 type Email = Email of NoneEmptyString
@@ -279,19 +279,19 @@ type CustomerDetails =
       Address: Address }
 ```
 
-Done! A nice feature of F# records is that all their fields are required. This means that when we get passed a ContactInformation or Address we know it must be valid, and we don't need to do any validation on our end. Or write any tests for it.
+Done! For the optional fields we are using the built-in Option type (a discriminated union that either has a value, or a None value). A nice feature of F# records is that all their fields are required. This means that when we get passed a ContactInformation or Address we know it must be valid, and we don't need to do any validation on our end. Or write any tests for it.
 
 ## Customer states
 
 If we consider the requirements we can see that customer can actually have only a few valid states:
 - First they are `invited`
-- Then can have `details only`
-- They can have `accepted GDPR`
-- They can be `checked in`
-- They can be **both** checked in and have accepted GDPR, let´s call that `complete`
+- Then they can have `details only`
+- Or they can have details and have `accepted GDPR`
+- Or details and can be `checked in`
+- Or they can have details and be **both** checked in and have accepted GDPR, let´s call that `complete`
 - Finally they can be `verified`
 
-In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the model that prevent us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.
+In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the C# model that prevents us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.
 
 In F# we can model just the valid states:
 ```fsharp
@@ -346,9 +346,7 @@ type UnverifiedCustomer =
         | Active of ActiveCustomer
 ```
 
-Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic[^2]. It won't be a "Service" in F# though, just a group of functions in a module. Let's go through them each in turn.
-
-I have added the type signatures above the functions because I think it really helps to see what's going on.
+Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic[^3]. It won't be a "Service" in F# though, just a group of functions in a module. Let's go through them each in turn.
 
 ```fsharp
 // CustomerId -> Email -> InvitedCustomer
@@ -370,7 +368,7 @@ let updateDetails (customer: UnverifiedCustomer) details =
         | Complete c -> Complete { c with Details = details }
 ```
 
-This is a bit more code, but from the signatur we can see that `updateDetails` takes an `UnverifiedCustomer` some `CustomerDetails` and returns a customer that we now know to be in the `ActiveCustomer` state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will tell us if we have forgotten to handle any states.
+This is a bit more code, but from the signature we can see that `updateDetails` takes an `UnverifiedCustomer` some `CustomerDetails` and returns a customer that we now know to be in the `ActiveCustomer` state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will remind us if we have forgotten to handle any states.
 
 ```fsharp
 // ActiveCustomer -> AcceptDate -> ActiveCustomer
@@ -416,7 +414,7 @@ let verify (customer: Complete) date =
       VerifiedDate = date }
 ```
 
-And finally `verify`, it takes a `Complete` customer and a `VerifiedDate` and returns a `VerifiedCustomer`. Our requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don't need any tests to verify that because we cannot even call this function unless we have a `Complete` customer. 
+And finally `verify`, it takes a `Complete` customer and a `VerifiedDate` and returns a `VerifiedCustomer`. One requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don't need any tests to verify that because we cannot even call this function unless we have a `Complete` customer. 
 
 ## Testing the F# code
 Actually, the only tests that we now need to write will be very focused on the requirements, we no longer need to worry about stuff like empty strings, or that customers must be in the correct state. The type system is enforcing all that for us.
@@ -449,13 +447,12 @@ And then for the domain logic:
 </sub>
 
 # Conclusions
-To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter[^3]. But we are accomplishing **so much more** in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#. 
+To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter[^4]. But we are accomplishing **so much more** in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#. 
 
-By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the "wrong" way. Anyone calling `invite` will have to provide us with a valid id and email. And they will have to deal with the fact that they get an `InvitedCustomer` back. Or that you cannot call `verify` without a `Complete` customer. And since the constructor for the `Complete` state is private, the only way you can get a `Complete` customer is by calling our functions `updateDetails`, `acceptGDPR` and `checkIn`. Hopefully you can see the benefits of all this.
-
-And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not.
-
+By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the "wrong" way. Anyone calling `invite` will have to provide us with a valid id and email. And they will have to deal with the fact that they get an `InvitedCustomer` back. Or that you cannot call `verify` without a `Complete` customer. And since the constructor for the `Complete` state is private, the only way you can get a `Complete` customer is by calling our functions `updateDetails`, `acceptGDPR` and `checkIn`. Hopefully you can see the benefits of all this[^5].
 
 [^1]: Sure this code can be improved quite a bit, and be made more like the proposed F# solution with immutability and similar Customer states, but I want to write **less** code, not more. I will leave this as an exercise to the reader 😉.
-[^2]: Mark Seemann refers to this as Dependency Rejection, you really should read his [series of posts](https://blog.ploeh.dk/2017/02/02/dependency-rejection/) on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possibly.
-[^3]: To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#.
+[^2]: In "real" code we would probably add some validations here, for example to check that the email is valid email and that the dates are not in the future.
+[^3]: Mark Seemann refers to this as Dependency Rejection, you really should read his [series of posts](https://blog.ploeh.dk/2017/02/02/dependency-rejection/) on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possible.
+[^4]: To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#.
+[^5]: And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not.

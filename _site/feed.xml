@@ -1,30 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://viktorvan.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://viktorvan.github.io/" rel="alternate" type="text/html" /><updated>2019-03-13T00:34:22+01:00</updated><id>https://viktorvan.github.io/feed.xml</id><title type="html">Viktor Andersson</title><subtitle>My thoughts and opionions on software development</subtitle><author><name>Viktor Andersson</name></author><entry><title type="html">Why you should model your domain with F#</title><link href="https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp/" rel="alternate" type="text/html" title="Why you should model your domain with F#" /><published>2019-03-12T22:47:02+01:00</published><updated>2019-03-12T22:47:02+01:00</updated><id>https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp</id><content type="html" xml:base="https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp/">&lt;p&gt;Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. &lt;em&gt;I wish I was coding in F#.&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://viktorvan.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://viktorvan.github.io/" rel="alternate" type="text/html" /><updated>2019-03-13T09:24:56+01:00</updated><id>https://viktorvan.github.io/feed.xml</id><title type="html">Viktor Andersson</title><subtitle>My thoughts and opionions on software development</subtitle><author><name>Viktor Andersson</name></author><entry><title type="html">Why you should model your domain with F#</title><link href="https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp/" rel="alternate" type="text/html" title="Why you should model your domain with F#" /><published>2019-03-12T22:47:02+01:00</published><updated>2019-03-12T22:47:02+01:00</updated><id>https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp</id><content type="html" xml:base="https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp/">&lt;p&gt;Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. &lt;em&gt;I wish I was coding in F#.&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Why? Let’s do the exercise of implementing a feature in both languages and see how it turns out…&lt;/p&gt;
 
 &lt;h1 id=&quot;the-requirements&quot;&gt;The requirements&lt;/h1&gt;
-&lt;p&gt;To simplify the model a bit, and keep the client anonymous, let’s say these are our requirements:&lt;/p&gt;
+&lt;p&gt;Let’s say these are our requirements:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;A &lt;code class=&quot;highlighter-rouge&quot;&gt;manager&lt;/code&gt; can &lt;code class=&quot;highlighter-rouge&quot;&gt;invite&lt;/code&gt; a customer by registering a customers &lt;code class=&quot;highlighter-rouge&quot;&gt;email&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;A manager can &lt;code class=&quot;highlighter-rouge&quot;&gt;invite&lt;/code&gt; a customer by registering a customer’s &lt;code class=&quot;highlighter-rouge&quot;&gt;email&lt;/code&gt;.&lt;/li&gt;
   &lt;li&gt;A customer can &lt;code class=&quot;highlighter-rouge&quot;&gt;create&lt;/code&gt; (and &lt;code class=&quot;highlighter-rouge&quot;&gt;update&lt;/code&gt;) their &lt;code class=&quot;highlighter-rouge&quot;&gt;contact information&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;address&lt;/code&gt;
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;contact information&lt;/code&gt; has &lt;strong&gt;required&lt;/strong&gt; fields: &lt;code class=&quot;highlighter-rouge&quot;&gt;first name&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;last name&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;email&lt;/code&gt;&lt;br /&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;contact information&lt;/code&gt; has &lt;strong&gt;required&lt;/strong&gt; fields: &lt;code class=&quot;highlighter-rouge&quot;&gt;firstName&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;lastName&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;email&lt;/code&gt;&lt;br /&gt;
    and an &lt;strong&gt;optional&lt;/strong&gt; field: &lt;code class=&quot;highlighter-rouge&quot;&gt;phone number&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;address&lt;/code&gt; has &lt;strong&gt;required&lt;/strong&gt; fields &lt;code class=&quot;highlighter-rouge&quot;&gt;street address 1&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;zipcode&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;city&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;country&lt;/code&gt;&lt;br /&gt;
-  and an &lt;strong&gt;optional&lt;/strong&gt; field &lt;code class=&quot;highlighter-rouge&quot;&gt;street address 2&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;address&lt;/code&gt; has &lt;strong&gt;required&lt;/strong&gt; fields &lt;code class=&quot;highlighter-rouge&quot;&gt;streetAddress1&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;zipcode&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;city&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;country&lt;/code&gt;&lt;br /&gt;
+  and an &lt;strong&gt;optional&lt;/strong&gt; field &lt;code class=&quot;highlighter-rouge&quot;&gt;streetAddress2&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;A customer can &lt;code class=&quot;highlighter-rouge&quot;&gt;accept GDPR&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;A customer can &lt;code class=&quot;highlighter-rouge&quot;&gt;check in&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;When a customer has done all of the above, an &lt;code class=&quot;highlighter-rouge&quot;&gt;administrator&lt;/code&gt; can &lt;code class=&quot;highlighter-rouge&quot;&gt;verify&lt;/code&gt; their registration.&lt;/li&gt;
+  &lt;li&gt;A customer can &lt;code class=&quot;highlighter-rouge&quot;&gt;acceptGDPR&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;A customer can &lt;code class=&quot;highlighter-rouge&quot;&gt;checkIn&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;When a customer has done all of the above, an administrator can &lt;code class=&quot;highlighter-rouge&quot;&gt;verify&lt;/code&gt; their registration.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;For the sake of simplicity we will not be doing any validation of contact information and addresses other than to check that they are not empty.&lt;/p&gt;
 
 &lt;h1 id=&quot;using-c&quot;&gt;Using C#&lt;/h1&gt;
 
-&lt;p&gt;A naive C# model could very well look something like this&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;Let’s make a simple C# implementation&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
 
 &lt;h2 id=&quot;entities&quot;&gt;Entities&lt;/h2&gt;
 &lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Customer&lt;/span&gt;
@@ -57,7 +57,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;domain-logic&quot;&gt;Domain logic&lt;/h2&gt;
-&lt;p&gt;And a &lt;code class=&quot;highlighter-rouge&quot;&gt;CustomerService&lt;/code&gt; with our domain logic to handle the requirements.&lt;/p&gt;
+&lt;p&gt;And a &lt;code class=&quot;highlighter-rouge&quot;&gt;CustomerService&lt;/code&gt; with our domain logic to handle the requirements:&lt;/p&gt;
 
 &lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CustomerService&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -219,9 +219,9 @@
 
 &lt;h1 id=&quot;using-f&quot;&gt;Using F#&lt;/h1&gt;
 
-&lt;h2 id=&quot;make-invalid-states-impossible&quot;&gt;Make invalid states impossible&lt;/h2&gt;
+&lt;h2 id=&quot;making-invalid-states-impossible&quot;&gt;Making invalid states impossible&lt;/h2&gt;
 
-&lt;p&gt;Ok, enough of that, let’s model this in F# instead and see what we gain.&lt;/p&gt;
+&lt;p&gt;Let’s try with F#.&lt;/p&gt;
 
 &lt;p&gt;We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is. Most of the types will just be one-liners.&lt;/p&gt;
 
@@ -241,7 +241,7 @@
 
 &lt;p&gt;The constructors are marked as private, so you cannot create the types without calling the &lt;code class=&quot;highlighter-rouge&quot;&gt;create&lt;/code&gt; functions.&lt;/p&gt;
 
-&lt;p&gt;We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn’t an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc.&lt;/p&gt;
+&lt;p&gt;We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn’t an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;language-fsharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NoneEmptyString&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CheckInDate&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CheckInDate&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DateTime&lt;/span&gt;
@@ -268,21 +268,21 @@
       &lt;span class=&quot;nc&quot;&gt;Address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Done! A nice feature of F# records is that all their fields are required. This means that when we get passed a ContactInformation or Address we know it must be valid, and we don’t need to do any validation on our end. Or write any tests for it.&lt;/p&gt;
+&lt;p&gt;Done! For the optional fields we are using the built-in Option type (a discriminated union that either has a value, or a None value). A nice feature of F# records is that all their fields are required. This means that when we get passed a ContactInformation or Address we know it must be valid, and we don’t need to do any validation on our end. Or write any tests for it.&lt;/p&gt;
 
 &lt;h2 id=&quot;customer-states&quot;&gt;Customer states&lt;/h2&gt;
 
 &lt;p&gt;If we consider the requirements we can see that customer can actually have only a few valid states:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;First they are &lt;code class=&quot;highlighter-rouge&quot;&gt;invited&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Then can have &lt;code class=&quot;highlighter-rouge&quot;&gt;details only&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;They can have &lt;code class=&quot;highlighter-rouge&quot;&gt;accepted GDPR&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;They can be &lt;code class=&quot;highlighter-rouge&quot;&gt;checked in&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;They can be &lt;strong&gt;both&lt;/strong&gt; checked in and have accepted GDPR, let´s call that &lt;code class=&quot;highlighter-rouge&quot;&gt;complete&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Then they can have &lt;code class=&quot;highlighter-rouge&quot;&gt;details only&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Or they can have details and have &lt;code class=&quot;highlighter-rouge&quot;&gt;accepted GDPR&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Or details and can be &lt;code class=&quot;highlighter-rouge&quot;&gt;checked in&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Or they can have details and be &lt;strong&gt;both&lt;/strong&gt; checked in and have accepted GDPR, let´s call that &lt;code class=&quot;highlighter-rouge&quot;&gt;complete&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;Finally they can be &lt;code class=&quot;highlighter-rouge&quot;&gt;verified&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the model that prevent us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.&lt;/p&gt;
+&lt;p&gt;In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the C# model that prevents us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.&lt;/p&gt;
 
 &lt;p&gt;In F# we can model just the valid states:&lt;/p&gt;
 &lt;div class=&quot;language-fsharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;InvitedCustomer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; 
@@ -335,9 +335,7 @@
         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Active&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ActiveCustomer&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;. It won’t be a “Service” in F# though, just a group of functions in a module. Let’s go through them each in turn.&lt;/p&gt;
-
-&lt;p&gt;I have added the type signatures above the functions because I think it really helps to see what’s going on.&lt;/p&gt;
+&lt;p&gt;Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic&lt;sup id=&quot;fnref:3&quot;&gt;&lt;a href=&quot;#fn:3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;. It won’t be a “Service” in F# though, just a group of functions in a module. Let’s go through them each in turn.&lt;/p&gt;
 
 &lt;div class=&quot;language-fsharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// CustomerId -&amp;gt; Email -&amp;gt; InvitedCustomer&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;invite&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
@@ -357,7 +355,7 @@
         &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Complete&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Complete&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Details&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;details&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This is a bit more code, but from the signatur we can see that &lt;code class=&quot;highlighter-rouge&quot;&gt;updateDetails&lt;/code&gt; takes an &lt;code class=&quot;highlighter-rouge&quot;&gt;UnverifiedCustomer&lt;/code&gt; some &lt;code class=&quot;highlighter-rouge&quot;&gt;CustomerDetails&lt;/code&gt; and returns a customer that we now know to be in the &lt;code class=&quot;highlighter-rouge&quot;&gt;ActiveCustomer&lt;/code&gt; state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will tell us if we have forgotten to handle any states.&lt;/p&gt;
+&lt;p&gt;This is a bit more code, but from the signature we can see that &lt;code class=&quot;highlighter-rouge&quot;&gt;updateDetails&lt;/code&gt; takes an &lt;code class=&quot;highlighter-rouge&quot;&gt;UnverifiedCustomer&lt;/code&gt; some &lt;code class=&quot;highlighter-rouge&quot;&gt;CustomerDetails&lt;/code&gt; and returns a customer that we now know to be in the &lt;code class=&quot;highlighter-rouge&quot;&gt;ActiveCustomer&lt;/code&gt; state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will remind us if we have forgotten to handle any states.&lt;/p&gt;
 
 &lt;div class=&quot;language-fsharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// ActiveCustomer -&amp;gt; AcceptDate -&amp;gt; ActiveCustomer&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;acceptGDPR&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ActiveCustomer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;
@@ -400,7 +398,7 @@
       &lt;span class=&quot;nc&quot;&gt;VerifiedDate&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;And finally &lt;code class=&quot;highlighter-rouge&quot;&gt;verify&lt;/code&gt;, it takes a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer and a &lt;code class=&quot;highlighter-rouge&quot;&gt;VerifiedDate&lt;/code&gt; and returns a &lt;code class=&quot;highlighter-rouge&quot;&gt;VerifiedCustomer&lt;/code&gt;. Our requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don’t need any tests to verify that because we cannot even call this function unless we have a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer.&lt;/p&gt;
+&lt;p&gt;And finally &lt;code class=&quot;highlighter-rouge&quot;&gt;verify&lt;/code&gt;, it takes a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer and a &lt;code class=&quot;highlighter-rouge&quot;&gt;VerifiedDate&lt;/code&gt; and returns a &lt;code class=&quot;highlighter-rouge&quot;&gt;VerifiedCustomer&lt;/code&gt;. One requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don’t need any tests to verify that because we cannot even call this function unless we have a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer.&lt;/p&gt;
 
 &lt;h2 id=&quot;testing-the-f-code&quot;&gt;Testing the F# code&lt;/h2&gt;
 &lt;p&gt;Actually, the only tests that we now need to write will be very focused on the requirements, we no longer need to worry about stuff like empty strings, or that customers must be in the correct state. The type system is enforcing all that for us.&lt;/p&gt;
@@ -433,11 +431,9 @@
 &lt;/sub&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h1&gt;
-&lt;p&gt;To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter&lt;sup id=&quot;fnref:3&quot;&gt;&lt;a href=&quot;#fn:3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;. But we are accomplishing &lt;strong&gt;so much more&lt;/strong&gt; in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.&lt;/p&gt;
+&lt;p&gt;To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter&lt;sup id=&quot;fnref:4&quot;&gt;&lt;a href=&quot;#fn:4&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt;. But we are accomplishing &lt;strong&gt;so much more&lt;/strong&gt; in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.&lt;/p&gt;
 
-&lt;p&gt;By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling &lt;code class=&quot;highlighter-rouge&quot;&gt;invite&lt;/code&gt; will have to provide us with a valid id and email. And they will have to deal with the fact that they get an &lt;code class=&quot;highlighter-rouge&quot;&gt;InvitedCustomer&lt;/code&gt; back. Or that you cannot call &lt;code class=&quot;highlighter-rouge&quot;&gt;verify&lt;/code&gt; without a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer. And since the constructor for the &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; state is private, the only way you can get a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer is by calling our functions &lt;code class=&quot;highlighter-rouge&quot;&gt;updateDetails&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;acceptGDPR&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;checkIn&lt;/code&gt;. Hopefully you can see the benefits of all this.&lt;/p&gt;
-
-&lt;p&gt;And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not.&lt;/p&gt;
+&lt;p&gt;By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling &lt;code class=&quot;highlighter-rouge&quot;&gt;invite&lt;/code&gt; will have to provide us with a valid id and email. And they will have to deal with the fact that they get an &lt;code class=&quot;highlighter-rouge&quot;&gt;InvitedCustomer&lt;/code&gt; back. Or that you cannot call &lt;code class=&quot;highlighter-rouge&quot;&gt;verify&lt;/code&gt; without a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer. And since the constructor for the &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; state is private, the only way you can get a &lt;code class=&quot;highlighter-rouge&quot;&gt;Complete&lt;/code&gt; customer is by calling our functions &lt;code class=&quot;highlighter-rouge&quot;&gt;updateDetails&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;acceptGDPR&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;checkIn&lt;/code&gt;. Hopefully you can see the benefits of all this&lt;sup id=&quot;fnref:5&quot;&gt;&lt;a href=&quot;#fn:5&quot; class=&quot;footnote&quot;&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;footnotes&quot;&gt;
   &lt;ol&gt;
@@ -445,10 +441,16 @@
       &lt;p&gt;Sure this code can be improved quite a bit, and be made more like the proposed F# solution with immutability and similar Customer states, but I want to write &lt;strong&gt;less&lt;/strong&gt; code, not more. I will leave this as an exercise to the reader 😉. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:2&quot;&gt;
-      &lt;p&gt;Mark Seemann refers to this as Dependency Rejection, you really should read his &lt;a href=&quot;https://blog.ploeh.dk/2017/02/02/dependency-rejection/&quot;&gt;series of posts&lt;/a&gt; on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possibly. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;In “real” code we would probably add some validations here, for example to check that the email is valid email and that the dates are not in the future. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:3&quot;&gt;
-      &lt;p&gt;To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#. &lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;Mark Seemann refers to this as Dependency Rejection, you really should read his &lt;a href=&quot;https://blog.ploeh.dk/2017/02/02/dependency-rejection/&quot;&gt;series of posts&lt;/a&gt; on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possible. &lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:4&quot;&gt;
+      &lt;p&gt;To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#. &lt;a href=&quot;#fnref:4&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:5&quot;&gt;
+      &lt;p&gt;And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not. &lt;a href=&quot;#fnref:5&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;</content><author><name>Viktor Andersson</name></author><summary type="html">Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a mantra was repeating in my mind. I wish I was coding in F#.</summary></entry></feed>

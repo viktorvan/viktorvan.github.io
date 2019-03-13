@@ -219,7 +219,7 @@
     
     
       <p class="author__bio" itemprop="description">
-        Software developer and F# enthusiast
+        Software developer, beekeeper and F# enthusiast
       </p>
     
   </div>
@@ -347,7 +347,7 @@
   </li>
   <li><a href="#using-f">Using F#</a>
     <ul>
-      <li><a href="#make-invalid-states-impossible">Make invalid states impossible</a></li>
+      <li><a href="#making-invalid-states-impossible">Making invalid states impossible</a></li>
       <li><a href="#customer-states">Customer states</a></li>
       <li><a href="#testing-the-f-code">Testing the F# code</a></li>
     </ul>
@@ -362,28 +362,28 @@
 <p>Why? Let’s do the exercise of implementing a feature in both languages and see how it turns out…</p>
 
 <h1 id="the-requirements">The requirements</h1>
-<p>To simplify the model a bit, and keep the client anonymous, let’s say these are our requirements:</p>
+<p>Let’s say these are our requirements:</p>
 
 <ul>
-  <li>A <code class="highlighter-rouge">manager</code> can <code class="highlighter-rouge">invite</code> a customer by registering a customers <code class="highlighter-rouge">email</code>.</li>
+  <li>A manager can <code class="highlighter-rouge">invite</code> a customer by registering a customer’s <code class="highlighter-rouge">email</code>.</li>
   <li>A customer can <code class="highlighter-rouge">create</code> (and <code class="highlighter-rouge">update</code>) their <code class="highlighter-rouge">contact information</code> and <code class="highlighter-rouge">address</code>
     <ul>
-      <li><code class="highlighter-rouge">contact information</code> has <strong>required</strong> fields: <code class="highlighter-rouge">first name</code>, <code class="highlighter-rouge">last name</code> and <code class="highlighter-rouge">email</code><br />
+      <li><code class="highlighter-rouge">contact information</code> has <strong>required</strong> fields: <code class="highlighter-rouge">firstName</code>, <code class="highlighter-rouge">lastName</code> and <code class="highlighter-rouge">email</code><br />
    and an <strong>optional</strong> field: <code class="highlighter-rouge">phone number</code></li>
-      <li><code class="highlighter-rouge">address</code> has <strong>required</strong> fields <code class="highlighter-rouge">street address 1</code>, <code class="highlighter-rouge">zipcode</code>, <code class="highlighter-rouge">city</code>, <code class="highlighter-rouge">country</code><br />
-  and an <strong>optional</strong> field <code class="highlighter-rouge">street address 2</code></li>
+      <li><code class="highlighter-rouge">address</code> has <strong>required</strong> fields <code class="highlighter-rouge">streetAddress1</code>, <code class="highlighter-rouge">zipcode</code>, <code class="highlighter-rouge">city</code>, <code class="highlighter-rouge">country</code><br />
+  and an <strong>optional</strong> field <code class="highlighter-rouge">streetAddress2</code></li>
     </ul>
   </li>
-  <li>A customer can <code class="highlighter-rouge">accept GDPR</code></li>
-  <li>A customer can <code class="highlighter-rouge">check in</code></li>
-  <li>When a customer has done all of the above, an <code class="highlighter-rouge">administrator</code> can <code class="highlighter-rouge">verify</code> their registration.</li>
+  <li>A customer can <code class="highlighter-rouge">acceptGDPR</code></li>
+  <li>A customer can <code class="highlighter-rouge">checkIn</code></li>
+  <li>When a customer has done all of the above, an administrator can <code class="highlighter-rouge">verify</code> their registration.</li>
 </ul>
 
 <p>For the sake of simplicity we will not be doing any validation of contact information and addresses other than to check that they are not empty.</p>
 
 <h1 id="using-c">Using C#</h1>
 
-<p>A naive C# model could very well look something like this<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+<p>Let’s make a simple C# implementation<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>:</p>
 
 <h2 id="entities">Entities</h2>
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
@@ -416,7 +416,7 @@
 </code></pre></div></div>
 
 <h2 id="domain-logic">Domain logic</h2>
-<p>And a <code class="highlighter-rouge">CustomerService</code> with our domain logic to handle the requirements.</p>
+<p>And a <code class="highlighter-rouge">CustomerService</code> with our domain logic to handle the requirements:</p>
 
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerService</span>
 <span class="p">{</span>
@@ -578,9 +578,9 @@
 
 <h1 id="using-f">Using F#</h1>
 
-<h2 id="make-invalid-states-impossible">Make invalid states impossible</h2>
+<h2 id="making-invalid-states-impossible">Making invalid states impossible</h2>
 
-<p>Ok, enough of that, let’s model this in F# instead and see what we gain.</p>
+<p>Let’s try with F#.</p>
 
 <p>We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is. Most of the types will just be one-liners.</p>
 
@@ -600,7 +600,7 @@
 
 <p>The constructors are marked as private, so you cannot create the types without calling the <code class="highlighter-rouge">create</code> functions.</p>
 
-<p>We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn’t an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc.</p>
+<p>We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn’t an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">Email</span> <span class="p">=</span> <span class="nc">Email</span> <span class="k">of</span> <span class="nc">NoneEmptyString</span>
 <span class="k">type</span> <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="nc">CheckInDate</span> <span class="k">of</span> <span class="nc">DateTime</span>
@@ -627,21 +627,21 @@
       <span class="nc">Address</span><span class="p">:</span> <span class="nc">Address</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Done! A nice feature of F# records is that all their fields are required. This means that when we get passed a ContactInformation or Address we know it must be valid, and we don’t need to do any validation on our end. Or write any tests for it.</p>
+<p>Done! For the optional fields we are using the built-in Option type (a discriminated union that either has a value, or a None value). A nice feature of F# records is that all their fields are required. This means that when we get passed a ContactInformation or Address we know it must be valid, and we don’t need to do any validation on our end. Or write any tests for it.</p>
 
 <h2 id="customer-states">Customer states</h2>
 
 <p>If we consider the requirements we can see that customer can actually have only a few valid states:</p>
 <ul>
   <li>First they are <code class="highlighter-rouge">invited</code></li>
-  <li>Then can have <code class="highlighter-rouge">details only</code></li>
-  <li>They can have <code class="highlighter-rouge">accepted GDPR</code></li>
-  <li>They can be <code class="highlighter-rouge">checked in</code></li>
-  <li>They can be <strong>both</strong> checked in and have accepted GDPR, let´s call that <code class="highlighter-rouge">complete</code></li>
+  <li>Then they can have <code class="highlighter-rouge">details only</code></li>
+  <li>Or they can have details and have <code class="highlighter-rouge">accepted GDPR</code></li>
+  <li>Or details and can be <code class="highlighter-rouge">checked in</code></li>
+  <li>Or they can have details and be <strong>both</strong> checked in and have accepted GDPR, let´s call that <code class="highlighter-rouge">complete</code></li>
   <li>Finally they can be <code class="highlighter-rouge">verified</code></li>
 </ul>
 
-<p>In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the model that prevent us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.</p>
+<p>In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the C# model that prevents us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.</p>
 
 <p>In F# we can model just the valid states:</p>
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">InvitedCustomer</span> <span class="p">=</span> 
@@ -694,9 +694,7 @@
         <span class="p">|</span> <span class="nc">Active</span> <span class="k">of</span> <span class="nc">ActiveCustomer</span>
 </code></pre></div></div>
 
-<p>Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>. It won’t be a “Service” in F# though, just a group of functions in a module. Let’s go through them each in turn.</p>
-
-<p>I have added the type signatures above the functions because I think it really helps to see what’s going on.</p>
+<p>Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. It won’t be a “Service” in F# though, just a group of functions in a module. Let’s go through them each in turn.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// CustomerId -&gt; Email -&gt; InvitedCustomer</span>
 <span class="k">let</span> <span class="n">invite</span> <span class="n">id</span> <span class="n">email</span> <span class="p">=</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span> <span class="nc">Email</span> <span class="p">=</span> <span class="n">email</span> <span class="p">}</span>
@@ -716,7 +714,7 @@
         <span class="p">|</span> <span class="nc">Complete</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">Details</span> <span class="p">=</span> <span class="n">details</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>This is a bit more code, but from the signatur we can see that <code class="highlighter-rouge">updateDetails</code> takes an <code class="highlighter-rouge">UnverifiedCustomer</code> some <code class="highlighter-rouge">CustomerDetails</code> and returns a customer that we now know to be in the <code class="highlighter-rouge">ActiveCustomer</code> state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will tell us if we have forgotten to handle any states.</p>
+<p>This is a bit more code, but from the signature we can see that <code class="highlighter-rouge">updateDetails</code> takes an <code class="highlighter-rouge">UnverifiedCustomer</code> some <code class="highlighter-rouge">CustomerDetails</code> and returns a customer that we now know to be in the <code class="highlighter-rouge">ActiveCustomer</code> state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will remind us if we have forgotten to handle any states.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ActiveCustomer -&gt; AcceptDate -&gt; ActiveCustomer</span>
 <span class="k">let</span> <span class="n">acceptGDPR</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">ActiveCustomer</span><span class="p">)</span> <span class="n">date</span> <span class="p">=</span>
@@ -759,7 +757,7 @@
       <span class="nc">VerifiedDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>And finally <code class="highlighter-rouge">verify</code>, it takes a <code class="highlighter-rouge">Complete</code> customer and a <code class="highlighter-rouge">VerifiedDate</code> and returns a <code class="highlighter-rouge">VerifiedCustomer</code>. Our requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don’t need any tests to verify that because we cannot even call this function unless we have a <code class="highlighter-rouge">Complete</code> customer.</p>
+<p>And finally <code class="highlighter-rouge">verify</code>, it takes a <code class="highlighter-rouge">Complete</code> customer and a <code class="highlighter-rouge">VerifiedDate</code> and returns a <code class="highlighter-rouge">VerifiedCustomer</code>. One requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don’t need any tests to verify that because we cannot even call this function unless we have a <code class="highlighter-rouge">Complete</code> customer.</p>
 
 <h2 id="testing-the-f-code">Testing the F# code</h2>
 <p>Actually, the only tests that we now need to write will be very focused on the requirements, we no longer need to worry about stuff like empty strings, or that customers must be in the correct state. The type system is enforcing all that for us.</p>
@@ -792,11 +790,9 @@
 </sub></p>
 
 <h1 id="conclusions">Conclusions</h1>
-<p>To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. But we are accomplishing <strong>so much more</strong> in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.</p>
+<p>To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>. But we are accomplishing <strong>so much more</strong> in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.</p>
 
-<p>By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling <code class="highlighter-rouge">invite</code> will have to provide us with a valid id and email. And they will have to deal with the fact that they get an <code class="highlighter-rouge">InvitedCustomer</code> back. Or that you cannot call <code class="highlighter-rouge">verify</code> without a <code class="highlighter-rouge">Complete</code> customer. And since the constructor for the <code class="highlighter-rouge">Complete</code> state is private, the only way you can get a <code class="highlighter-rouge">Complete</code> customer is by calling our functions <code class="highlighter-rouge">updateDetails</code>, <code class="highlighter-rouge">acceptGDPR</code> and <code class="highlighter-rouge">checkIn</code>. Hopefully you can see the benefits of all this.</p>
-
-<p>And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not.</p>
+<p>By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling <code class="highlighter-rouge">invite</code> will have to provide us with a valid id and email. And they will have to deal with the fact that they get an <code class="highlighter-rouge">InvitedCustomer</code> back. Or that you cannot call <code class="highlighter-rouge">verify</code> without a <code class="highlighter-rouge">Complete</code> customer. And since the constructor for the <code class="highlighter-rouge">Complete</code> state is private, the only way you can get a <code class="highlighter-rouge">Complete</code> customer is by calling our functions <code class="highlighter-rouge">updateDetails</code>, <code class="highlighter-rouge">acceptGDPR</code> and <code class="highlighter-rouge">checkIn</code>. Hopefully you can see the benefits of all this<sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>.</p>
 
 <div class="footnotes">
   <ol>
@@ -804,10 +800,16 @@
       <p>Sure this code can be improved quite a bit, and be made more like the proposed F# solution with immutability and similar Customer states, but I want to write <strong>less</strong> code, not more. I will leave this as an exercise to the reader 😉. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:2">
-      <p>Mark Seemann refers to this as Dependency Rejection, you really should read his <a href="https://blog.ploeh.dk/2017/02/02/dependency-rejection/">series of posts</a> on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possibly. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+      <p>In “real” code we would probably add some validations here, for example to check that the email is valid email and that the dates are not in the future. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:3">
-      <p>To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+      <p>Mark Seemann refers to this as Dependency Rejection, you really should read his <a href="https://blog.ploeh.dk/2017/02/02/dependency-rejection/">series of posts</a> on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possible. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p>To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#. <a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:5">
+      <p>And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not. <a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>
