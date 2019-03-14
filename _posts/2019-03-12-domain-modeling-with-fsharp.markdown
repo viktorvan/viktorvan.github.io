@@ -231,7 +231,7 @@ These are the tests I had to write, by the way. I'll only list the test names, b
 
 Let's try with F#.
 
-We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is. Most of the types will just be one-liners. 
+We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is.
 
 Let's start with creating some basic constrained types to prevent users from creating invalid values:
 ```fsharp
@@ -450,6 +450,8 @@ And then for the domain logic:
 To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter[^4]. But we are accomplishing **so much more** in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#. 
 
 By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the "wrong" way. Anyone calling `invite` will have to provide us with a valid id and email. And they will have to deal with the fact that they get an `InvitedCustomer` back. Or that you cannot call `verify` without a `Complete` customer. And since the constructor for the `Complete` state is private, the only way you can get a `Complete` customer is by calling our functions `updateDetails`, `acceptGDPR` and `checkIn`. Hopefully you can see the benefits of all this[^5].
+
+If you want to read more about modeling your domain with F# I strongly recommend the book [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional) by Scott Wlaschin.
 
 [^1]: Sure this code can be improved quite a bit, and be made more like the proposed F# solution with immutability and similar Customer states, but I want to write **less** code, not more. I will leave this as an exercise to the reader 😉.
 [^2]: In "real" code we would probably add some validations here, for example to check that the email is valid email and that the dates are not in the future.

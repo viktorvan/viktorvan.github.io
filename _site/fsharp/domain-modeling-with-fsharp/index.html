@@ -582,7 +582,7 @@
 
 <p>Let’s try with F#.</p>
 
-<p>We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is. Most of the types will just be one-liners.</p>
+<p>We will start out by defining a bunch of types. Quite a lot of them actually, but one great thing about F# is how lightweight the type syntax is.</p>
 
 <p>Let’s start with creating some basic constrained types to prevent users from creating invalid values:</p>
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">NoneEmptyString</span> <span class="p">=</span> <span class="k">private</span> <span class="nc">NoneEmptyString</span> <span class="k">of</span> <span class="kt">string</span>
@@ -793,6 +793,8 @@
 <p>To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>. But we are accomplishing <strong>so much more</strong> in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.</p>
 
 <p>By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling <code class="highlighter-rouge">invite</code> will have to provide us with a valid id and email. And they will have to deal with the fact that they get an <code class="highlighter-rouge">InvitedCustomer</code> back. Or that you cannot call <code class="highlighter-rouge">verify</code> without a <code class="highlighter-rouge">Complete</code> customer. And since the constructor for the <code class="highlighter-rouge">Complete</code> state is private, the only way you can get a <code class="highlighter-rouge">Complete</code> customer is by calling our functions <code class="highlighter-rouge">updateDetails</code>, <code class="highlighter-rouge">acceptGDPR</code> and <code class="highlighter-rouge">checkIn</code>. Hopefully you can see the benefits of all this<sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>.</p>
+
+<p>If you want to read more about modeling your domain with F# I strongly recommend the book <a href="https://pragprog.com/book/swdddf/domain-modeling-made-functional">Domain Modeling Made Functional</a> by Scott Wlaschin.</p>
 
 <div class="footnotes">
   <ol>
