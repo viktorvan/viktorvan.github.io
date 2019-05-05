@@ -1,0 +1,941 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Use property-based testing to increase your test coverage by ∞ - Viktor Andersson</title>
+<meta name="description" content="Background">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Viktor Andersson">
+<meta property="og:title" content="Use property-based testing to increase your test coverage by ∞">
+<meta property="og:url" content="http://localhost:4000/fsharp/increase-test-coverage-with-property-based-tests/">
+
+
+  <meta property="og:description" content="Background">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/ny_skyline3.jpg">
+
+
+
+  <meta name="twitter:site" content="@Emmet_Ray">
+  <meta name="twitter:title" content="Use property-based testing to increase your test coverage by ∞">
+  <meta name="twitter:description" content="Background">
+  <meta name="twitter:url" content="http://localhost:4000/fsharp/increase-test-coverage-with-property-based-tests/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/ny_skyline3.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2019-03-16T09:47:00+01:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/fsharp/increase-test-coverage-with-property-based-tests/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Viktor Andersson",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">Viktor Andersson</a>
+        <ul class="visible-links"></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(242, 19, 104, 0.2), rgba(242, 19, 104, 0.2)), url('/assets/images/ny_skyline3.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          Use property-based testing to increase your test coverage by ∞
+
+        
+      </h1>
+      
+        <p class="page__lead"><h1 id="background">Background</h1>
+
+</p>
+      
+      
+        <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  16 minute read
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio-photo.jpg" alt="Viktor Andersson" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Viktor Andersson</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Software developer, beekeeper and F# enthusiast
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Stockholm, Sweden</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:v.andersson@me.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/viktorvan" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/viktorand/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Use property-based testing to increase your test coverage by ∞">
+    <meta itemprop="description" content="Background">
+    <meta itemprop="datePublished" content="March 16, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> </h4></header>
+              <ul class="toc__menu">
+  <li><a href="#background">Background</a></li>
+  <li><a href="#what-are-property-based-tests">What are property-based tests</a>
+    <ul>
+      <li><a href="#testing-by-example">Testing by example</a></li>
+      <li><a href="#testing-by-properties">Testing by properties</a></li>
+    </ul>
+  </li>
+  <li><a href="#migrating-to-property-based-tests">Migrating to property-based tests</a>
+    <ul>
+      <li><a href="#unit-testing-in-f">Unit testing in F#</a></li>
+      <li><a href="#the-first-test-the-happy-path">The first test, the happy path</a></li>
+      <li><a href="#a-custom-swedishpersonalidentitynumbervalues-generator">A custom SwedishPersonalIdentityNumberValues-generator</a></li>
+      <li><a href="#using-our-custom-generator">Using our custom generator</a></li>
+      <li><a href="#adding-type-safety-to-our-generators">Adding type safety to our generators</a></li>
+      <li><a href="#next-test-invalid-year">Next test, invalid year</a></li>
+      <li><a href="#writing-the-correct-tests">Writing the correct tests</a></li>
+      <li><a href="#thinking-of-relevant-properties-to-test">Thinking of relevant properties to test</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h1 id="background">Background</h1>
+
+<p>A few weeks ago, a heated discussion about TDD at work got me thinking more and more about <em>property-based testing</em>.
+I was also in the process of migrating our tests for <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a> library from C# to F# (we had already migrated the implementation to F#). It seemed like a great opportunity to try writing some property-based tests and see how that turned out.</p>
+
+<p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a checksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a><sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+
+<p>The tests I started with were the ones related to creating a pin, <a href="https://github.com/ActiveLogin/ActiveLogin.Identity/blob/master/test/ActiveLogin.Identity.Swedish.Test/SwedishPersonalIdentityNumber_Constructor.cs">original code here</a>. The tests verify that you can create a valid pin and that invalid input throws an exception.</p>
+
+<h1 id="what-are-property-based-tests">What are property-based tests</h1>
+<h2 id="testing-by-example">Testing by example</h2>
+<p>So what are property-based tests? Maybe it is easier to explain if put them in contrast with <em>normal</em> unit tests. The first test from the original code looks like this:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">[Theory]</span>
+<span class="na">[InlineData(-1, 01, 01, 239, 2)]</span>
+<span class="na">[InlineData(int.MaxValue, 01, 01, 239, 2)]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">Throws_When_Invalid_Year</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">,</span> <span class="kt">int</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="kt">int</span> <span class="n">checksum</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">ex</span> <span class="p">=</span> <span class="n">Assert</span><span class="p">.</span><span class="n">Throws</span><span class="p">&lt;</span><span class="n">ArgumentOutOfRangeException</span><span class="p">&gt;(()</span> 
+        <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">SwedishPersonalIdentityNumber</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="n">checksum</span><span class="p">));</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">"Invalid year."</span><span class="p">,</span> <span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is what we can call an <strong>example-based test</strong>. We are providing the tests with two known inputs (through the InlineData attributes) that we expect to have a certain outcome. In this case we except the <code class="highlighter-rouge">SwedishPersonalIdentityNumber</code> constructor to throw an Exception.</p>
+
+<p>The problem is that a really evil developer could actually make this test pass by writing an implementation like this:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="nf">SwedishPersonalIdentity</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">,</span> <span class="kt">int</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="kt">int</span> <span class="n">checksum</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">year</span> <span class="p">==</span> <span class="p">-</span><span class="m">1</span> <span class="p">||</span> <span class="n">year</span> <span class="p">==</span> <span class="kt">int</span><span class="p">.</span><span class="n">MaxValue</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentOutOfRangeException</span><span class="p">(</span><span class="s">"Invalid year"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="p">&lt;...</span><span class="n">rest</span> <span class="n">of</span> <span class="n">implementation</span><span class="p">...&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So what should we do then? Add more example inputs? How many do we need to be satisfied that the evil developer has written the implementation that we <em>want</em>?</p>
+
+<h2 id="testing-by-properties">Testing by properties</h2>
+
+<p>Property-based testing turns this on its head. Instead of us, the test writers, providing the example inputs, we let a library do it using a <em>generators</em>. In the simplest case this could just be a generator that returns a random integer. For our domain types we usually have to write our own custom generators.</p>
+
+<p>The testing library would then run our tests several times using input from the <em>generator</em>. Either it will find an input where the test fails and report that to us, or after running the tests a certain number of times it would be satisfied that the <em>property</em> holds.</p>
+
+<p>We call these tests property-based since instead of providing <em>example inputs</em> where we know the result, we will be stating <em>properties that we know are true</em> about the code we are testing.</p>
+
+<p>For example, instead of providing two example inputs to the “Throws_When_Invalid_Year” test above we would just state the property “Throws when input year is invalid”. I.e. given <strong>any</strong> <em>invalid year</em> our code should throw an exception.</p>
+
+<p>Maybe it get’s clearer if we put it into practice.</p>
+
+<h1 id="migrating-to-property-based-tests">Migrating to property-based tests</h1>
+
+<p>The complete implementation for the examples below can be found in <a href="https://github.com/viktorvan/ActiveLoginPropertyBasedTestExample">this GitHub repository</a>.</p>
+
+<p>Since there now is an F# api for ActiveLogin.Identity we will test against that. The function under test is going to be create:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SwedishPersonalIdentityNumberValues -&gt; Result&lt;SwedishPersonalIdentityNumber, Error&gt;</span>
+<span class="k">let</span> <span class="n">create</span> <span class="p">(</span><span class="n">values</span> <span class="p">:</span> <span class="nc">SwedishPersonalIdentityNumberValues</span><span class="p">)</span> <span class="p">=</span> <span class="o">...</span>
+</code></pre></div></div>
+
+<p>where <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues</code> is a record with the input values:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">SwedishPersonalIdentityNumberValues</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="nc">Year</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">Month</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">Day</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">BirthNumber</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">Checksum</span> <span class="p">:</span> <span class="kt">int</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>and <code class="highlighter-rouge">Error</code> is a discriminated union with some error cases specific to our domain.</p>
+
+<p>So it’s a function that given the number values input will return a value wrapped in the built-in <code class="highlighter-rouge">Result</code>type. Result is a discriminated union that can have either an <code class="highlighter-rouge">Ok</code> value or an <code class="highlighter-rouge">Error</code>. We are not throwing any exceptions like we did in the C# version.</p>
+
+<h2 id="unit-testing-in-f">Unit testing in F#</h2>
+<p>A quick note on writing unit tests in F#. My test library of choice for F# is <a href="https://github.com/haf/expecto">Expecto</a>. I also like <a href="https://github.com/SwensenSoftware/unquote">Unquote</a> for writing my assertions, since I think it makes for really expressive assertions.</p>
+
+<p>For those unfamiliar with Unquote it makes it possible to write test assertions using F# quotations. For example, the following Expecto assertion (which shouldn’t be too unfamiliar for users of other Assertion libraries):</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">Expect</span><span class="p">.</span><span class="n">equal</span> <span class="n">result</span> <span class="mi">42</span> <span class="s2">"result should be equal to 42"</span>
+</code></pre></div></div>
+
+<p>could with Unquote be written as:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">test</span> <span class="o">&lt;@</span> <span class="n">result</span> <span class="p">=</span> <span class="mi">42</span> <span class="o">@&gt;</span>
+</code></pre></div></div>
+
+<p>or even simpler, using one of Unquote’s custom operators:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">result</span> <span class="o">=!</span> <span class="mi">42</span>
+</code></pre></div></div>
+
+<p>The library we are going to use for property-based testing is <a href="https://fscheck.github.io/FsCheck/">FsCheck</a>. Expecto has an api for writing property-based tests with FsCheck so we will use that.</p>
+
+<h2 id="the-first-test-the-happy-path">The first test, the happy path</h2>
+
+<p>It turns out that we are going to need a <em>generator</em> for valid Personal Identity Numbers, so we might as well start with the “happy path” test which in C# looked like this:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">[Theory]</span>
+<span class="na">[InlineData(1899, 09, 13, 980, 1)]</span>
+<span class="na">[InlineData(1999, 08, 07, 239, 1)]</span>
+<span class="na">[InlineData(2000, 01, 02, 239, 1)]</span>
+<span class="na">[InlineData(2018, 01, 01, 239, 2)]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">Accepts_Valid_Personal_Identity_Number</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">,</span> <span class="kt">int</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="kt">int</span> <span class="n">checksum</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">personalIdentityNumber</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SwedishPersonalIdentityNumber</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="n">checksum</span><span class="p">);</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">personalIdentityNumber</span><span class="p">.</span><span class="n">Year</span><span class="p">);</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">personalIdentityNumber</span><span class="p">.</span><span class="n">Month</span><span class="p">);</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="n">day</span><span class="p">,</span> <span class="n">personalIdentityNumber</span><span class="p">.</span><span class="n">Day</span><span class="p">);</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="n">birthNumber</span><span class="p">,</span> <span class="n">personalIdentityNumber</span><span class="p">.</span><span class="n">BirthNumber</span><span class="p">);</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="n">checksum</span><span class="p">,</span> <span class="n">personalIdentityNumber</span><span class="p">.</span><span class="n">Checksum</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s write a property-based version in F#:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProperty</span> <span class="s2">"valid input values returns Result.Ok"</span> <span class="p">&lt;|</span> <span class="k">fun</span> <span class="n">input</span> <span class="p">-&gt;</span>
+    <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+    <span class="nn">Expect</span><span class="p">.</span><span class="n">isOk</span> <span class="n">result</span> <span class="s2">"should be Result.Ok"</span>
+</code></pre></div></div>
+
+<p>Ok, there´s a lot to go through here. 
+First, we are using the function <code class="highlighter-rouge">testProperty</code> from Expecto, its’ signature is</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// (name: string) -&gt; a' -&gt; Test</span>
+<span class="k">let</span> <span class="n">testProperty</span> <span class="n">name</span> <span class="p">=</span> <span class="o">...</span>
+</code></pre></div></div>
+
+<p>which means that it will take a name for the test and then a function <code class="highlighter-rouge">a' -&gt; Test</code>, i.e. a function that takes a generic type and returns a <code class="highlighter-rouge">Test</code>.</p>
+
+<p>And as the value for that function we are passing in</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SwedishPersonalIdentityNumberValues -&gt; Test</span>
+<span class="k">fun</span> <span class="n">input</span> <span class="p">-&gt;</span>
+    <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+    <span class="nn">Expect</span><span class="p">.</span><span class="n">isOk</span> <span class="n">result</span> <span class="s2">"should be Result.Ok"</span>
+</code></pre></div></div>
+
+<p>So in our case the type of the function will be <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues -&gt; Test</code> since we are passing <code class="highlighter-rouge">input</code> to the <code class="highlighter-rouge">create</code> function.</p>
+
+<p>We then use <code class="highlighter-rouge">Expect.isOk</code> to verify that the result of calling create is Successful, i.e. <code class="highlighter-rouge">result</code> is <code class="highlighter-rouge">Ok</code> and not an <code class="highlighter-rouge">Error</code>.</p>
+
+<p>As you can see we have not specified anywhere how to generate the <code class="highlighter-rouge">input</code> SwedishPersonalIdentityNumberValues. Let’s run the test and see what happens.</p>
+
+<p><img src="/assets/images/20190317/PropertyBasedTests20190316_1.png" alt="result1" /></p>
+
+<p>We get the message that the test failed after 1 test, and we can see that instead of <code class="highlighter-rouge">Ok</code> we got <code class="highlighter-rouge">Error(InvalidYear 0)</code>. We can see the values that FsCheck used as the input, and it used all zeros for Year, month, day, etc. Which clearly is not the valid inputs that we require for this test to pass.</p>
+
+<p>It comes as no surprise that FsCheck does not know how to generate the valid input for us, it just sees that the properties on the <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues</code> record are ints and tries to populate them with ints.</p>
+
+<p>We need to write custom generator.</p>
+
+<h2 id="a-custom-swedishpersonalidentitynumbervalues-generator">A custom SwedishPersonalIdentityNumberValues-generator</h2>
+
+<p>It turns out, due to GDPR, that you can just use any Personal Identity Number values in your tests since the pins could actully belong to a real person. The Swedish National Tax Board that is in charge of the Personal Identity Numbers actually provide a list of valid numbers to use for testing purposes. To simplify the usage of these test numbers <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a> actually provides access to the test numbers in the package <code class="highlighter-rouge">ActiveLogin.Identity.Swedish.TestData</code>. So we are going to be using that to make sure we are only testing with valid test numbers.</p>
+
+<p>Using the TestData package we can get a string array of all test numbers, <code class="highlighter-rouge">SwedishPersonalIdentityNumberTestData.raw12DigitStrings</code>.
+Let’s build a generator that uses that array to build a valid <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues</code> record.</p>
+
+<p>First we create a generator that given an array will return a random element:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// a' [] -&gt; Gen&lt;a'&gt;</span>
+<span class="k">let</span> <span class="n">chooseFromArray</span> <span class="n">xs</span> <span class="p">=</span>
+    <span class="n">gen</span> <span class="p">{</span> <span class="k">let</span><span class="o">!</span> <span class="n">index</span> <span class="p">=</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="nn">Array</span><span class="p">.</span><span class="n">length</span> <span class="n">xs</span><span class="p">)</span> <span class="p">-</span> <span class="mi">1</span><span class="p">)</span>
+          <span class="k">return</span> <span class="n">xs</span><span class="o">.[</span><span class="n">index</span><span class="p">]</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Here we are using the <code class="highlighter-rouge">gen</code> computation expression from FsCheck to create our generator. We use <code class="highlighter-rouge">Gen.choose</code> to generate a random index. <code class="highlighter-rouge">Gen.choose</code> is a function from the FsCheck library that generates a value from within the range we provide, in this case <code class="highlighter-rouge">[0, n-1]</code> where n is then length of the array.</p>
+
+<p>Now we can build a generator that returns one of the test number strings:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Gen&lt;string&gt;</span>
+<span class="k">let</span> <span class="n">valid12Digit</span> <span class="p">=</span> <span class="n">chooseFromArray</span> <span class="nn">SwedishPersonalIdentityNumberTestData</span><span class="p">.</span><span class="n">raw12DigitStrings</span>
+</code></pre></div></div>
+
+<p>And finally we can build a generator that transforms the string into <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues</code>:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// string -&gt; SwedishPersonalIdentityNumberValues</span>
+<span class="k">let</span> <span class="n">stringToValues</span> <span class="p">(</span><span class="n">pin</span> <span class="p">:</span> <span class="kt">string</span><span class="p">)</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">pin</span><span class="o">.[</span><span class="mi">0</span><span class="p">..</span><span class="mi">3</span><span class="p">]</span> <span class="p">|&gt;</span> <span class="kt">int</span>
+      <span class="nc">Month</span> <span class="p">=</span> <span class="n">pin</span><span class="o">.[</span><span class="mi">4</span><span class="p">..</span><span class="mi">5</span><span class="p">]</span> <span class="p">|&gt;</span> <span class="kt">int</span>
+      <span class="nc">Day</span> <span class="p">=</span> <span class="n">pin</span><span class="o">.[</span><span class="mi">6</span><span class="p">..</span><span class="mi">7</span><span class="p">]</span> <span class="p">|&gt;</span> <span class="kt">int</span>
+      <span class="nc">BirthNumber</span> <span class="p">=</span> <span class="n">pin</span><span class="o">.[</span><span class="mi">8</span><span class="p">..</span><span class="mi">10</span><span class="p">]</span> <span class="p">|&gt;</span> <span class="kt">int</span>
+      <span class="nc">Checksum</span> <span class="p">=</span> <span class="n">pin</span><span class="o">.[</span><span class="mi">11</span><span class="p">..</span><span class="mi">11</span><span class="p">]</span> <span class="p">|&gt;</span> <span class="kt">int</span> <span class="p">}</span>
+
+<span class="c1">// Gen&lt;SwedishPersonalIdentityNumberValues&gt;</span>
+<span class="k">let</span> <span class="n">validValues</span> <span class="p">=</span>
+    <span class="n">gen</span> <span class="p">{</span> <span class="k">let</span><span class="o">!</span> <span class="n">str</span> <span class="p">=</span> <span class="n">valid12Digit</span>
+          <span class="k">return</span> <span class="n">stringToValues</span> <span class="n">str</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>FsCheck actually packages a <em>generator</em> together with a <em>shrinker</em> into something called an <em>arbitrary</em> instance. I will not go further into the details of those concepts in this blog post, but feel free to take a deep dive into <a href="https://fscheck.github.io/FsCheck/TestData.html">FsCheck’s documentation on generating test data</a>.</p>
+
+<p>But nevertheless we need to expose our custom generator as an arbitrary instance to be able to use it from Expecto:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidNumberValuesGen</span><span class="bp">()</span> <span class="p">=</span>
+    <span class="k">static</span> <span class="k">member</span> <span class="nc">Gen</span><span class="bp">()</span> <span class="p">:</span> <span class="nc">Arbitrary</span><span class="p">&lt;</span><span class="nc">SwedishPersonalIdentityNumberValues</span><span class="p">&gt;</span> <span class="p">=</span>
+        <span class="n">validValues</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<h2 id="using-our-custom-generator">Using our custom generator</h2>
+
+<p>To use the generator we need to configure Expecto to use it.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testPropertyWithConfig</span> <span class="p">{</span> <span class="nn">FsCheckConfig</span><span class="p">.</span><span class="n">defaultConfig</span> <span class="k">with</span> <span class="n">arbitrary</span> <span class="p">=</span> <span class="p">[</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nn">Generators</span><span class="p">.</span><span class="nc">ValidNumberValuesGen</span><span class="p">&gt;</span> <span class="o">]}</span> 
+    <span class="s2">"valid input values returns Result.Ok"</span> <span class="p">&lt;|</span> <span class="k">fun</span> <span class="n">input</span> <span class="p">-&gt;</span>
+        <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+        <span class="nn">Expect</span><span class="p">.</span><span class="n">isOk</span> <span class="s2">"should be Result.Ok"</span> <span class="n">result</span> 
+</code></pre></div></div>
+
+<p>Let’s add some functions to make the configuration easier on the eyes:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">config</span> <span class="p">=</span> <span class="nn">FsCheckConfig</span><span class="p">.</span><span class="n">defaultConfig</span>
+<span class="k">let</span> <span class="n">addToConfig</span> <span class="n">arbTypes</span> <span class="p">=</span> <span class="p">{</span> <span class="n">config</span> <span class="k">with</span> <span class="n">arbitrary</span> <span class="p">=</span> <span class="n">arbTypes</span> <span class="o">@</span> <span class="n">config</span><span class="p">.</span><span class="n">arbitrary</span> <span class="p">}</span>
+<span class="k">let</span> <span class="n">testProp</span> <span class="n">arbTypes</span> <span class="p">=</span> <span class="n">testPropertyWithConfig</span> <span class="p">(</span><span class="n">addToConfig</span> <span class="n">arbTypes</span><span class="p">)</span>
+
+<span class="p">[&lt;</span><span class="nc">Tests</span><span class="p">&gt;]</span>
+<span class="k">let</span> <span class="n">tests</span> <span class="p">=</span>
+    <span class="n">testList</span> <span class="s2">"create"</span> <span class="p">[</span>
+        <span class="n">testProp</span> <span class="p">[</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nn">Generators</span><span class="p">.</span><span class="nc">ValidNumberValuesGen</span><span class="p">&gt;</span> <span class="p">]</span> 
+            <span class="s2">"valid input values returns Result.Ok"</span> <span class="p">&lt;|</span> <span class="k">fun</span> <span class="n">input</span> <span class="p">-&gt;</span>
+                <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+                <span class="nn">Expect</span><span class="p">.</span><span class="n">isOk</span> <span class="s2">"should be Result.Ok"</span> <span class="n">result</span> 
+    <span class="p">]</span>
+</code></pre></div></div>
+
+<p>And if we run that test:</p>
+
+<p><img src="/assets/images/20190317/PropertyBasedTests20190316_2.png" alt="result2" /></p>
+
+<p>Success!<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup></p>
+
+<p>So, now instead of the just testing with 4 examples we know to be valid, like in the C# test above. We are now letting FsCheck test our function with random values until it is satisfied that the property holds. In this case this means running the test for a configurable amount of iterations, the default being 200.</p>
+
+<h2 id="adding-type-safety-to-our-generators">Adding type safety to our generators</h2>
+
+<p>A problem with our generator is that it is of type <code class="highlighter-rouge">Arbitrary&lt;SwedishPersonalIdentityNumberValues&gt;</code>. Just by looking at that type signature it is not actually clear what type of Values we are generating, is it valid or invalid or just completely random.</p>
+
+<p>This would be even worse if we had written a generator for a primitive type, like we are going to do later in this post when we need an InvalidYear-generator, InvalidMonth-generator, etc. Then it’s going to be really hard to understand if our <code class="highlighter-rouge">Arbitrary&lt;int&gt;</code> is returning a year or a month. Also we would not be able to configure our property test to use two different <code class="highlighter-rouge">Arbitrary&lt;int&gt;</code> generators, it would just use the last one we configured it with.</p>
+
+<p>A common approach to solve this problem is to use single-case discriminated unions. Instead of writing a generator for invalid year to be of type <code class="highlighter-rouge">Gen&lt;int&gt;</code> we can create a new type <code class="highlighter-rouge">type InvalidYear = InvalidYear of int</code> and make our generator be of type <code class="highlighter-rouge">Gen&lt;InvalidYear&gt;</code>.</p>
+
+<p>Let’s rewrite our ValidValuesGen using this approach:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidValues</span> <span class="p">=</span> <span class="nc">ValidValues</span> <span class="k">of</span> <span class="nc">SwedishPersonalIdentityNumberValues</span>
+<span class="k">let</span> <span class="n">validValues</span> <span class="p">=</span>
+    <span class="n">gen</span> <span class="p">{</span> <span class="k">let</span><span class="o">!</span> <span class="n">str</span> <span class="p">=</span> <span class="n">valid12Digit</span>
+          <span class="k">return</span> <span class="n">stringToValues</span> <span class="n">str</span> <span class="p">|&gt;</span> <span class="nc">ValidValues</span> <span class="p">}</span>
+
+<span class="k">type</span> <span class="nc">ValidNumberValuesGen</span><span class="bp">()</span> <span class="p">=</span>
+    <span class="k">static</span> <span class="k">member</span> <span class="nc">Gen</span><span class="bp">()</span> <span class="p">:</span> <span class="nc">Arbitrary</span><span class="p">&lt;</span><span class="nc">ValidValues</span><span class="p">&gt;</span> <span class="p">=</span>
+        <span class="n">validValues</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<p>And update the test where we use it:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"valid input values returns Result.Ok"</span> <span class="p">&lt;|</span> <span class="k">fun</span> <span class="p">(</span><span class="nn">Gen</span><span class="p">.</span><span class="nc">ValidValues</span> <span class="n">input</span><span class="p">)</span> <span class="p">-&gt;</span>
+    <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+    <span class="nn">Expect</span><span class="p">.</span><span class="n">isOk</span> <span class="s2">"should be Result.Ok"</span> <span class="n">result</span> 
+</code></pre></div></div>
+
+<p>So in our test function we are deconstructing the <code class="highlighter-rouge">ValidValues</code> discriminated union directly in the function definition: <code class="highlighter-rouge">(Gen.Validvalues input)</code>.</p>
+
+<h2 id="next-test-invalid-year">Next test, invalid year</h2>
+
+<p>Now let’s move on to the test for invalid year. This is the test we will be replacing:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">[Theory]</span>
+<span class="na">[InlineData(-1, 01, 01, 239, 2)]</span>
+<span class="na">[InlineData(int.MaxValue, 01, 01, 239, 2)]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">Throws_When_Invalid_Year</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">,</span> <span class="kt">int</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="kt">int</span> <span class="n">checksum</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">ex</span> <span class="p">=</span> <span class="n">Assert</span><span class="p">.</span><span class="n">Throws</span><span class="p">&lt;</span><span class="n">ArgumentOutOfRangeException</span><span class="p">&gt;(()</span> 
+        <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">SwedishPersonalIdentityNumber</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="n">checksum</span><span class="p">));</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">"Invalid year."</span><span class="p">,</span> <span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>First we need to create a generator for invalid year.</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">invalidYear</span> <span class="p">=</span>
+    <span class="k">let</span> <span class="n">tooSmall</span> <span class="p">=</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span><span class="p">(</span><span class="nn">Int32</span><span class="p">.</span><span class="nc">MinValue</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">tooBig</span> <span class="p">=</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="nn">Int32</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
+    <span class="nn">Gen</span><span class="p">.</span><span class="n">oneof</span> <span class="p">[</span> <span class="n">tooSmall</span><span class="p">;</span> <span class="n">tooBig</span> <span class="p">]</span>
+
+<span class="k">type</span> <span class="nc">InvalidYearGen</span><span class="bp">()</span> <span class="p">=</span>
+    <span class="k">static</span> <span class="k">member</span> <span class="nc">Gen</span><span class="bp">()</span> <span class="p">:</span> <span class="nc">Arbitrary</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="p">=</span>
+        <span class="n">invalidYear</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<p>First we are using the <code class="highlighter-rouge">Gen.choose</code> function to create two generators for too small and too big values for a year. We then combine them using <code class="highlighter-rouge">Gen.oneof</code> which will randomly pick one of the generators.</p>
+
+<p>And here’s the test using <code class="highlighter-rouge">InvalidYearGen</code>:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="p">[</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nn">Generators</span><span class="p">.</span><span class="nc">ValidNumberValuesGen</span><span class="o">&gt;;</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nc">InvalidYearGen</span><span class="p">&gt;</span> <span class="p">]</span>
+    <span class="s2">"invalid year returns InvalidYear Error"</span> 
+        <span class="p">&lt;|</span> <span class="k">fun</span> <span class="p">(</span><span class="n">validValues</span><span class="p">:</span> <span class="nc">SwedishPersonalIdentityNumberValues</span><span class="p">,</span> <span class="n">invalidYear</span><span class="p">)</span> <span class="p">-&gt;</span>
+            <span class="k">let</span> <span class="n">input</span> <span class="p">=</span> <span class="p">{</span> <span class="n">validValues</span> <span class="k">with</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">invalidYear</span> <span class="p">}</span>
+            <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+            <span class="n">result</span> <span class="o">=!</span> <span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">invalidYear</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>For this test first we want a valid <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues</code> record and then an invalid year so we can make a new record where the <code class="highlighter-rouge">Year</code> property is invalid. As we saw before, the test function have a signature of <code class="highlighter-rouge">a' -&gt; Test</code> and in this case the generic type <code class="highlighter-rouge">a'</code> will be a tuple <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues * int</code>. We have configured two generators, one for each of those types. And if we run the test:</p>
+
+<p><img src="/assets/images/20190317/PropertyBasedTests20190316_3.png" alt="result3" /></p>
+
+<p>Success! Or not so fast, maybe…</p>
+
+<p>Just to be sure whats going on here, let’s add some debug printing and run the test again:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="p">[</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nn">Generators</span><span class="p">.</span><span class="nc">ValidNumberValuesGen</span><span class="o">&gt;;</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nc">InvalidYearGen</span><span class="p">&gt;</span> <span class="p">]</span>
+    <span class="s2">"invalid year returns InvalidYear Error"</span> 
+        <span class="p">&lt;|</span> <span class="k">fun</span> <span class="p">(</span><span class="n">validValues</span><span class="p">:</span> <span class="nc">SwedishPersonalIdentityNumberValues</span><span class="p">,</span> <span class="n">invalidYear</span><span class="p">)</span> <span class="p">-&gt;</span>
+            <span class="n">printfn</span> <span class="s2">"values: %A"</span> <span class="n">validValues</span>
+            <span class="n">printfn</span> <span class="s2">"year: %i"</span> <span class="n">invalidYear</span>
+            <span class="k">let</span> <span class="n">input</span> <span class="p">=</span> <span class="p">{</span> <span class="n">validValues</span> <span class="k">with</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">invalidYear</span> <span class="p">}</span>
+            <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+            <span class="n">result</span> <span class="o">=!</span> <span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">invalidYear</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Looks ok, but we should verify that this test fails if we pass it a valid year, let’s tweak the generator to return a valid year, in that case the test should fail.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">invalidYear</span> <span class="p">=</span>
+    <span class="k">let</span> <span class="n">tooSmall</span> <span class="p">=</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span><span class="p">(</span><span class="nn">Int32</span><span class="p">.</span><span class="nc">MinValue</span><span class="p">,</span> <span class="nn">DateTime</span><span class="p">.</span><span class="nn">MinValue</span><span class="p">.</span><span class="nc">Year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">tooBig</span> <span class="p">=</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="nn">Int32</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
+    <span class="nn">Gen</span><span class="p">.</span><span class="n">oneof</span> <span class="p">[</span> <span class="n">tooSmall</span><span class="p">;</span> <span class="n">tooBig</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Now we are including <code class="highlighter-rouge">DateTime.MinValue.Year + 1</code> which actually is a valid year. Let’s run the test again.</p>
+
+<p><img src="/assets/images/20190317/PropertyBasedTests20190316_.png" alt="result" /></p>
+
+<p>Success!? That’s not what we wanted, what is going on?</p>
+
+<h2 id="writing-the-correct-tests">Writing the <em>correct</em> tests</h2>
+
+<p>Like I wrote earlier, FsCheck runs test until it is satisfied the property holds, and that by default it will run 200 tests. Is that enough in our case? How many possible input values are we testing with? Well our range of possible input values is almost the full range from Int32.MinValue to Int32.MaxValue, so about 2 billion. We probably will not hit our edge case <code class="highlighter-rouge">1</code> if we just pick 200 ints in random. We could, hypothetically, increase the number of tests, but I won’t be able to run billions of tests on my machine in a reasonable amount of time.</p>
+
+<p>So what now? Should we throw away the notion of property-based testing on the bases of this. No, of course not, let’s try another approach.</p>
+
+<p>If we cannot prove that <em>an</em> <strong>invalid year</strong> <em>should return an</em> <strong>InvalidYear Error</strong> then maybe we can prove that <em>a</em> <strong>valid year</strong> <em>should</em> <strong>not</strong> <em>return an</em> <strong>InvalidYear Error</strong><sup id="fnref:4"><a href="#fn:4" class="footnote">3</a></sup>.</p>
+
+<p>That test would look like this:</p>
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"valid year does not return InvalidYear Error"</span> <span class="p">&lt;|</span> 
+    <span class="k">fun</span> <span class="p">(</span><span class="nn">Gen</span><span class="p">.</span><span class="nc">ValidValues</span> <span class="n">values</span><span class="p">,</span> <span class="nn">Gen</span><span class="p">.</span><span class="nc">ValidYear</span> <span class="n">validYear</span><span class="p">)</span> <span class="p">-&gt;</span>
+        <span class="k">let</span> <span class="n">input</span> <span class="p">=</span> <span class="p">{</span> <span class="n">values</span> <span class="k">with</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">validYear</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+        <span class="n">result</span> <span class="o">&lt;&gt;!</span> <span class="p">(</span><span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">validYear</span><span class="o">))</span>
+</code></pre></div></div>
+
+<p>and the ValidYear generator:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidYear</span> <span class="p">=</span> <span class="nc">ValidYear</span> <span class="k">of</span> <span class="kt">int</span>
+<span class="k">type</span> <span class="nc">ValidYearGen</span><span class="bp">()</span> <span class="p">=</span>
+    <span class="k">static</span> <span class="k">member</span> <span class="nc">Gen</span><span class="bp">()</span> <span class="p">:</span> <span class="nc">Arbitrary</span><span class="p">&lt;</span><span class="nc">ValidYear</span><span class="p">&gt;</span> <span class="p">=</span>
+        <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span> <span class="p">|&gt;</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">map</span> <span class="nc">ValidYear</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<p>Even for this test we can see that the number of possible inputs is going to be too large for us to run just 200 tests. There are 9999 possible input values so just to be sure let’s change the configuration to run 20000 tests. Using a helper function<sup id="fnref:3"><a href="#fn:3" class="footnote">4</a></sup> we can write the test like this:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testPropWithMaxTest</span> <span class="mi">20000</span> <span class="s2">"valid year does not return InvalidYear Error"</span> <span class="p">&lt;|</span> 
+    <span class="k">fun</span> <span class="p">(</span><span class="nn">Gen</span><span class="p">.</span><span class="nc">ValidValues</span> <span class="n">values</span><span class="p">,</span> <span class="nn">Gen</span><span class="p">.</span><span class="nc">ValidYear</span> <span class="n">validYear</span><span class="p">)</span> <span class="p">-&gt;</span>
+        <span class="k">let</span> <span class="n">input</span> <span class="p">=</span> <span class="p">{</span> <span class="n">values</span> <span class="k">with</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">validYear</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+        <span class="n">result</span> <span class="o">&lt;&gt;!</span> <span class="p">(</span><span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">validYear</span><span class="o">))</span>
+</code></pre></div></div>
+
+<p>Let’s run the test:
+<img src="/assets/images/20190317/PropertyBasedTests20190316_5.png" alt="result5" /></p>
+
+<p>It passes. And let’s tweak the generator again so it an invalid year:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidYearGen</span><span class="bp">()</span> <span class="p">=</span>
+    <span class="k">static</span> <span class="k">member</span> <span class="nc">Gen</span><span class="bp">()</span> <span class="p">:</span> <span class="nc">Arbitrary</span><span class="p">&lt;</span><span class="nc">ValidYear</span><span class="p">&gt;</span> <span class="p">=</span>
+        <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span> <span class="p">|&gt;</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">map</span> <span class="nc">ValidYear</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<p>It can now return 0 which is an invalid year. Let’s run it now:
+<img src="/assets/images/20190317/PropertyBasedTests20190316_4.png" alt="result4" /></p>
+
+<p>It fails! As expected, so now we can be confident in our test. We have to run 20000 iterations which is pretty many, maybe this actually should serve as an indicator to us to think about if we are accepting to wide a range of input values for year. Maybe a more reasonble range would be [1800, 2100]. There are no persons born before 1800 that can have a personal identity number. And I don’t expect this code to be running in 80 years from now. But that is another concern, but I find it interesting that writing the property-based test got me thinking about this.</p>
+
+<p>Does this mean that we can now drop the InvalidYear test that we wrote first. Not really, even though we cannot test it with the full range of inputs I still think it has some value; showing that given an invalid input year the function actually does return an InvalidYear Error. So I let the test remain.</p>
+
+<h2 id="thinking-of-relevant-properties-to-test">Thinking of relevant properties to test</h2>
+
+<p>I am going to skip the tests for InvalidMonth, InvalidDay, and InvalidBirthNumber, since they will be very similar to the test for InvalidYear.</p>
+
+<p>Instead I will next focus on this test:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">[Theory]</span>
+<span class="na">[InlineData(2018, 01, 01, 239, 3)]</span>
+<span class="na">[InlineData(2018, 01, 01, 239, 4)]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">Throws_When_Invalid_Checksum</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">,</span> <span class="kt">int</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="kt">int</span> <span class="n">checksum</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">ex</span> <span class="p">=</span> <span class="n">Assert</span><span class="p">.</span><span class="n">Throws</span><span class="p">&lt;</span><span class="n">ArgumentException</span><span class="p">&gt;(()</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">SwedishPersonalIdentityNumber</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">birthNumber</span><span class="p">,</span> <span class="n">checksum</span><span class="p">));</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">"Invalid checksum."</span><span class="p">,</span> <span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. But we can’t write a generator that generates a valid or invalid checksum using the same algorithm that we are using in the production code. We wouldn’t actually be testing anything of value, other than that copy-paste is working 😉.</p>
+
+<p>So instead we need to think of another property to test for the checksum. This is what I came up with: <em>When all other inputs are valid only 1 in 10 checksums can be valid</em>. So we won’t verify that the checksum is correct. We have actually already done that in another test where we verified that we could create a pin from valid input values.</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"with all other values valid, only 1 of 10 checksums can be valid"</span> <span class="p">&lt;|</span> 
+    <span class="k">fun</span> <span class="p">(</span><span class="nn">Gen</span><span class="p">.</span><span class="nc">ValidValues</span> <span class="n">values</span><span class="p">)</span> <span class="p">-&gt;</span>
+        <span class="k">let</span> <span class="n">withChecksum</span> <span class="n">values</span> <span class="n">checksum</span> <span class="p">=</span> <span class="p">{</span> <span class="n">values</span> <span class="k">with</span> <span class="nn">SwedishPersonalIdentityNumberValues</span><span class="p">.</span><span class="nc">Checksum</span> <span class="p">=</span> <span class="n">checksum</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="n">hasInvalidChecksum</span> <span class="p">=</span> <span class="k">function</span> <span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidChecksum</span> <span class="o">_)</span> <span class="p">-&gt;</span> <span class="bp">true</span> <span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="bp">false</span>
+        <span class="k">let</span> <span class="n">numberOfInvalidPins</span> <span class="p">=</span>
+            <span class="p">[</span> <span class="mi">0</span><span class="p">..</span><span class="mi">9</span> <span class="p">]</span>
+            <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="p">(</span><span class="n">withChecksum</span> <span class="n">values</span> <span class="o">&gt;&gt;</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span><span class="p">)</span>
+            <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">filter</span> <span class="n">hasInvalidChecksum</span>
+            <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span>
+        <span class="n">numberOfInvalidPins</span> <span class="o">=!</span> <span class="mi">9</span>
+</code></pre></div></div>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>In reality it is a little bit more complex than that, and there are other valid formats for a pin as well. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>Although we should really be checking that the pin we have created has the expected values, not just that it’s not an Error. But I will leave that as exercise for the reader, or you can look at the <a href="https://github.com/viktorvan/ActiveLoginPropertyBasedTestExample">solution on GitHub</a> to see how that can be done. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p>It’s not testing exactly the same thing, of course, but actually it is more useful for this domain since we are more worried about false negatives than false positives. <a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>Checkout the GitHub repo for the full implementation. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-03-16T09:47:00+01:00">March 16, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=Emmet_Ray&text=Use+property-based+testing+to+increase+your+test+coverage+by+%E2%88%9E%20http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fincrease-test-coverage-with-property-based-tests%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fincrease-test-coverage-with-property-based-tests%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fincrease-test-coverage-with-property-based-tests%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/fsharp/domain-modeling-with-fsharp/" class="pagination--pager" title="Why you should model your domain with F#
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/fsharp/domain-modeling-with-fsharp/" rel="permalink">Why you should model your domain with F#
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  12 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>
