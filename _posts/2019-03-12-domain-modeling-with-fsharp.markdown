@@ -1,7 +1,10 @@
 ---
 title:  "Why you should model your domain with F#"
 date:   2019-03-12 22:47:02 +0100
-categories: fsharp
+categories: fsharp 
+tags:
+    - fsharp
+    - domain-modeling
 classes: wide
 toc: true
 header: 

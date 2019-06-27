@@ -1,12 +1,14 @@
 ---
 title:  "Migrating a C# test suite to property based tests in F# - part 2"
 date:   2019-06-28 07:50:00 +0100
-categories: fsharp
+categories: fsharp 
+tags:
+    - fsharp
+    - tests
 classes: wide
 toc: true
 header: 
-    overlay_image: /assets/images/ny_skyline3.jpg
-    overlay_filter: rgba(242, 19, 104, 0.2)
+    overlay_image: /assets/images/spain_bridge.jpg
 ---
 
 # Background
