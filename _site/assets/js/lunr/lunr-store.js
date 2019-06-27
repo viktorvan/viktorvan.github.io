@@ -4,8 +4,8 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/fsharp/domain-modeling-with-fsharp/",
         "teaser":null},{
-        "title": "Use property-based testing to increase your test coverage by ∞",
-        "excerpt":"Background A few weeks ago, a heated discussion about TDD at work got me thinking more and more about property-based testing. I was also in the process of migrating our tests for ActiveLogin.Identity library from C# to F# (we had already migrated the implementation to F#). It seemed like a...","categories": ["fsharp"],
+        "title": "Migrating a C# test suite to property based tests in F# - part 1",
+        "excerpt":"Background I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity. A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity...","categories": ["fsharp"],
         "tags": [],
-        "url": "http://localhost:4000/fsharp/increase-test-coverage-with-property-based-tests/",
+        "url": "http://localhost:4000/fsharp/migrating-activelogin.identity-to-property-based-tests-1/",
         "teaser":null}]
