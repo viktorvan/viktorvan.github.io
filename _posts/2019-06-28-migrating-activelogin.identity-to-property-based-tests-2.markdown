@@ -23,11 +23,15 @@ A short background on ActiveLogin.Identity; it's a library for parsing and valid
 
 In the last blog post we wrote some property tests for verifying the `parse` function for valid inputs. In this post we will handle som invalid inputs. 
 
-<!-- ## Parsing invalid pin strings
+As a reminder, this is the type signature of `parse`:
 
-### null or empty strings
+```fsharp
+// string -> Result<SwedishPersonalIdentityNumber, Error>
+```
 
-The first invalid string we will test is `null` and for this test we don't need to use property based testing, there is only one input to test. So this is just a straight forward unit test:
+# Empty input
+
+First let's deal with empty input strings. The first example is simply if the input string is null. There isn't really anything to gain from using property based tests here, so let's just right a normal unit test.
 
 ```fsharp
 test "null string returns argument null error" {
@@ -35,9 +39,11 @@ test "null string returns argument null error" {
     |> SwedishPersonalIdentityNumber.parse =! Error ArgumentNullError }
 ```
 
-The next test is for empty strings. To write a generator for empty strings we are going to use a feature in FsCheck where a generator can take a size parameter. When running the tests the test framework will begin by generating small test cases, and gradually increases the size as testing progresses.
+It's when we move on to empty strings that it get's a little bit more interesting. If we were writing normal 'example' based unit tests we would probably provide some example inputs like `""`, and maybe some examples with whitespace, `" "`, `"   "`. With property based tests we can actually do one better, and generate empty strings with different length and test with that.
 
-A generator for an empty string of random size could then look like this:
+So we need to write a generator that returns empty strings of different lengths. We are going to use a feature of FsCheck[^1] where a generator can take a size parameter. When running the tests the test framework will begin by generating small test cases, and gradually increases the size as testing progresses.
+
+A generator for an empty string of random size could then look like this[^1]:
 
 ```fsharp
 let emptyStringGen() =
@@ -58,7 +64,8 @@ testProp "empty string returns parsing error" <| fun (Gen.EmptyString str) ->
     |> SwedishPersonalIdentityNumber.parse =! Error (ParsingError Empty)
 ```
 
-### An invalid number of digits
+# Input with invalid number of digits
+
 Another form of invalid pin strings are when there is an invalid number of digits. A pin can only have 10 or 12 digits. Let's write a generator for some random digits:
 
 ```fsharp
@@ -100,4 +107,7 @@ testProp "invalid number of digits returns parsing error" <| fun (Gen.Digits dig
 ```
 
 By using the `==>` operator and wrapping the right-hand-side in a lazy expression then FsCheck will stop if the condition on the left-hand-side is false. And our test assertions will not be evaluated.
-IF THE LEFT-HAND-SIDE IS TRUE THEN THE LAZY EXPRESSION WILL BE EVALUATED. -->
+IF THE LEFT-HAND-SIDE IS TRUE THEN THE LAZY EXPRESSION WILL BE EVALUATED.
+
+[^1]: See (part 1)[] for an introduction to the [FsCheck](https://fscheck.github.io/FsCheck/)  library. 
+[^2]: See (part 1)[] for an introduction to generators and fsharp unit testing in general.
