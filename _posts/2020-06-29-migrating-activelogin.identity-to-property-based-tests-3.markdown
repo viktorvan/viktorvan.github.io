@@ -1,6 +1,6 @@
 ---
 title:  "Migrating a C# test suite to property based tests in F# - part 3"
-date:   2019-06-29 07:50:00 +0100
+date:   2020-06-29 07:50:00 +0100
 categories: fsharp 
 tags:
     - fsharp

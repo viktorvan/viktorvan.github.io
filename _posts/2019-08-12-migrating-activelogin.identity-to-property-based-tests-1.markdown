@@ -1,6 +1,6 @@
 ---
 title:  "Migrating a C# test suite to property based tests in F# - part 1"
-date:   2019-06-27 06:45:00 +0100
+date:   2019-08-12 06:45:00 +0100
 categories: fsharp 
 tags:
     - fsharp
@@ -16,9 +16,9 @@ header:
 
 I've been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity.
 
-A short background on ActiveLogin.Identity; it's a library for parsing and validating Swedish identities, such as a Personal Identity Number, let's call it a **pin**. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. **Y**ear, **M**onth, **D**ay, **B**irth number and a checksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm). You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a "+" indicates that the person has turned or is turning 100 this year[^1].
+A short background on ActiveLogin.Identity; it's a library for parsing and validating Swedish identities, such as a Personal Identity Number, let's call it a **pin**. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. **Y**ear, **M**onth, **D**ay, **B**irth number and a **C**hecksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm). You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a "+" indicates that the person has turned or is turning 100 this year[^1].
 
-There are a few functions of interest in the library that we are going to focus on in this blog post: `parse`, `create`, `to12DigitString`, and `to10DigitString`. What they do is pretty straight forward, parse takes a string input and returns a pin or an error, create takes some input values and returns a pin or an error. The toXXDigitString takes a pin and returns its string representation.
+There are a few functions of interest in the library that we are going to focus on in this blog post: `parse`, `to12DigitString`, and `to10DigitString`. What they do is pretty straight forward, `parse` takes a string input and returns a pin or an error. The `toXXDigitString` takes a pin and returns its string representation.
 
 # What are property-based tests
 ## Testing by example
@@ -314,7 +314,7 @@ let private surroundEachChar (chars:char[]) (pin:string) =
 
 That's almost all the tests we need for parsing valid strings. We do need tests for 10 digit strings with some random noise added, but those tests will be very similar to the tests for 12 digit strings. So I will leave those tests as an exercise to the reader.[^4]
 
-As we can see we ended up with only 4 test cases, but we are really verifying a lot with those tests. We know the `parse` function and to10/12digitString functions are working for valid inputs. Comparing this with C# unit test suite we have replaced about 30 unit tests. Additionally, since our property based tests are using randomly generated inputs, we are actually testing many, many more inputs than we had setup in the C# unit test suite.
+As we can see we ended up with only 4 test cases, but we are really verifying a lot with those tests. We know the `parse` function and to10/12digitString functions are working for valid inputs. Comparing this with C# unit test suite we have replaced about 30 unit tests. Additionally, since our property based tests are using randomly generated inputs, we are actually testing many, many more inputs than we did in the C# unit test suite.
 
 I feel we have covered enough ground in this blog post so I will stop here. In the next post we will look at the tests for invalid inputs.
 
