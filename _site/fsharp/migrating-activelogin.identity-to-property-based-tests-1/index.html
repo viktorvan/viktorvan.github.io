@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.16.5 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.16.6 by Michael Rose
   Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -20,25 +20,25 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Viktor Andersson">
 <meta property="og:title" content="Migrating a C# test suite to property based tests in F# - part 1">
-<meta property="og:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
+<meta property="og:url" content="http://localhost:4000/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
 
 
   <meta property="og:description" content="Background">
 
 
 
-  <meta property="og:image" content="https://viktorvan.github.io/assets/images/sansebastian1.jpg">
+  <meta property="og:image" content="http://localhost:4000/assets/images/sansebastian1.jpg">
 
 
 
   <meta name="twitter:site" content="@Emmet_Ray">
   <meta name="twitter:title" content="Migrating a C# test suite to property based tests in F# - part 1">
   <meta name="twitter:description" content="Background">
-  <meta name="twitter:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
+  <meta name="twitter:url" content="http://localhost:4000/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
 
   
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://viktorvan.github.io/assets/images/sansebastian1.jpg">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/sansebastian1.jpg">
   
 
   
@@ -56,7 +56,7 @@
   
 
 
-<link rel="canonical" href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
+<link rel="canonical" href="http://localhost:4000/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
 
 
 
@@ -67,7 +67,7 @@
     
       "@type": "Person",
       "name": "Viktor Andersson",
-      "url": "https://viktorvan.github.io/"
+      "url": "http://localhost:4000/"
     
   }
 </script>
@@ -381,7 +381,7 @@
         
         <h1 id="background">Background</h1>
 
-<p>I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity.</p>
+<p>I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a>.</p>
 
 <p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a <strong>C</strong>hecksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a “+” indicates that the person has turned or is turning 100 this year<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
 
@@ -739,11 +739,11 @@ I will not go further into the details of those concepts in this blog post, but 
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?via=Emmet_Ray&text=Migrating+a+C%23+test+suite+to+property+based+tests+in+F%23+-+part+1%20https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?via=Emmet_Ray&text=Migrating+a+C%23+test+suite+to+property+based+tests+in+F%23+-+part+1%20http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
@@ -754,7 +754,8 @@ I will not go further into the details of those concepts in this blog post, but 
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-2/" class="pagination--pager" title="Migrating a C# test suite to property based tests in F# - part 2
+">Next</a>
     
   </nav>
 
@@ -768,6 +769,35 @@ I will not go further into the details of those concepts in this blog post, but 
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-2/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  8 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Background
+
+</p>
+  </article>
+</div>
+
         
           
 

@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp/</loc>
+<loc>http://localhost:4000/fsharp/domain-modeling-with-fsharp/</loc>
 <lastmod>2019-03-12T22:47:02+01:00</lastmod>
 </url>
 <url>
-<loc>https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/</loc>
+<loc>http://localhost:4000/fsharp/migrating-activelogin.identity-to-property-based-tests-1/</loc>
 <lastmod>2019-08-12T07:45:00+02:00</lastmod>
 </url>
 <url>
-<loc>https://viktorvan.github.io/pages/404/</loc>
+<loc>http://localhost:4000/fsharp/migrating-activelogin.identity-to-property-based-tests-2/</loc>
+<lastmod>2019-08-22T08:51:00+02:00</lastmod>
 </url>
 <url>
-<loc>https://viktorvan.github.io/about/</loc>
+<loc>http://localhost:4000/pages/404/</loc>
 </url>
 <url>
-<loc>https://viktorvan.github.io/</loc>
+<loc>http://localhost:4000/about/</loc>
 </url>
 <url>
-<loc>https://viktorvan.github.io/tags/</loc>
+<loc>http://localhost:4000/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/tags/</loc>
 </url>
 </urlset>
