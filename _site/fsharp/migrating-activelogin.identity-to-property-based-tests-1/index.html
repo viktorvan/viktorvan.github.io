@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Migrating a C# test suite to property based tests in F# - part 1 - Viktor Andersson</title>
-<meta name="description" content="Background">
+<meta name="description" content="I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity.">
 
 
   <meta name="author" content="Viktor Andersson">
@@ -23,7 +23,7 @@
 <meta property="og:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
 
 
-  <meta property="og:description" content="Background">
+  <meta property="og:description" content="I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity.">
 
 
 
@@ -33,7 +33,7 @@
 
   <meta name="twitter:site" content="@Emmet_Ray">
   <meta name="twitter:title" content="Migrating a C# test suite to property based tests in F# - part 1">
-  <meta name="twitter:description" content="Background">
+  <meta name="twitter:description" content="I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity.">
   <meta name="twitter:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">
 
   
@@ -185,7 +185,7 @@
         
       </h1>
       
-        <p class="page__lead"><h1 id="background">Background</h1>
+        <p class="page__lead">I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a>.
 
 </p>
       
@@ -339,7 +339,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Migrating a C# test suite to property based tests in F# - part 1">
-    <meta itemprop="description" content="Background">
+    <meta itemprop="description" content="I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity.">
     <meta itemprop="datePublished" content="August 12, 2019">
     
 
@@ -379,9 +379,9 @@
             </nav>
           </aside>
         
-        <h1 id="background">Background</h1>
+        <p>I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a>.</p>
 
-<p>I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a>.</p>
+<h1 id="background">Background</h1>
 
 <p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a <strong>C</strong>hecksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a “+” indicates that the person has turned or is turning 100 this year<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
 
@@ -792,7 +792,7 @@ I will not go further into the details of those concepts in this blog post, but 
   8 minute read
 </p>
     
-    <p class="archive__item-excerpt" itemprop="description">Background
+    <p class="archive__item-excerpt" itemprop="description">This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.
 
 </p>
   </article>

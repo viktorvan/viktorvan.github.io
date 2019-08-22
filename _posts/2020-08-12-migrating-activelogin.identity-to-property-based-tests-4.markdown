@@ -12,9 +12,9 @@ header:
 published: false
 ---
 
-# Background
-
 This is part 4 in a series of blog post where I migrate a C# test suite to property based tests in F#.
+
+# Background
 
 [Part 1 - Introduction to property based testing](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/)
 [Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/)
