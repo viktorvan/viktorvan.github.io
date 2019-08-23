@@ -185,7 +185,7 @@ The only invalid birth number is 000 so we replace the valid birthNumber with "0
 
 **Invalid checksum**
 
-The checksum of the pin calculated using the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) so to generate an invalid value we can just take the valid checksum and add 1, and use the modulo operator to make sure 9 + 1 = 10 will give result in 0.
+The checksum of the pin calculated using the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) so to generate an invalid value we can just take the valid checksum and add 1, and use the modulo operator to make sure 9 + 1 = 10 will give result in 0. Maybe we feel that this isn't enough and that we want to test with all invalid checksums and we will do that in the next blog post, when we are testing the `create` function.
 
 **The full test**
 

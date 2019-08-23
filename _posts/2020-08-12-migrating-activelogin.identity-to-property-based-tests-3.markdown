@@ -148,11 +148,34 @@ testProp "valid year does not return InvalidYear Error" <|
 
 But we should note that even in this case it will not be enough to run the test 200 times, we must increase the number of times to run the test which is done by setting the MaxTest property of FsCheck[^1].
 
-# Conclusion
-
 The tests for invalid months and days can be done in the same way as for years, so I will leave them out of this blog post. For invalid birth numbers there's only one invalid case: 000, so I will skip that as well.
 
-Testing with an invalid checksum on the other hand turns out to be so interesting that we will leave that for the next blog post.
+## Creating a pin with an invalid checksum
+
+The checksum is a single digit [0,9] and since we have a generator for `ValidValues` we know which one is valid. We just need to test with all the others. So for this test we actually won't create a generator for InvalidChecksums, instead we can calculate all invalid checksums using the valid pin like this:
+
+```fsharp
+testProp "invalid checksum returns InvalidChecksum Error" <|
+    fun (Gen.ValidValues values) ->
+        let invalidChecksums =
+            [ 0..9 ]
+            |> List.except [ values.Checksum ]
+
+        let withInvalidChecksums =
+            invalidChecksums
+            |> List.map (fun checksum -> { values with Checksum = checksum })
+
+        withInvalidChecksums
+        |> List.map (fun values -> values.Checksum, SwedishPersonalIdentityNumber.create values)
+        |> List.iter (function
+        | (expected, (Error(InvalidChecksum actual))) -> expected =! actual
+        | _ -> failwith "Expected InvalidChecksum Error")
+```
+
+First we get all invalidChecksums by starting with a list of all digits in the range [0,9] and removing the valid checksum. We then create a list of `SwedishPersonalIdentityNumberValues' records where we replace the checksum with each of the invalid checksums. And the we run the test by calling `create` with all the invalid records and asserting that we get an InvalidChecksum Error.
+
+# Conclusion
+
 
 In this post we realised we need to be careful when writing generators to be aware of what their possible outputs can be. If it's too large there is a great chance we will have flaky tests, or never find any bugs simply because the tests will not run enough times. In the next post we will look at how to write tests without repeating our production code in the test logic.
 
