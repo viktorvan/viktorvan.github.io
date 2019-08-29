@@ -163,7 +163,7 @@ let invalidPinStringGen() =
     } |> Gen.map InvalidPinString |> Arb.fromGen
 ```
 
-We are using a lot of the stuff we have previously learnt. We use a helper function `chooseFromArray`, that picks a random value from an array, to get a random from 12-digit string from the SwedishPersonalIdentityNumberTestData library.
+We are using a lot of the stuff we have previously learnt. We use a helper function `chooseFromArray`, that picks a random value from an array, to get a random from 12-digit string from the [ActiveLogin.Identity.Swedish.TestData](https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/) library.
 
 Then we create generators for invalid values for all the individual parts of the pin: 
 

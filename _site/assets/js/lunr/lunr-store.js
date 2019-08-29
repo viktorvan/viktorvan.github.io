@@ -13,4 +13,9 @@ var store = [{
         "excerpt":"This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#. Background Part 1 - Introduction to property based testing I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try...","categories": ["fsharp"],
         "tags": ["fsharp","tests"],
         "url": "https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/",
+        "teaser":null},{
+        "title": "Migrating a C# test suite to property based tests in F# - part 3",
+        "excerpt":"This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#. Background Part 1 - Introduction to property based testing Part 2 - More about generators I’ve been wanting to try property-based testing in a real-life situation for...","categories": ["fsharp"],
+        "tags": ["fsharp","tests"],
+        "url": "https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/",
         "teaser":null}]

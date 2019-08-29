@@ -55,7 +55,7 @@ Often these property tests can look quite different from what (at least from my 
 One example property would be, in plain english: "turning a pin into a 12-digit string and then parsing it, should return the same pin". And this is what the property-based test in F# would look like:
 
 ```fsharp
-    testProp "roundtrip for 12 digit string" <| fun (Gen.ValidPin pin) ->
+    testProp "roundtrip for 12 digit string" <| fun (ValidPin pin) ->
         pin
         |> SwedishPersonalIdentityNumber.to12DigitString
         |> SwedishPersonalIdentityNumber.parse =! Ok pin
@@ -138,7 +138,7 @@ Which is due to the fact that FsCheck doesn't yet know how to create the input `
 
 ## Creating a custom generator for the SwedishPersonalIdentityNumber type
 
-It turns out, due to GDPR, that you should not use any 'real' Personal Identity Number values in your tests since the pins could actully belong to a real person. The Swedish National Tax Board that is in charge of the Personal Identity Numbers actually provide a list of valid numbers to use for testing purposes. To simplify the usage of these test numbers [ActiveLogin.Identity](https://github.com/ActiveLogin/ActiveLogin.Identity) actually provides access to the test numbers in the package [`ActiveLogin.Identity.Swedish.TestData`](https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/). So we'll use that package to ensure we are not using any 'real' pin numbers.
+It turns out, due to GDPR, that you should not use any 'random' Personal Identity Number values in your tests since the pins could actully belong to a real person. The Swedish National Tax Board that is in charge of the Personal Identity Numbers actually provide a list of valid numbers to use for testing purposes. To simplify the usage of these test numbers [ActiveLogin.Identity](https://github.com/ActiveLogin/ActiveLogin.Identity) actually provides access to the test numbers in the package [ActiveLogin.Identity.Swedish.TestData](https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/). So we'll use that package to ensure we are not using any 'real' pin numbers.
 
 Using the TestData package we can get a random valid pin from: `SwedishPersonalIdentityNumberTestData.getRandom()`.
 Now let's build our custom generator; In this case it is quite easy, we can use the generator computation expression from FsCheck and just call the getRandom-function.

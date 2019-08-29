@@ -505,7 +505,7 @@
     <span class="p">}</span> <span class="p">|&gt;</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">map</span> <span class="nc">InvalidPinString</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>We are using a lot of the stuff we have previously learnt. We use a helper function <code class="highlighter-rouge">chooseFromArray</code>, that picks a random value from an array, to get a random from 12-digit string from the SwedishPersonalIdentityNumberTestData library.</p>
+<p>We are using a lot of the stuff we have previously learnt. We use a helper function <code class="highlighter-rouge">chooseFromArray</code>, that picks a random value from an array, to get a random from 12-digit string from the <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a> library.</p>
 
 <p>Then we create generators for invalid values for all the individual parts of the pin:</p>
 
@@ -640,7 +640,8 @@ If we actually were interested in also verifying the error messages we could spl
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-3/" class="pagination--pager" title="Migrating a C# test suite to property based tests in F# - part 3
+">Next</a>
     
   </nav>
 
@@ -654,6 +655,35 @@ If we actually were interested in also verifying the error messages we could spl
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-3/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 3
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  8 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.
+
+</p>
+  </article>
+</div>
+
         
           
 

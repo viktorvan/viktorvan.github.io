@@ -1,0 +1,777 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.16.6 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Migrating a C# test suite to property based tests in F# - part 3 - Viktor Andersson</title>
+<meta name="description" content="This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+
+
+  <meta name="author" content="Viktor Andersson">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Viktor Andersson">
+<meta property="og:title" content="Migrating a C# test suite to property based tests in F# - part 3">
+<meta property="og:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/">
+
+
+  <meta property="og:description" content="This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+
+
+
+  <meta property="og:image" content="https://viktorvan.github.io/assets/images/spain_skyline.jpg">
+
+
+
+  <meta name="twitter:site" content="@Emmet_Ray">
+  <meta name="twitter:title" content="Migrating a C# test suite to property based tests in F# - part 3">
+  <meta name="twitter:description" content="This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+  <meta name="twitter:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://viktorvan.github.io/assets/images/spain_skyline.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2019-08-29T08:45:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Viktor Andersson",
+      "url": "https://viktorvan.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Viktor Andersson
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" ></a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: url('/assets/images/spain_skyline.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          Migrating a C# test suite to property based tests in F# - part 3
+
+        
+      </h1>
+      
+        <p class="page__lead">This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.
+
+</p>
+      
+      
+        <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  8 minute read
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio-photo.jpg" alt="Viktor Andersson" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Viktor Andersson</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software developer, beekeeper and F# enthusiast</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Stockholm, Sweden</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:v.andersson@me.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/viktorvan" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/viktorand/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Migrating a C# test suite to property based tests in F# - part 3">
+    <meta itemprop="description" content="This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+    <meta itemprop="datePublished" content="August 29, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#background">Background</a>
+    <ul>
+      <li><a href="#the-create-function">The create function</a></li>
+    </ul>
+  </li>
+  <li><a href="#creating-valid-pins">Creating valid pins</a></li>
+  <li><a href="#creating-a-pin-with-an-invalid-year">Creating a pin with an invalid year</a>
+    <ul>
+      <li><a href="#how-many-valid-input-values-are-there">How many valid input values are there?</a></li>
+      <li><a href="#testing-the-inverse-property">Testing the inverse property</a></li>
+    </ul>
+  </li>
+  <li><a href="#creating-a-pin-with-an-invalid-checksum">Creating a pin with an invalid checksum</a></li>
+  <li><a href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.</p>
+
+<h1 id="background">Background</h1>
+
+<p><a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">Part 1 - Introduction to property based testing</a></p>
+
+<p><a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/">Part 2 - More about generators</a></p>
+
+<p>I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a>.</p>
+
+<p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a checksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a “+” indicates that the person has turned or is turning 100 this year.</p>
+
+<p>In the previous posts we have looked at parsing valid and invalid pin numbers. In this post we will look at the <code class="highlighter-rouge">create</code> function and have to deal with ranges of inputs that are very large.</p>
+
+<h2 id="the-create-function">The create function</h2>
+
+<p>The type signature of the <code class="highlighter-rouge">create</code> function is:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">SwedishPersonalIdentityNumberValues</span> <span class="p">-&gt;</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="nc">SwedishPersonalIdentityNumber</span><span class="p">,</span> <span class="nc">Error</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<p>where SwedishPersonalIdentityNumberValues is just a record for grouping all the input values together:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">SwedishPersonalIdentityNumberValues</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="nc">Year</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">Month</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">Day</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">BirthNumber</span> <span class="p">:</span> <span class="kt">int</span>
+      <span class="nc">Checksum</span> <span class="p">:</span> <span class="kt">int</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="creating-valid-pins">Creating valid pins</h1>
+
+<p>The first test I would like to write would be a roundtrip test for valid input, just like what we did in <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">Part 1</a> of this series. It would test the property:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Valid12DigitString</span> <span class="p">-&gt;</span> <span class="nc">SwedishPersonalIdentityNumbeValues</span> <span class="p">-&gt;</span> <span class="n">create</span> <span class="p">-&gt;</span> <span class="nc">Valid12DigitString</span>
+</code></pre></div></div>
+
+<p>I.e. starting with a valid 12 digit string and extracting the year, month, day, birthnumber and checksum we can create a pin and if we turn that pin back into a 12-digit string we end up with the same valid 12-digit string we started with.</p>
+
+<p>But I will skip it in this blog post because it would be so similar to what we already have seen in <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">Part 1</a>, instead let’s move on to testing invalid inputs where we will run into problems!</p>
+
+<h1 id="creating-a-pin-with-an-invalid-year">Creating a pin with an invalid year</h1>
+
+<p>My first approach was to write the following test:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"invalid year returns InvalidYear Error"</span> <span class="p">&lt;|</span>
+    <span class="k">fun</span> <span class="p">(</span><span class="nc">ValidValues</span> <span class="n">validValues</span><span class="p">,</span> <span class="nc">InvalidYear</span> <span class="n">invalidYear</span><span class="p">)</span> <span class="p">-&gt;</span>
+        <span class="k">let</span> <span class="n">input</span> <span class="p">=</span> <span class="p">{</span> <span class="n">validValues</span> <span class="k">with</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">invalidYear</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+        <span class="n">result</span> <span class="o">=!</span> <span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">invalidYear</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>It requires us to write a generator for valid SwedishPersonalIdentityNumberValues and a generator for invalid years. They would look like this:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidValues</span> <span class="p">=</span> <span class="nc">ValidValues</span> <span class="k">of</span> <span class="nc">SwedishPersonalIdentityNumberValues</span>
+
+<span class="c1">// Gen&lt;SwedishPersonalIdentityNumber&gt;</span>
+<span class="k">let</span> <span class="n">validPin</span><span class="bp">()</span> <span class="p">=</span> <span class="n">gen</span> <span class="p">{</span> <span class="k">return</span> <span class="nn">SwedishPersonalIdentityNumberTestData</span><span class="p">.</span><span class="n">getRandom</span><span class="bp">()</span> <span class="p">}</span>
+
+<span class="c1">// Arb&lt;ValidValues&gt;</span>
+<span class="k">let</span> <span class="n">validValues</span> <span class="p">=</span> 
+    <span class="n">gen</span> <span class="p">{</span>
+        <span class="k">let</span><span class="o">!</span> <span class="n">pin</span> <span class="p">=</span> <span class="n">validPin</span><span class="bp">()</span>
+        <span class="k">let</span> <span class="n">values</span> <span class="p">=</span> 
+            <span class="p">{</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">pin</span><span class="p">.</span><span class="nn">Year</span><span class="p">.</span><span class="nc">Value</span>
+              <span class="nc">Month</span> <span class="p">=</span> <span class="n">pin</span><span class="p">.</span><span class="nn">Month</span><span class="p">.</span><span class="nc">Value</span>
+              <span class="nc">Day</span> <span class="p">=</span> <span class="n">pin</span><span class="p">.</span><span class="nn">Day</span><span class="p">.</span><span class="nc">Value</span>
+              <span class="nc">BirthNumber</span> <span class="p">=</span> <span class="n">pin</span><span class="p">.</span><span class="nn">BirthNumber</span><span class="p">.</span><span class="nc">Value</span>
+              <span class="nc">Checksum</span> <span class="p">=</span> <span class="n">pin</span><span class="p">.</span><span class="nn">Checksum</span><span class="p">.</span><span class="nc">Value</span> <span class="p">}</span>
+        <span class="k">return</span> <span class="n">values</span> <span class="p">|&gt;</span> <span class="nc">ValidValues</span>
+    <span class="p">}</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">InvalidYear</span> <span class="p">=</span> <span class="nc">InvalidYear</span> <span class="k">of</span> <span class="kt">int</span>
+
+<span class="c1">// int -&gt; int -&gt; Gen&lt;int&gt;</span>
+<span class="k">let</span> <span class="n">outsideRange</span> <span class="n">min</span> <span class="n">max</span> <span class="p">=</span>
+    <span class="k">let</span> <span class="n">low</span> <span class="p">=</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span> <span class="p">(</span><span class="nn">Int32</span><span class="p">.</span><span class="nc">MinValue</span><span class="p">,</span> <span class="n">min</span> <span class="p">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">high</span> <span class="p">=</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span> <span class="p">(</span><span class="n">max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nn">Int32</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
+    <span class="nn">Gen</span><span class="p">.</span><span class="n">oneof</span> <span class="p">[</span> <span class="n">low</span><span class="p">;</span> <span class="n">high</span> <span class="p">]</span>
+
+<span class="k">let</span> <span class="n">invalidYearGen</span><span class="bp">()</span> <span class="p">=</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+    <span class="o">||&gt;</span> <span class="n">outsideRange</span>
+    <span class="p">|&gt;</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">map</span> <span class="nc">InvalidYear</span>
+    <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<p>where <code class="highlighter-rouge">outsideRange</code> is a helper function that takes a min and a max value and generates an int outside of that range. We then provide our range of valid years, and since we are using the <code class="highlighter-rouge">DateTime</code> type for parsing the year that will be 1 - 9999. <code class="highlighter-rouge">SwedishPersonalIdentityNumberTestData.getRandom()</code> is a function from <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a><sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+
+<h2 id="how-many-valid-input-values-are-there">How many valid input values are there?</h2>
+
+<p>Now, we can run this test, and it will pass, but let’s think about what FsCheck is doing for us here. Specifically the <code class="highlighter-rouge">InvalidYear</code> generator is a problem. By default FsCheck will try to falsify our property by generating 200 input values using our generator. How many different values can be generated by <code class="highlighter-rouge">InvalidYear</code> though? Ints outside the range [1, 9999], so that would be Int.MaxValue - Int.MinValue - 9999 = 4,294,957,296. Which is more than 200. Quite a bit more actually. When writing a test like this we are probably more worried about tests close to our limits, e.g. invalid years near 1 or near 9999. For example, if we would introduce an bug in our <code class="highlighter-rouge">create</code> function so that 10000 is a valid year this test would most likely not catch it.</p>
+
+<p>So what do we do? Well, in this case I would say that this is probably a code smell to be using an Int32 as input for a year. Even thinking about what we are considering valid years, [1, 9999], might be too big a range for our domain. I think the earliest year for which a pin was issued was around 1860. Also it’s quite optimistic (or pessimistic 🙂) to expect this code to be running in 8000 years time. We would probably be fine if we only considered valid years in the range [1860, 2100].</p>
+
+<p>But let’s say we cannot change the business logic at this point, what can we do then? Like I said FsCheck will by default try to falsify a property 200 times. This is configurable, but to cover 4 billion possible input values we would probably have to run the test 8 billion times or more. Which is not feasible of course.</p>
+
+<p>Another option is to rewrite the generator to return more reasonable ranges of inputs, for example [-100, 0] and [10000, 10100] instead of the full span of Int32. That would require us to increase the MaxTest configuration to 20000. On my machine running the test with 200 iterations takes about a second, and with 20,000 iterations about 4 seconds. A big increase it would seem, but in the end, all 46 tests in the ActiveLogin.Identity test suite still only take 5 seconds to run since Expecto is running the tests in parallell. I can live with that for now.</p>
+
+<h2 id="testing-the-inverse-property">Testing the inverse property</h2>
+<p>In some cases it might be useful to look at the inverse of a property when we run in to this issue where the range of invalid inputs is too large to test. E.g. if we cannot test that ‘An invalid year should return InvalidYearError’, then maybe we can test that ‘A valid year should <em>not</em> return InvalidYearError’. It will not fulfill exactly the same requirement, but maybe will be good enough, or useful anyway. And as it turns out, in this domain of personal identity numbers this would be a good test. We are probably more worried that a valid year would be interpreted as an invalid year than the other way around. It would be very inconvenient for a user to not be able to enter their valid pin in a form using our library for validation.</p>
+
+<p>A generator for valid years is not so hard to write:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidYear</span> <span class="p">=</span> <span class="nc">ValidYear</span> <span class="k">of</span> <span class="kt">int</span>
+
+<span class="k">let</span> <span class="n">validYearGen</span><span class="bp">()</span> <span class="p">=</span>
+    <span class="nn">Gen</span><span class="p">.</span><span class="n">choose</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+    <span class="p">|&gt;</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">map</span> <span class="nc">ValidYear</span>
+    <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
+</code></pre></div></div>
+
+<p>And we would use it like this:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">testProp</span> <span class="s2">"valid year does not return InvalidYear Error"</span> <span class="p">&lt;|</span>
+    <span class="k">fun</span> <span class="p">(</span><span class="nc">ValidValues</span> <span class="n">values</span><span class="p">,</span> <span class="nc">ValidYear</span> <span class="n">validYear</span><span class="p">)</span> <span class="p">-&gt;</span>
+        <span class="k">let</span> <span class="n">input</span> <span class="p">=</span> <span class="p">{</span> <span class="n">values</span> <span class="k">with</span> <span class="nc">Year</span> <span class="p">=</span> <span class="n">validYear</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="n">result</span> <span class="p">=</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">input</span>
+        <span class="n">result</span> <span class="o">&lt;&gt;!</span> <span class="p">(</span><span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">validYear</span><span class="o">))</span>
+</code></pre></div></div>
+
+<p>But we should note that even in this case it will not be enough to run the test 200 times, we must increase the number of times to run the test which is done by setting the MaxTest property of FsCheck<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>.</p>
+
+<p>The tests for invalid months and days can be done in the same way as for years, so I will leave them out of this blog post. For invalid birth numbers there’s only one invalid case: 000, so I will leave that out as well.</p>
+
+<h1 id="creating-a-pin-with-an-invalid-checksum">Creating a pin with an invalid checksum</h1>
+
+<p>The checksum is a single digit [0,9] and since we have a generator for <code class="highlighter-rouge">ValidValues</code> we know which one is valid. We just need to test with all the others. So for this test we actually won’t create a generator for InvalidChecksums, instead we can calculate all invalid checksums from the valid pin like this:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"invalid checksum returns InvalidChecksum Error"</span> <span class="p">&lt;|</span>
+    <span class="k">fun</span> <span class="p">(</span><span class="nc">ValidValues</span> <span class="n">valid</span><span class="p">)</span> <span class="p">-&gt;</span>
+        <span class="k">let</span> <span class="n">invalidChecksums</span> <span class="p">=</span>
+            <span class="p">[</span> <span class="mi">0</span><span class="p">..</span><span class="mi">9</span> <span class="p">]</span>
+            <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">except</span> <span class="p">[</span> <span class="n">valid</span><span class="p">.</span><span class="nc">Checksum</span> <span class="p">]</span>
+
+        <span class="k">let</span> <span class="n">withInvalidChecksums</span> <span class="p">=</span>
+            <span class="n">invalidChecksums</span>
+            <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> 
+                <span class="p">(</span><span class="k">fun</span> <span class="n">checksum</span> <span class="p">-&gt;</span> <span class="p">{</span> <span class="n">valid</span> <span class="k">with</span> <span class="nc">Checksum</span> <span class="p">=</span> <span class="n">checksum</span> <span class="o">})</span>
+
+        <span class="k">let</span> <span class="n">invalidChecksumsAndResults</span> <span class="p">=</span>
+            <span class="n">withInvalidChecksums</span>
+            <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> 
+                <span class="p">(</span><span class="k">fun</span> <span class="n">values</span> <span class="p">-&gt;</span> 
+                    <span class="n">values</span><span class="p">.</span><span class="nc">Checksum</span><span class="p">,</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">create</span> <span class="n">values</span><span class="p">)</span>
+
+        <span class="n">invalidChecksumsAndResults</span>
+        <span class="p">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">iter</span> <span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="n">invalidChecksum</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">-&gt;</span>
+            <span class="k">match</span> <span class="n">result</span> <span class="k">with</span>
+            <span class="p">|</span> <span class="nc">Error</span> <span class="p">(</span><span class="nc">InvalidChecksum</span> <span class="n">actual</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">invalidChecksum</span> <span class="o">=!</span> <span class="n">actual</span>
+            <span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Expected InvalidChecksum Error"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>First we get all invalidChecksums by starting with a list of all digits in the range [0,9] and removing the valid checksum. We then create a list of <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues</code> records where we replace the checksum with each of the invalid checksums. Then we call create on all those values to get 9 results. We return those results as tuples together with the invalid checksum to be able to assert we get the expected error. The assertion is done by first pattern matching on each result to make sure it is of type InvalidChecksum. Then we check that the invalid checksum in the error is the expected checksum.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>In this post we realised we need to be careful when writing generators to be aware of what their possible outputs can be. If it’s too large there is a great chance we will have flaky tests, or never find any bugs simply because the tests will not run enough times. In the next post we will look at how to write tests without repeating our production code in the test logic.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Due to GDPR and such it’s best practice to not use any ‘random’ Personal Identity Number values in your tests since the pins could actully belong to a real person. The Swedish National Tax Board that is in charge of the Personal Identity Numbers actually provide a list of valid numbers to use for testing purposes. The library <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a> provides easy access to this test data. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p><a href="https://fscheck.github.io/FsCheck/reference/fscheck-config.html">FsCheck configuration</a> <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#tests" class="page__taxonomy-item" rel="tag">tests</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-08-29T08:45:00+02:00">August 29, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=Emmet_Ray&text=Migrating+a+C%23+test+suite+to+property+based+tests+in+F%23+-+part+3%20https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-3%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-3%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Fmigrating-activelogin.identity-to-property-based-tests-3%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-2/" class="pagination--pager" title="Migrating a C# test suite to property based tests in F# - part 2
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-2/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  8 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-1/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 1
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  13 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source lib...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/fsharp/domain-modeling-with-fsharp/" rel="permalink">Why you should model your domain with F#
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  12 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
