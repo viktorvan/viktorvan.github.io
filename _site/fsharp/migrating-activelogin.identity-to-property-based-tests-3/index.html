@@ -423,7 +423,7 @@
         <span class="n">result</span> <span class="o">=!</span> <span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">invalidYear</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>It requires us to write a generator for valid SwedishPersonalIdentityNumberValues and a generator for invalid years. They would look like this:</p>
+<p>We get some valid input values and replace the year with an invalid year. Then we assert that <code class="highlighter-rouge">create</code> returns the expected Error. It requires us to write a generator for valid SwedishPersonalIdentityNumberValues and a generator for invalid years. They would look like this:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidValues</span> <span class="p">=</span> <span class="nc">ValidValues</span> <span class="k">of</span> <span class="nc">SwedishPersonalIdentityNumberValues</span>
 
@@ -444,6 +444,8 @@
     <span class="p">}</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
+<p><code class="highlighter-rouge">SwedishPersonalIdentityNumberTestData.getRandom()</code> is a function from <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a><sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">InvalidYear</span> <span class="p">=</span> <span class="nc">InvalidYear</span> <span class="k">of</span> <span class="kt">int</span>
 
 <span class="c1">// int -&gt; int -&gt; Gen&lt;int&gt;</span>
@@ -459,7 +461,7 @@
     <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>where <code class="highlighter-rouge">outsideRange</code> is a helper function that takes a min and a max value and generates an int outside of that range. We then provide our range of valid years, and since we are using the <code class="highlighter-rouge">DateTime</code> type for parsing the year that will be 1 - 9999. <code class="highlighter-rouge">SwedishPersonalIdentityNumberTestData.getRandom()</code> is a function from <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a><sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+<p>where <code class="highlighter-rouge">outsideRange</code> is a helper function that takes a min and a max value and generates an int outside of that range. We then provide our range of valid years, and since we are using the <code class="highlighter-rouge">System.DateTime</code> type for parsing the year that will be [1, 9999].</p>
 
 <h2 id="how-many-valid-input-values-are-there">How many valid input values are there?</h2>
 
@@ -469,7 +471,7 @@
 
 <p>But let’s say we cannot change the business logic at this point, what can we do then? Like I said FsCheck will by default try to falsify a property 200 times. This is configurable, but to cover 4 billion possible input values we would probably have to run the test 8 billion times or more. Which is not feasible of course.</p>
 
-<p>Another option is to rewrite the generator to return more reasonable ranges of inputs, for example [-100, 0] and [10000, 10100] instead of the full span of Int32. That would require us to increase the MaxTest configuration to 20000. On my machine running the test with 200 iterations takes about a second, and with 20,000 iterations about 4 seconds. A big increase it would seem, but in the end, all 46 tests in the ActiveLogin.Identity test suite still only take 5 seconds to run since Expecto is running the tests in parallell. I can live with that for now.</p>
+<p>Another option is to rewrite the generator to return more reasonable ranges of inputs, for example [-100, 0] and [10000, 10100] instead of the full span of Int32. That would require us to increase the MaxTest configuration to 20000. On my machine running the test with 200 iterations takes about a second, and with 20,000 iterations about 4 seconds. A big increase it would seem, but in the end, all 46 tests in the ActiveLogin.Identity test suite still only take 5 seconds to run since we run the all in parallell. I can live with 5 seconds for now.</p>
 
 <h2 id="testing-the-inverse-property">Testing the inverse property</h2>
 <p>In some cases it might be useful to look at the inverse of a property when we run in to this issue where the range of invalid inputs is too large to test. E.g. if we cannot test that ‘An invalid year should return InvalidYearError’, then maybe we can test that ‘A valid year should <em>not</em> return InvalidYearError’. It will not fulfill exactly the same requirement, but maybe will be good enough, or useful anyway. And as it turns out, in this domain of personal identity numbers this would be a good test. We are probably more worried that a valid year would be interpreted as an invalid year than the other way around. It would be very inconvenient for a user to not be able to enter their valid pin in a form using our library for validation.</p>

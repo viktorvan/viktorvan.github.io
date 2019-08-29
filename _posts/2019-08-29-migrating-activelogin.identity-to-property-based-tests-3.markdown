@@ -69,7 +69,7 @@ testProp "invalid year returns InvalidYear Error" <|
         result =! Error(InvalidYear invalidYear)
 ```
 
-It requires us to write a generator for valid SwedishPersonalIdentityNumberValues and a generator for invalid years. They would look like this:
+We get some valid input values and replace the year with an invalid year. Then we assert that `create` returns the expected Error. It requires us to write a generator for valid SwedishPersonalIdentityNumberValues and a generator for invalid years. They would look like this:
 
 ```fsharp
 type ValidValues = ValidValues of SwedishPersonalIdentityNumberValues
@@ -91,6 +91,8 @@ let validValues =
     } |> Arb.fromGen
 ```
 
+`SwedishPersonalIdentityNumberTestData.getRandom()` is a function from [ActiveLogin.Identity.Swedish.TestData](https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/)[^1].
+
 ```fsharp
 type InvalidYear = InvalidYear of int
 
@@ -107,7 +109,7 @@ let invalidYearGen() =
     |> Arb.fromGen
 ```
 
-where `outsideRange` is a helper function that takes a min and a max value and generates an int outside of that range. We then provide our range of valid years, and since we are using the `DateTime` type for parsing the year that will be 1 - 9999. `SwedishPersonalIdentityNumberTestData.getRandom()` is a function from [ActiveLogin.Identity.Swedish.TestData](https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/)[^1].
+where `outsideRange` is a helper function that takes a min and a max value and generates an int outside of that range. We then provide our range of valid years, and since we are using the `System.DateTime` type for parsing the year that will be [1, 9999]. 
 
 ## How many valid input values are there?
 
@@ -117,7 +119,7 @@ So what do we do? Well, in this case I would say that this is probably a code sm
 
 But let's say we cannot change the business logic at this point, what can we do then? Like I said FsCheck will by default try to falsify a property 200 times. This is configurable, but to cover 4 billion possible input values we would probably have to run the test 8 billion times or more. Which is not feasible of course.
 
-Another option is to rewrite the generator to return more reasonable ranges of inputs, for example [-100, 0] and [10000, 10100] instead of the full span of Int32. That would require us to increase the MaxTest configuration to 20000. On my machine running the test with 200 iterations takes about a second, and with 20,000 iterations about 4 seconds. A big increase it would seem, but in the end, all 46 tests in the ActiveLogin.Identity test suite still only take 5 seconds to run since Expecto is running the tests in parallell. I can live with that for now.
+Another option is to rewrite the generator to return more reasonable ranges of inputs, for example [-100, 0] and [10000, 10100] instead of the full span of Int32. That would require us to increase the MaxTest configuration to 20000. On my machine running the test with 200 iterations takes about a second, and with 20,000 iterations about 4 seconds. A big increase it would seem, but in the end, all 46 tests in the ActiveLogin.Identity test suite still only take 5 seconds to run since we run the all in parallell. I can live with 5 seconds for now.
 
 ## Testing the inverse property
 In some cases it might be useful to look at the inverse of a property when we run in to this issue where the range of invalid inputs is too large to test. E.g. if we cannot test that 'An invalid year should return InvalidYearError', then maybe we can test that 'A valid year should *not* return InvalidYearError'. It will not fulfill exactly the same requirement, but maybe will be good enough, or useful anyway. And as it turns out, in this domain of personal identity numbers this would be a good test. We are probably more worried that a valid year would be interpreted as an invalid year than the other way around. It would be very inconvenient for a user to not be able to enter their valid pin in a form using our library for validation.
