@@ -5,10 +5,12 @@ categories: fsharp
 tags:
     - fsharp
     - tests
+    - property based tests
 classes: wide
 toc: true
 header: 
     overlay_image: /assets/images/spain_skyline.jpg
+    overlay_filter: rgba(0, 0, 0, 0.4)
 published: true
 ---
 
@@ -17,10 +19,12 @@ Property based tests part 3 - generators with too many output values.
 # Background
 
 This is part 3 in a four part series: 
-[Part 1 - Introduction to property based testing](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/)
-[Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/)
-[Part 4 -Hard to test properties and conclusions](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-4/)
 
+[Part 1 - Introduction to property based testing](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/)
+
+[Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/)
+
+[Part 4 - Production code repeated in tests](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-4/)
 
 I've been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library [ActiveLogin.Identity](https://github.com/ActiveLogin/ActiveLogin.Identity).
 

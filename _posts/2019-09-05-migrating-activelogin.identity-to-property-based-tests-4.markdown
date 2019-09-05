@@ -5,20 +5,25 @@ categories: fsharp
 tags:
     - fsharp
     - tests
+    - property based tests
 classes: wide
 toc: true
 header: 
     overlay_image: /assets/images/sansebastian2.jpg 
+    overlay_filter: rgba(0, 0, 0, 0.4)
 published: true
 ---
 
-This is part 4 in a series of blog post where I migrate a C# test suite to property based tests in F#. In this post we will be dealing with tests where we need to avoid to re-using the production code in the test code.
+Property based tests part 4 - production code repeated in tests.
 
 # Background
 
 This is part 4 in a four part series: 
+
 [Part 1 - Introduction to property based testing](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/)
+
 [Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/)
+
 [Part 3 - Generators with too many output values](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/)
 
 I've been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity.
@@ -29,7 +34,7 @@ In the previous posts we have written property tests for valid and invalid pin n
 
 # "Hard to test properties"
 
-The final group of tests I will discuss in this series of blog posts is tests where we would like to repeat the logic from the production code in the test just to know what is the expected result. For example since the first 8 digits (or 6 in the 10-digit version) of the swedish personal identity number corresponds to your date of birth[^1] the Active.Identity library provides a helper function to get a person's age given an identity number.
+The final group of tests I will discuss in this series of blog posts is tests where we would like to repeat the logic from the production code in the test just to figure out what the expected result should be. For example, since the first 8 digits (or 6 in the 10-digit version) of the swedish personal identity number corresponds to your date of birth (most of the time[^1]) the Active.Identity library provides a helper function to get a person's age given an identity number. Let's write a test for that function.
 
 ## Getting a persons age from a pin
 
@@ -37,7 +42,6 @@ Getting a persons date of birth is just a matter of looking at the Year, Month a
 
 ```fsharp
 let getAgeHintOnDate date pin =
-    let date = DateTime.UtcNow
     let dateOfBirth = getDateOfBirth pin
     if date >= dateOfBirth then
         let months = 12 * (date.Year - dateOfBirth.Year) + (date.Month - dateOfBirth.Month)
@@ -49,7 +53,7 @@ let getAgeHintOnDate date pin =
     else None
 ```
 
-Now, if we were going to tests this function using an example based unit test, it wouldn't be so hard. We would just take some examples where we know what the expected age would be and test with that. From the C# test suite[^2]:
+Now, if we were going to tests this function using an example based unit test, it wouldn't be so hard. We would just take some examples where we know what the expected age should be and test with that; from the C# test suite[^2]:
 
 ```csharp
 [Theory]
@@ -102,20 +106,22 @@ public void GetAgeHint_Handles_LeapYears_Correctly(string personalIdentityNumber
 if we tried to write a property based test in the same way we would end up with something like this:
 
 ```fsharp
-testProp "getAgeHintOnDate calculates the age from a pin" <| fun (Gen.ValidPin pin) ->
-    let currentDate = DateTime.UtcNow
-    let expectedAge = calculateExpectedAge date pin
-    Hints.getAgeHintOnDate date pin =! expectedAge
+testProp "getAgeHintOnDate calculates the age from a pin" 
+    <| fun (Gen.ValidPin pin, DateTime date) ->
+        let expectedAge = calculateExpectedAge date pin
+        Hints.getAgeHintOnDate date pin =! expectedAge
 ```
 
-But what would calculateExpectedAge look like? It's exactly the same thing as the code we want to test. We can't just copy the production code, then we aren't really testing anything. It's almost like stating the property "a person `x` years old is `x` years old". In some cases maybe we could think of an alternative implementation and use that instead but in many cases that will not be feasible. Otherwise we need to think of another property to test to fulfill our requirements.
+But what would calculateExpectedAge look like? It's exactly the same thing as the code we want to test. We can't just copy the production code, then we aren't really testing anything. It's almost like stating the property "a person **x** years old is **x** years old". 
 
-In this case another property could be expressed "a person ages by years counting from their date of birth". Maybe it's not clear straight away why that is a better property to test. Let's write the test and see. Actually since the logic for people born on leap days makes it complicated we'll actually split this into two separate tests. 
+In some cases maybe we can think of an alternative implementation and use in the test instead, but in many cases that will not be feasible. Otherwise we need to think of another property to test to fulfill our requirements.
+
+In this case another property for the age calculation could be expressed as "a person ages by years counting from their date of birth". Maybe it's not clear straight away why that is a better property to test. Let's write the test and see. Actually since the logic for people born on leap days makes it complicated we'll actually split this into two separate tests. 
 
 First we will deal with people not born on a leap day and for this test we need a generator for Age, like this:
 
 ```fsharp
-type Age = Age of Years: int * Months : int * Days: double
+type Age = Age of Years : int * Months : int * Days : double
 
 let age() =
     gen {
@@ -127,7 +133,7 @@ let age() =
     } |> Arb.fromGen
 ``` 
 
-The 10-digit format actually breaks down for ages > 199 so we will limit our generator to only yield ages in the range [0,199]. Which shouldn't be too small a range anyway. For the month we picn any month from 0 to 11, so the person has not aged a full year in months. And in the same way we don't want the person to have aged a full month in days, so we pick any day in the range [0,27] since the shortest month has 28 days.
+The 10-digit format actually breaks down for ages > 199[^3] so we will limit our generator to only yield ages in the range [0,199]. For the months we pick any number of months from 0 to 11, so the person has not aged a full year. And in the same way we don't want the person to have aged a full month in days, so we pick any day in the range [0,27] since the shortest month has 28 days.
 
 We can then write our property test.
 
@@ -146,7 +152,7 @@ testProp "A person ages by years counting from their date of birth"
             Hints.getAgeHintOnDate checkDate pin =! Some years
 ```
 
-We have added a condition to the input value using the `==>` operator from FsCheck that we discussed in [Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/) to not run the test for leap days. We then extract the date-of-birth. We add the expected age to the date-of-birth and then use that as the date on which to check the age of the person. In this way we are testing the business logic calculate a person's age, but we do not need to repeat any code from the production code.
+We have added a condition to the input value using the `==>` operator from FsCheck that we discussed in [Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/) to not run the test for leap days. We then extract the date of birth. We add the expected age to the date of birth and then use that as the date on which to check the age of the person. In this way we are testing the business logic calculate a person's age, but we do not need to repeat any code from the production code.
 
 Next we need to do the same thing for people born on leap days. For this test we also need a generator for leap day pins. We could try and use the same conditional approach as above, i.e.:
 
@@ -161,10 +167,10 @@ testProp "A person ages by years counting from their date of birth"
 To only run the test for leap days. But there are a lot less pins for leap days than not in the test data. Most of the values FsCheck will get from the generator will cause the condition to evaluate to false, and after a certain amount of tries it will fail the test and state that it was **exhausted**:
 
 <div class="notice--danger">
-    [18:40:34 INF] EXPECTO? Running tests... <Expecto>
+    [18:40:34 INF] EXPECTO? Running tests... <br/>
     [18:40:36 ERR] hints/getAgeHint/A person ages by years counting from their date of birth failed in 00:00:01.3020000. 
-    Exhausted after 1 test <Expecto>
-    [18:40:36 INF] EXPECTO! 1 tests run in 00:00:01.3755183 for miscellaneous – 0 passed, 46 ignored, 1 failed, 0 errored.
+    Exhausted after 1 test <br/>
+    [18:40:36 INF] EXPECTO! 1 tests run in 00:00:01.3755183 for miscellaneous – 0 passed, 0 ignored, 1 failed, 0 errored.
 </div>
 
 To avoid this we can create a new generator where we take the array of pins from the test data and filter out the ones corresponding to leap days:
@@ -187,7 +193,7 @@ let leapDayPinGen() =
     |> Arb.fromGen
 ```
 
-We use a helper function `isLeapDay` to filter out the leap day pins, then wrap them in our single case discriminated union LeapDayPin. The test will look very similar the test for non leap days but we need to account for the leap day:
+We use a helper function `isLeapDay` to filter out the leap day pins, then wrap them in our single case discriminated union LeapDayPin. The test will look exactly like the test for non leap days except for the calculation of check date where we need to account for the leap day.
 
 ```fsharp
 testProp "A person born on a leap day also ages by years counting from their date of birth"
@@ -203,14 +209,13 @@ testProp "A person born on a leap day also ages by years counting from their dat
         |> Hints.getAgeHintOnDate checkDate =! Some years
 ```
 
-## Duplicating production code in a test
+# Duplicating production code in a test
 
 There are a few usecases worth mentioning when it can be useful to copy the production code implementation to the test.
-But as it turns out, sometimes it can actually be very useful to use the same code in both test and production code. Honestly, this might be a too important tip to hide in a foot note actually, but here we are... There are some good use cases for this type of testing. Refactoring legacy code, or trying to improve performance are two cases that comes to mind. When you are working with legacy code where there are no unit tests and you don't know what the requirements are, only that the legacy function is "doing the right thing". Then you copy the legacy production code to your property test. You are then free to refactor the production code and as long as the test is passing you know the functionality is the same. 
 
-### Working with legacy code
+## Working with legacy code
 
-When working with legacy code where there are no tests, we can write a test with the production code ase the expexcted result. Let's say we are tasked with refactoring the getAgeHint function from above, but that there are no tests for it.
+When working with legacy code where there are no tests, we can write a test with the production code ase the expected result. Let's say we are tasked with refactoring the getAgeHint function from above, but that there are no tests for it.
 
 ```fsharp
 testProp "The new function should work as the new function"
@@ -218,18 +223,20 @@ testProp "The new function should work as the new function"
         Hints.getAgeHintOnDate date pin =! newImplementation date pin
 ```
 
+The test uses our ValidPin generator to run the test for any pin. We also let FsCheck generate a DateTime to use as the checkdate. If the new implementation does not return the same result as the original implementation the test will fail.
+
 We are now safe to implement a new version of the business logic without being worried of changing any behaviours.
 
-### Performance
+## Performance
 
-If we are tasked with improving the performance of a function we can use the same approach to make sure we don't introduce any changes. And there are some convenient built-in functions in the [Expecto performance module](https://github.com/haf/expecto#performance-module) that we can use to compare performance:
+If we are tasked with improving the performance of a function we can use the same approach to make sure we don't introduce any behaviour changes. And there are some convenient built-in functions in the [Expecto performance module](https://github.com/haf/expecto#performance-module) that we can use to compare performance:
 
 ```fsharp
 [<Tests>]
 let perfTests =
     testSequenced <| testList "performance tests" [
             testProp "The new implementation should be faster"
-                <| fun (Gen.ValidPin pin, date) ->
+                <| fun (Gen.ValidPin pin, DateTime date) ->
                     Expect.isFasterThan 
                         (fun () -> newImplementation date pin) 
                         (fun () -> Hints.getAgeHintOnDate date pin) 
@@ -237,18 +244,22 @@ let perfTests =
     ]
 ```
 
-This test will fail as long as the new implementation is not faster than the old function. I am showing the full test list setup here because it is important to remember to run any performance test in sequence using `testSequenced`. By default Expecto will run all tests in parallel which will not work with performance tests.
+This test will fail as long as the new implementation is not faster than the old function. I am showing the full test setup here because it is important to remember to run any performance tests in sequence using `testSequenced`. By default Expecto will run all tests in parallel which will not work with performance tests.
 
 # Conclusions
 
 So, in the end, what are my thoughts on property based testing after migrating a unit test suite to property tests?
-I do like it a lot. It does require a new mindset and it still takes longer for me to think of the right tests to write. But in the end I was able to test the same requirements with a lot less actual test code. Comparing the test suites with generators and all the C# test suite had 1035 lines of code compared to 748 for the F# property tests. Maybe even more telling is to compare the number of tests, 91  unit tests in C# compared to 43.
 
-Besides having less tests to maintain I also discovered two bugs in the process of writing the new tests. Having to think of properties to test for your code is insightful.
+I like it a lot 🙂. It does require a new mindset and it still takes longer for me to think of the right tests to write. But in the end I was able to test the same requirements with a lot less actual test code. Comparing the test suites, with generators and all, the C# test suite had 1035 lines of code compared to 748 for the F# property tests. Maybe even more telling is to compare the number of tests, 91 with example based tests in C# and 43 with property based tests in F#.
 
-This codebase was pretty well suited to be tested by properties but I imagine that might not be the case for all code. It sometimes can take a lot of time to think of the right properties. For example the test for `getAgeHintOnDate` did actually take me a few nights to figure out and get right. So I am not advocating that you **have** to replace all your tests with property based tests. Example based unit tests are better than **no** tests. So if you have a hard time to write property tests at first, go ahead and write normal example based unit tests. Then, later, when you realise that some requirements can be expressed as a testable property, do a refactoring and replace the unit tests with property tests. 
+Besides having less tests to maintain I also discovered two bugs in the process of writing the new tests. Having to think of properties of your code can give you some useful insights.
 
-[^1]: This is true in most cases, but not always. The identity numbers for any given day can actually run out and then you would be "moved" to another nearby day within the same month. The functions the [Active.Identity]() uses to determine date-of-birth and age are therefore placed in a `Hints` namespace to make it clear that the results can not be used as absolute.
+This codebase was pretty well suited to be tested by properties, and I imagine that will not be the case for all types of code. Without experience it can take some time to express your requirements as properties. For example the test for `getAgeHintOnDate` above did actually take me a few nights to figure out and get right. So I am not advocating that you **have** to replace all your tests with property based tests. Example based unit tests are better than **no** tests. 
 
+So if you are struggling to write property tests at first, go ahead and write normal example based unit tests. Then, later, when you realise that some requirements can be expressed as a testable property, do a refactoring and replace the unit tests with property tests! 
+
+[^1]: This is true in most cases, but not always. The identity numbers for any given day can actually run out and then you would be "moved" to another nearby day within the same month. The functions the [Active.Identity]() uses to determine date of birth and age are therefore placed in a `Hints` namespace to make it clear that the results must not be used as an absolute truth.
 
 [^2]: There is a wrapper we are not seeing here that handles the conversion of age from `int option` to int when calling from C#. It makes the conversion of `None` to 0.
+
+[^3]: In the 10-digit format YYMMDD-bbbc the delimiter changes to a **+** the year you turn 100. But there is no delimiter change when your age changes from 199 to 200. For historical reasons 😉.

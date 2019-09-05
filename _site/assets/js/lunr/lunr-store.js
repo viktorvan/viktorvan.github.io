@@ -5,17 +5,22 @@ var store = [{
         "url": "https://viktorvan.github.io/fsharp/domain-modeling-with-fsharp/",
         "teaser":null},{
         "title": "Migrating a C# test suite to property based tests in F# - part 1",
-        "excerpt":"I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity. Background A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity...","categories": ["fsharp"],
-        "tags": ["fsharp","tests"],
+        "excerpt":"I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library ActiveLogin.Identity. This is part 1 in a four part series: Part 2 - More about generators Part 3 - Generators with...","categories": ["fsharp"],
+        "tags": ["fsharp","tests","property based tests"],
         "url": "https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/",
         "teaser":null},{
         "title": "Migrating a C# test suite to property based tests in F# - part 2",
-        "excerpt":"This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#. Background Part 1 - Introduction to property based testing I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try...","categories": ["fsharp"],
-        "tags": ["fsharp","tests"],
+        "excerpt":"Property based tests part 2 - More about generators. Background This is part 2 in a four part series: Part 1 - Introduction to property based testing Part 3 - Generators with too many output values Part 4 - Production code repeated in tests I’ve been wanting to try property-based...","categories": ["fsharp"],
+        "tags": ["fsharp","tests","property based tests"],
         "url": "https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/",
         "teaser":null},{
         "title": "Migrating a C# test suite to property based tests in F# - part 3",
-        "excerpt":"This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#. Background Part 1 - Introduction to property based testing Part 2 - More about generators I’ve been wanting to try property-based testing in a real-life situation for...","categories": ["fsharp"],
-        "tags": ["fsharp","tests"],
+        "excerpt":"Property based tests part 3 - generators with too many output values. Background This is part 3 in a four part series: Part 1 - Introduction to property based testing Part 2 - More about generators Part 4 - Production code repeated in tests I’ve been wanting to try property-based...","categories": ["fsharp"],
+        "tags": ["fsharp","tests","property based tests"],
         "url": "https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/",
+        "teaser":null},{
+        "title": "Migrating a C# test suite to property based tests in F# - part 4",
+        "excerpt":"Property based tests part 4 - production code repeated in tests. Background This is part 4 in a four part series: Part 1 - Introduction to property based testing Part 2 - More about generators Part 3 - Generators with too many output values I’ve been wanting to try property-based...","categories": ["fsharp"],
+        "tags": ["fsharp","tests","property based tests"],
+        "url": "https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-4/",
         "teaser":null}]

@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Migrating a C# test suite to property based tests in F# - part 2 - Viktor Andersson</title>
-<meta name="description" content="This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+<meta name="description" content="Property based tests part 2 - More about generators.">
 
 
   <meta name="author" content="Viktor Andersson">
@@ -23,7 +23,7 @@
 <meta property="og:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/">
 
 
-  <meta property="og:description" content="This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+  <meta property="og:description" content="Property based tests part 2 - More about generators.">
 
 
 
@@ -33,7 +33,7 @@
 
   <meta name="twitter:site" content="@Emmet_Ray">
   <meta name="twitter:title" content="Migrating a C# test suite to property based tests in F# - part 2">
-  <meta name="twitter:description" content="This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+  <meta name="twitter:description" content="Property based tests part 2 - More about generators.">
   <meta name="twitter:url" content="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/">
 
   
@@ -143,9 +143,7 @@
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
-              <a href="" >Tags</a>
-            </li><li class="masthead__menu-item">
-              <a href="/tags/" ></a>
+              <a href="/tags/" >Tags</a>
             </li></ul>
         
         <button class="greedy-nav__toggle hidden" type="button">
@@ -174,7 +172,7 @@
 
 
 <div class="page__hero--overlay"
-  style=" background-image: url('/assets/images/spain_bridge.jpg');"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/assets/images/spain_bridge.jpg');"
 >
   
     <div class="wrapper">
@@ -185,7 +183,7 @@
         
       </h1>
       
-        <p class="page__lead">This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.
+        <p class="page__lead">Property based tests part 2 - More about generators.
 
 </p>
       
@@ -339,7 +337,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Migrating a C# test suite to property based tests in F# - part 2">
-    <meta itemprop="description" content="This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.">
+    <meta itemprop="description" content="Property based tests part 2 - More about generators.">
     <meta itemprop="datePublished" content="August 22, 2019">
     
 
@@ -361,11 +359,17 @@
             </nav>
           </aside>
         
-        <p>This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.</p>
+        <p>Property based tests part 2 - More about generators.</p>
 
 <h1 id="background">Background</h1>
 
+<p>This is part 2 in a four part series:</p>
+
 <p><a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">Part 1 - Introduction to property based testing</a></p>
+
+<p><a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/">Part 3 - Generators with too many output values</a></p>
+
+<p><a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-4/">Part 4 - Production code repeated in tests</a></p>
 
 <p>I’ve been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a>.</p>
 
@@ -590,6 +594,10 @@ If we actually were interested in also verifying the error messages we could spl
     
       
       
+      <a href="/tags/#property-based-tests" class="page__taxonomy-item" rel="tag">property based tests</a><span class="sep">, </span>
+    
+      
+      
       <a href="/tags/#tests" class="page__taxonomy-item" rel="tag">tests</a>
     
     </span>
@@ -665,6 +673,35 @@ If we actually were interested in also verifying the error messages we could spl
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-4/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 4
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  10 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Property based tests part 4 - production code repeated in tests.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-3/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 3
 </a>
       
@@ -678,7 +715,7 @@ If we actually were interested in also verifying the error messages we could spl
   8 minute read
 </p>
     
-    <p class="archive__item-excerpt" itemprop="description">This is part 3 in a series of blog post where I migrate a C# test suite to property based tests in F#.
+    <p class="archive__item-excerpt" itemprop="description">Property based tests part 3 - generators with too many output values.
 
 </p>
   </article>
