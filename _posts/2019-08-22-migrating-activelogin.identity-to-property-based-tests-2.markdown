@@ -11,11 +11,15 @@ header:
     overlay_image: /assets/images/spain_bridge.jpg
 ---
 
-This is part 2 in a series of blog post where I migrate a C# test suite to property based tests in F#.
+Property based tests part 2 - More about generators.
 
 # Background
 
+This is part 2 in a four part series: 
 [Part 1 - Introduction to property based testing](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/)
+[Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/)
+[Part 3 - Generators with too many output values](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/)
+[Part 4 -Hard to test properties and conclusions](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-4/)
 
 I've been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library [ActiveLogin.Identity](https://github.com/ActiveLogin/ActiveLogin.Identity).
 

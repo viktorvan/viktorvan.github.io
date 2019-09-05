@@ -13,6 +13,11 @@ header:
 
 I've been wanting to try property-based testing in a real-life situation for some time, and decided to try it out with the test suite for our open source library [ActiveLogin.Identity](https://github.com/ActiveLogin/ActiveLogin.Identity).
 
+This is part 1 in a four part series: 
+[Part 2 - More about generators](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/)
+[Part 3 - Generators with too many output values](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-3/)
+[Part 4 -Hard to test properties and conclusions](https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-4/)
+
 # Background
 
 A short background on ActiveLogin.Identity; it's a library for parsing and validating Swedish identities, such as a Personal Identity Number, let's call it a **pin**. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. **Y**ear, **M**onth, **D**ay, **B**irth number and a **C**hecksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm). You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a "+" indicates that the person has turned or is turning 100 this year[^1].
