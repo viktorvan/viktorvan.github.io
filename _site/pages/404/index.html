@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.16.6 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.19.1 by Michael Rose
   Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Viktor Andersson</title>
-<meta name="description" content="My thoughts and opionions on software development">
+<meta name="description" content="My thoughts and opionions on software development ">
 
 
   <meta name="author" content="Viktor Andersson">
@@ -23,13 +23,15 @@
 <meta property="og:url" content="https://viktorvan.github.io/pages/404/">
 
 
+  <meta property="og:description" content="My thoughts and opionions on software development ">
+
 
 
 
 
   <meta name="twitter:site" content="@Emmet_Ray">
   <meta name="twitter:title" content="Viktor Andersson">
-  <meta name="twitter:description" content="My thoughts and opionions on software development">
+  <meta name="twitter:description" content="My thoughts and opionions on software development ">
   <meta name="twitter:url" content="https://viktorvan.github.io/pages/404/">
 
   
@@ -86,7 +88,7 @@
 <!-- For all browsers -->
 <link rel="stylesheet" href="/assets/css/main.css">
 
-<!--[if IE ]>
+<!--[if IE]>
   <style>
     /* old IE unsupported flexbox fixes */
     .greedy-nav .site-title {
@@ -137,7 +139,7 @@
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
-              <a href="/tags/" >Tags</a>
+              <a href="/tags/">Tags</a>
             </li></ul>
         
         <button class="greedy-nav__toggle hidden" type="button">
@@ -180,7 +182,25 @@
     <div id="footer" class="page__footer">
       <footer>
         <!-- start custom footer snippets -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
 
+<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
+<script>
+window.cookieconsent.initialise({
+  "palette": {
+    "popup": {
+      "background": "#343c66",
+      "text": "#cfcfe8"
+    },
+    "button": {
+      "background": "transparent",
+      "text": "#f71559",
+      "border": "#f71559"
+    }
+  },
+  "position": "bottom-right"
+});
+</script>
 <!-- end custom footer snippets -->
         <div class="page__footer-follow">
   <ul class="social-icons">
@@ -202,13 +222,17 @@
       
         
       
+        
+          <li><a href="/terms" rel="nofollow noopener noreferrer"><i class="fas fa-link" aria-hidden="true"></i> Privacy policy</a></li>
+        
+      
     
 
     <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2020 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

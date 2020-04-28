@@ -155,6 +155,8 @@ footer:
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       # url:
+    - label: "Privacy policy"
+      url: /terms
 
 
 # Reading Files
