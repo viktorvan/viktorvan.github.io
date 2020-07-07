@@ -107,7 +107,7 @@ analytics:
 # Site Author
 author:
   name             : "Viktor Andersson"
-  avatar           : "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/bio-photo-blue.jpeg"
   bio              : "Software developer, beekeeper and F# enthusiast"
   location         : "Stockholm, Sweden"
   email            : 
