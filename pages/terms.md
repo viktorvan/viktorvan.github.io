@@ -23,6 +23,6 @@ Like many other websites, this site uses log files to help learn about when, fro
 
 All of this information is not linked to anything that is personally identifiable.
 
-#### Google Analytics
+#### Plausible Analytics
 
-Google Analytics is a web analytics tool I use to help understand how visitors engage with this website. It reports website trends using cookies and web beacons without identifying individual visitors. You can read [Google Analytics Privacy Policy](http://www.google.com/analytics/learn/privacy.html).
+Plausible Analytics is a web analytics tool I use to help understand how visitors engage with this website. It does not use cookies to identify individual visitors. You can read [Plausible Analytics Data Policy](https://plausible.io/data-policy).

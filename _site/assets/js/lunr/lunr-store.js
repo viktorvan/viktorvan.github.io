@@ -28,4 +28,10 @@ var store = [{
         "tags": ["fsharp","tests","property based tests"],
         "url": "https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-4/",
         "teaser": null
+      },{
+        "title": "Using Turbolinks with the SAFE web stack",
+        "excerpt":"“Do you really need a single-page application for that?” Background - What is Turbolinks? Turbolinks is a javascript library that gives your web application the look and feel of a single-page application, without really being one. The idea is that it intercepts any navigation and instead of reloading the page...","categories": ["fsharp"],
+        "tags": ["fsharp","web","turbolinks"],
+        "url": "https://viktorvan.github.io/fsharp/safe-stack-turbolinks/",
+        "teaser": null
       }]
