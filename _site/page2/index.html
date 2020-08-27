@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.20.1 by Michael Rose
   Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -109,6 +109,24 @@
 
 
     <script async defer data-domain="viktorvan.github.io" src="https://plausible.io/js/plausible.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script> 
+<script>
+    document.addEventListener("click", function(event) {
+        if (event.target.closest('a[href="https://github.com/viktorvan"]'))
+        {
+            plausible('GithubProfile')
+        }
+        if (event.target.closest('a[href="https://twitter.com/Emmet_Ray"]'))
+        {
+            plausible('TwitterProfile')
+        }
+        if (event.target.closest('a[href="https://www.linkedin.com/in/viktorand/"]'))
+        {
+            plausible('LinkedInProfile')
+        }
+    });
+</script>
+<link rel="stylesheet" href="style.css">
   </head>
 
   <body class="layout--home">
@@ -294,7 +312,9 @@
 
 
 
+<div class="entries-list">
   
+    
 
 
 
@@ -308,20 +328,32 @@
       
     </h2>
     
-      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
 
 
+  <p class="page__meta">
 
-
-  12 minute read
-
-</p>
     
+
+    
+
+    
+      
+      
+
+      <i class="far fa-clock" aria-hidden="true"></i>
+      
+        12 minute read
+      
+    
+
+  </p>
+
     <p class="archive__item-excerpt" itemprop="description">Recently when working on a feature for a client, writing the normal barrage of C# null-checks and unit-tests verifying that my model state wasn’t invalid, a ...</p>
   </article>
 </div>
 
-
+  
+</div>
 
 
 <nav class="pagination">
