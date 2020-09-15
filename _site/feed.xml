@@ -1,4 +1,180 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://viktorvan.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://viktorvan.github.io/" rel="alternate" type="text/html" /><updated>2020-09-14T13:55:43+02:00</updated><id>https://viktorvan.github.io/feed.xml</id><title type="html">Viktor Andersson</title><subtitle>My thoughts and opinions on software development</subtitle><author><name>Viktor Andersson</name></author><entry><title type="html">Using Turbolinks with the SAFE web stack</title><link href="https://viktorvan.github.io/fsharp/safe-stack-turbolinks/" rel="alternate" type="text/html" title="Using Turbolinks with the SAFE web stack" /><published>2020-07-22T17:00:00+02:00</published><updated>2020-07-22T17:00:00+02:00</updated><id>https://viktorvan.github.io/fsharp/safe-stack-turbolinks</id><content type="html" xml:base="https://viktorvan.github.io/fsharp/safe-stack-turbolinks/">&lt;p&gt;“Do you really need a single-page application for that?”&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://viktorvan.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://viktorvan.github.io/" rel="alternate" type="text/html" /><updated>2020-09-15T10:35:51+02:00</updated><id>https://viktorvan.github.io/feed.xml</id><title type="html">Viktor Andersson</title><subtitle>My thoughts and opinions on software development</subtitle><author><name>Viktor Andersson</name></author><entry><title type="html">Running kubernetes on Raspberry Pi</title><link href="https://viktorvan.github.io/kubernetes/kubernetes-on-raspberry-pi/" rel="alternate" type="text/html" title="Running kubernetes on Raspberry Pi" /><published>2020-09-14T17:00:00+02:00</published><updated>2020-09-14T17:00:00+02:00</updated><id>https://viktorvan.github.io/kubernetes/kubernetes-on-raspberry-pi</id><content type="html" xml:base="https://viktorvan.github.io/kubernetes/kubernetes-on-raspberry-pi/">&lt;p&gt;“Do you really need a cloud for that?”
+or: How I spent my 2020 summer vacation&lt;/p&gt;
+
+&lt;h2 id=&quot;background---why&quot;&gt;Background - Why?&lt;/h2&gt;
+
+&lt;p&gt;Most of the applications I build at work end up running in Azure, so to get a break from that environment I decided I wanted to try to host my side-projects in my own private kubernetes cluster. In this series of blog post I will show you how to set up your own kubernetes cluster using some Raspberry Pis.&lt;/p&gt;
+
+&lt;p&gt;In this first post we will prepare the Raspberry Pis and install kubernetes.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-setup&quot;&gt;The setup&lt;/h2&gt;
+
+&lt;p&gt;The cluster I am building will consist of 4 computers, a main node and 3 worker nodes. The main node is an Raspberry Pi 4 with 8GB memory and the workers are of thee 4 GB version. We are going to install the 64-bit version of Ubuntu, so we are going to need to use v3 or v4 Raspberry Pis. You don’t have to have a multi-node cluster of course, for a simple dev/test cluster, a single-node can be enough. I am using a TP-Link TL-SG108 8-port switch to connect all the nodes to my network, and a WD My Passport SSD 512GB for storage.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/rpi-cluster.jpeg&quot; alt=&quot;cluster-setup&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;1-installing-ubuntu&quot;&gt;1. Installing Ubuntu&lt;/h3&gt;
+
+&lt;p&gt;For my main node I am using a 128 GB sized SD-card. It turns out there are some issues when using a SD-card with a size &amp;gt; 32GB. I will describe the fix neeeded below, but my recommendation is to just use a 32 GB card, since we will be adding external storage anyways.&lt;/p&gt;
+
+&lt;h4 id=&quot;installation&quot;&gt;Installation&lt;/h4&gt;
+&lt;p&gt;To install Ubuntu from my mac I used the Raspberry Pi Imager, but any sd-card imager works fine. I am installing Ubuntu 20.04 LTS.&lt;/p&gt;
+
+&lt;p&gt;When you first start up the Raspberry Pi after with the new Ubuntu image it will take a short while before the default &lt;code class=&quot;highlighter-rouge&quot;&gt;ubuntu&lt;/code&gt; user is created. After a minute or so you should be able to login with user: &lt;code class=&quot;highlighter-rouge&quot;&gt;ubuntu&lt;/code&gt;, password &lt;code class=&quot;highlighter-rouge&quot;&gt;ubuntu&lt;/code&gt;. You will be prompted to change the password.&lt;/p&gt;
+
+&lt;h4 id=&quot;if-using-an-sd-card--32-gb&quot;&gt;If using an SD-card &amp;gt; 32 GB&lt;/h4&gt;
+
+&lt;p&gt;Trying to use an SD-card larger than 32 GB caused me to run into some weird issues. Sometimes it seemed to work fine, but then suddenly when rebooting the Raspberry Pi just wouldn’t start. After a lot of reading I ended up &lt;a href=&quot;https://jamesachambers.com/raspberry-pi-ubuntu-server-18-04-2-installation-guide/&quot;&gt;on this blog post&lt;/a&gt; that solved my issue: I had to update config.txt file in the /boot/ partition.&lt;/p&gt;
+
+&lt;p&gt;So I connected the SD-card to the card-reader on my mac again, and updated &lt;code class=&quot;highlighter-rouge&quot;&gt;config.txt&lt;/code&gt; to make sure it included:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Enable audio (loads snd_bcm2835)
+&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;dtparam&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;audio=on&lt;/span&gt;
+
+&lt;span class=&quot;nn&quot;&gt;[pi4]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;arm_64bit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;enable_gic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;armstub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;armstub8-gic.bin&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you’re using a Raspberry Pi 3, use the &lt;code class=&quot;highlighter-rouge&quot;&gt;[pi3]&lt;/code&gt;-header instead.&lt;/p&gt;
+
+&lt;p&gt;Then your Raspberry Pi should be able to handle your large SD-card when you boot it up again.&lt;/p&gt;
+
+&lt;h3 id=&quot;2-update-hostname-and-setup-mdns&quot;&gt;2. Update hostname and setup mDNS&lt;/h3&gt;
+&lt;p&gt;Next we are going to change the hostname and add &lt;a href=&quot;https://en.wikipedia.org/wiki/Multicast_DNS&quot;&gt;mDNS&lt;/a&gt; to make it a little easier to connect to.&lt;/p&gt;
+
+&lt;p&gt;The hostname can be changed by editing /etc/hostname, a reboot is required.&lt;/p&gt;
+
+&lt;p&gt;mDns can be used to make your Raspberry Pis available on the &lt;a href=&quot;https://en.wikipedia.org/wiki/.local&quot;&gt;.local&lt;/a&gt; domain. To &lt;a href=&quot;https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/&quot;&gt;enable it on the Raspberry Pi&lt;/a&gt;, just install the &lt;a href=&quot;http://avahi.org/&quot;&gt;avahi-daemon&lt;/a&gt;, and we might as well install any available updates at this point:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;update&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;upgrade&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;avahi-daemon&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you’re running mac os-x the .local-domain should now just work out of the box and your raspberry pi will be reachable on &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;hostname&amp;gt;.local&lt;/code&gt; for whatever hostname you changed to in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/hostname&lt;/code&gt;. If you are running windows you need to install the bonjour-service, see the “What Do I Neeed?”-section &lt;a href=&quot;https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/&quot;&gt;here&lt;/a&gt; for instructions.&lt;/p&gt;
+
+&lt;h3 id=&quot;3-setup-ssh-keys&quot;&gt;3. Setup SSH keys&lt;/h3&gt;
+
+&lt;p&gt;We don’t want to be logging in with username/password all the time when accessing our Raspberry Pis, so we are going to setup ssh login. If you do not already have an ssh-key on your client computer you can create one, on a mac you would run: &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh-keygen&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then we copy the key to the raspberry pi using ssh-copy-id:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;ssh-copy-id&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;username@remote_host&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now verify that you can login to the Raspberry Pi using ssh: &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh username@remote_host&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If we want we can also disable username/password login altogether and only allow login with ssh keys. We do this by editing &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/ssh/sshd_config&lt;/code&gt; and setting &lt;code class=&quot;highlighter-rouge&quot;&gt;PasswordAuthentication no&lt;/code&gt;. For this take effect we need to restart the ssh-service: &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo systemctl restart ssh&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;4-setup-nfs-share&quot;&gt;4. Setup nfs-share&lt;/h3&gt;
+
+&lt;p&gt;Most likely you are going to want some shared external storage that your kubernetes nodes can use. For this we are going to setup a nfs-share using an external ssd-drive. If you are running a single node cluster you can skip this step and use a kubernetes hostpath volume instead of nfs volume for your pods.&lt;/p&gt;
+
+&lt;h4 id=&quot;main-node-setup&quot;&gt;Main-node setup&lt;/h4&gt;
+
+&lt;p&gt;First we need to find our external disk, we can do this using &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo lsblk&lt;/code&gt; 
+&lt;img src=&quot;/assets/images/list-disks.png&quot; alt=&quot;sudo lsblk output&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The disk I am looking for in this case is a 500 GB external drive, and we can see that the name is &lt;code class=&quot;highlighter-rouge&quot;&gt;sda&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;First I want to mount it locally on the main-node to path I want to call /media/expansion1:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/media/expansion1&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;mount&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;—bind&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/dev/sda&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/media/expansion1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then additionally I want to mount it at &lt;code class=&quot;highlighter-rouge&quot;&gt;/export/share1&lt;/code&gt; which is going to be the path that is exported as my nfs-share.&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/export/share1&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;mount&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;—bind&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/media/expansion1&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/export/share1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we can install the nfs-server on the main node:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;nfs-kernel-server&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then we edit &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/exports&lt;/code&gt; with the following:&lt;/p&gt;
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;/export/share1&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;192.168.50.200/29(rw,sync,no_subtree_check)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The ip-range 192.168.50.200/29 is the network for my cluster to which I am exporting the path. For more information on the settings, see &lt;a href=&quot;http://manpages.ubuntu.com/manpages/xenial/man5/exports.5.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;worker-node-setup&quot;&gt;Worker-node setup&lt;/h4&gt;
+
+&lt;p&gt;To setup the worker nodes as nfs-client we need to do the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;nfs-common&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/share1&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;mount&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-t&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;nfs&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;proto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;tcp,port=2049 192.168.50.200:/export/share1 /share1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will install the nfs-client, create a local path &lt;code class=&quot;highlighter-rouge&quot;&gt;/share1&lt;/code&gt; and then setup a mount using nfs to bind &lt;code class=&quot;highlighter-rouge&quot;&gt;/export/share1&lt;/code&gt; on the nfs-server to the local path &lt;code class=&quot;highlighter-rouge&quot;&gt;/share1&lt;/code&gt;. 
+If you have any errors in your nfs-setup you will get an error when trying to run the &lt;code class=&quot;highlighter-rouge&quot;&gt;mount&lt;/code&gt; command above. In that case, add the verbose flag &lt;code class=&quot;highlighter-rouge&quot;&gt;-v&lt;/code&gt; to get more information. In my case it is usually an access denied-error due to me mixing up the paths I am trying to mount.&lt;/p&gt;
+
+&lt;p&gt;If you don’t get any error messages, go ahead and try adding and modifying a file on the nfs-share to verify the setup.&lt;/p&gt;
+
+&lt;p&gt;If you were to restart the nfs-client computer at this point it would lose the connection to the nfs-share, though. And that’s not what we want, so to avoid this we can edit &lt;a href=&quot;https://help.ubuntu.com/community/Fstab&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt;&lt;/a&gt; and add:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;192.168.50.200:/export/share1&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/share1&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;nfs&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;defaults&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now the nfs-share will be available even after a reboot.&lt;/p&gt;
+
+&lt;h3 id=&quot;5-install-kubernetes&quot;&gt;5. Install kubernetes&lt;/h3&gt;
+&lt;p&gt;We are going to be installing &lt;a href=&quot;https://microk8s.io/&quot;&gt;microk8s&lt;/a&gt; which is described as “The smallest, simplest, pure production K8s. For clusters, laptops, IoT and Edge, on Intel and ARM.”&lt;/p&gt;
+
+&lt;p&gt;To be able to install microk8s on our Raspberry Pis there is an &lt;a href=&quot;https://microk8s.io/docs/install-alternatives#heading--arm&quot;&gt;additional fix we need to do:&lt;/a&gt;
+Edit &lt;code class=&quot;highlighter-rouge&quot;&gt;/boot/firmware/cmdline.txt&lt;/code&gt; and add:&lt;/p&gt;
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;cgroup_enable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;memory cgroup_memory=1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we are ready to install microk8s which we will do using &lt;a href=&quot;https://snapcraft.io/&quot;&gt;snap&lt;/a&gt;. We need to install microk8s on all nodes, so repeat the following steps on all your nodes:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;snap&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;microk8s&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;--classic&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;--stable&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Here I am using the &lt;code class=&quot;highlighter-rouge&quot;&gt;--stable&lt;/code&gt; channel, &lt;a href=&quot;https://microk8s.io/docs/setting-snap-channel&quot;&gt;many others are available&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then we need to setup some permissions for microk8s:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;usermod&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-a&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-G&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;microk8s&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;ubuntu&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;chown&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-R&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;ubuntu&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;~/.kube&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Microk8s comes with a bunch of &lt;a href=&quot;https://microk8s.io/docs/addons&quot;&gt;add-ons&lt;/a&gt; (although some of these are not available on arm64 that we are running on the Raspberry Pi). We only need to activate these on the main node, and for now we will only enable the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;microk8s.enable&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;helm3&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;storage&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;dns&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;registry&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For good measure we can reboot all the nodes at this point. After a reboot you can check the status of the microk8s installation by running &lt;code class=&quot;highlighter-rouge&quot;&gt;microk8s.status&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;connecting-nodes-to-the-cluster&quot;&gt;Connecting nodes to the cluster&lt;/h4&gt;
+&lt;p&gt;To add a node to the cluster run the following command on the &lt;em&gt;main-node&lt;/em&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;microk8s&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;add-node&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The output from this command will provide you with a snippet to run on the node you want to add. Just run it, and as simple as that the node will be added to the cluster. Repeat for all your nodes.&lt;/p&gt;
+
+&lt;p&gt;Now you should have your own kubernetes cluster up and running!&lt;/p&gt;
+
+&lt;h4 id=&quot;using-kubectl-remotely&quot;&gt;Using kubectl remotely&lt;/h4&gt;
+&lt;p&gt;As the final step in this blog post we are going to setup &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; on our local computer to be able to connect to our new kubernetes cluster.
+If you do not already have &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; installed locally, &lt;a href=&quot;https://kubernetes.io/docs/tasks/tools/install-kubectl/&quot;&gt;see instructions here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We need to get the kubectl configuration and copy it to our local computer. Login to the main node and run:&lt;/p&gt;
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;microk8s.kubectl&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;--raw&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;config&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This will save the configuration to a file &lt;code class=&quot;highlighter-rouge&quot;&gt;config&lt;/code&gt;. You can now copy this file to your local kubectl configuration folder (~/.kube by default). Be careful not to overwrite any existing config files that you are using. If you need to use multiple configurations / contexts for connecting to multiple clusters, &lt;a href=&quot;https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/&quot;&gt;see the documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now it should be possible to run &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; from your local computer. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl get nodes&lt;/code&gt; to list all the nodes in your cluster.&lt;/p&gt;
+
+&lt;h2 id=&quot;next-steps&quot;&gt;Next steps&lt;/h2&gt;
+
+&lt;p&gt;In the next blog post we will deal with exposing our cluster to the world by installing a load-balancer &lt;a href=&quot;https://metallb.universe.tf/&quot;&gt;metallb&lt;/a&gt;, setting up an &lt;a href=&quot;https://kubernetes.github.io/ingress-nginx/&quot;&gt;nginx-ingress&lt;/a&gt; resource and use &lt;a href=&quot;https://cert-manager.io/docs/installation/kubernetes/&quot;&gt;cert-manager&lt;/a&gt; to automatically configure ssl-certificates.&lt;/p&gt;</content><author><name>Viktor Andersson</name></author><category term="kubernetes" /><category term="raspberry-pi" /><summary type="html">“Do you really need a cloud for that?” or: How I spent my 2020 summer vacation</summary></entry><entry><title type="html">Using Turbolinks with the SAFE web stack</title><link href="https://viktorvan.github.io/fsharp/safe-stack-turbolinks/" rel="alternate" type="text/html" title="Using Turbolinks with the SAFE web stack" /><published>2020-07-22T17:00:00+02:00</published><updated>2020-07-22T17:00:00+02:00</updated><id>https://viktorvan.github.io/fsharp/safe-stack-turbolinks</id><content type="html" xml:base="https://viktorvan.github.io/fsharp/safe-stack-turbolinks/">&lt;p&gt;“Do you really need a single-page application for that?”&lt;/p&gt;
 
 &lt;h3 id=&quot;background---what-is-turbolinks&quot;&gt;Background - What is Turbolinks?&lt;/h3&gt;
 

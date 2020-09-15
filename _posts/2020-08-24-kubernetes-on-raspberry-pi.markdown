@@ -1,5 +1,5 @@
 ---
-title:  "Running kubernetes on raspberry pi"
+title:  "Running kubernetes on Raspberry Pi"
 date:   2020-09-14 16:00:00 +0100
 categories: kubernetes 
 tags:
@@ -31,7 +31,7 @@ The cluster I am building will consist of 4 computers, a main node and 3 worker 
 
 ### 1. Installing Ubuntu
 
-For my master node I am using a 128 GB sized SD-card. It turns out there are some issues when using a SD-card with a size > 32GB. I will describe the fix neeeded below, but my recommendation is to just use a 32 GB card, since we will be adding external storage anyways.
+For my main node I am using a 128 GB sized SD-card. It turns out there are some issues when using a SD-card with a size > 32GB. I will describe the fix neeeded below, but my recommendation is to just use a 32 GB card, since we will be adding external storage anyways.
 
 #### Installation
 To install Ubuntu from my mac I used the Raspberry Pi Imager, but any sd-card imager works fine. I am installing Ubuntu 20.04 LTS.

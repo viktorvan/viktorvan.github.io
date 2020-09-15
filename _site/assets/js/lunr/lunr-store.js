@@ -34,4 +34,10 @@ var store = [{
         "tags": ["fsharp","web","turbolinks"],
         "url": "https://viktorvan.github.io/fsharp/safe-stack-turbolinks/",
         "teaser": null
+      },{
+        "title": "Running kubernetes on Raspberry Pi",
+        "excerpt":"“Do you really need a cloud for that?” or: How I spent my 2020 summer vacation Background - Why? Most of the applications I build at work end up running in Azure, so to get a break from that environment I decided I wanted to try to host my side-projects...","categories": ["kubernetes"],
+        "tags": ["kubernetes","raspberry-pi"],
+        "url": "https://viktorvan.github.io/kubernetes/kubernetes-on-raspberry-pi/",
+        "teaser": null
       }]
