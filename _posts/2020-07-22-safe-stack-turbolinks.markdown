@@ -19,6 +19,10 @@ published: true
 
 ### Background - What is Turbolinks?
 
+*Update 2021-02-24*
+
+*Since the writing of this blog post [Hotwire](https://hotwire.dev) has been released. Hotwire is the new collective name for the combination of [Turbo](https://turbo.hotwire.dev) (which used to be Turbolinks) and [Stimulus](https://stimulus.hotwire.dev). This new release means some of this blog post no longer is relevant. I will re-visit Turbo and Stimulus in a new blog post when I have the time. In the mean time you can have a look at the [source code for a demo web-application](https://github.com/ActiveSolution/ActiveGameNight) I have built that uses the new versions of Turbo and Stimulus together with Giraffe/Saturn.*
+
 Turbolinks is a javascript library that gives your web application the look and feel of a single-page application, without really being one. The idea is that it intercepts any navigation and instead of reloading the page at that point, it fetches the page in the background and just switches the whole html \<body> from response with the current body. A little simplified of course.
 
 From the Turbolinks documentation:

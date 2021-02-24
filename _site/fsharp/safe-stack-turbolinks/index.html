@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
   Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -83,7 +83,9 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
 
 <!-- https://t.co/dKP3o1e -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,7 +112,6 @@
     }
   </style>
 <![endif]-->
-
 
 
     <script async defer data-domain="viktorvan.github.io" src="https://plausible.io/js/plausible.js"></script>
@@ -214,7 +215,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          14 minute read
+          15 minute read
         
       </span>
     
@@ -373,25 +374,7 @@
           <aside class="sidebar__right ">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu">
-  <li><a href="#background---what-is-turbolinks">Background - What is Turbolinks?</a></li>
-  <li><a href="#the-demo-application">The demo application</a></li>
-  <li><a href="#our-goals">Our goals</a></li>
-  <li><a href="#step-1-render-all-html-on-the-server">Step 1. Render all html on the server</a></li>
-  <li><a href="#step-2-navigate-dates-using-turbolinks">Step 2. Navigate dates using Turbolinks</a>
-    <ul>
-      <li><a href="#step-2b-dealing-with-permanent-elements">Step 2b. Dealing with “permanent” elements</a></li>
-      <li><a href="#step-2c-using-the-date-input-to-navigate-dates">Step 2c. Using the date input to navigate dates</a></li>
-    </ul>
-  </li>
-  <li><a href="#step-3-edit-data">Step 3. Edit data</a>
-    <ul>
-      <li><a href="#step-3b-saving-scroll-position">Step 3b. Saving scroll position</a></li>
-    </ul>
-  </li>
-  <li><a href="#step-4-deal-with-redirects">Step 4. Deal with redirects</a></li>
-  <li><a href="#conclusions">Conclusions</a></li>
-</ul>
+              <ul class="toc__menu"><li><a href="#background---what-is-turbolinks">Background - What is Turbolinks?</a></li><li><a href="#the-demo-application">The demo application</a></li><li><a href="#our-goals">Our goals</a></li><li><a href="#step-1-render-all-html-on-the-server">Step 1. Render all html on the server</a></li><li><a href="#step-2-navigate-dates-using-turbolinks">Step 2. Navigate dates using Turbolinks</a><ul><li><a href="#step-2b-dealing-with-permanent-elements">Step 2b. Dealing with “permanent” elements</a></li><li><a href="#step-2c-using-the-date-input-to-navigate-dates">Step 2c. Using the date input to navigate dates</a></li></ul></li><li><a href="#step-3-edit-data">Step 3. Edit data</a><ul><li><a href="#step-3b-saving-scroll-position">Step 3b. Saving scroll position</a></li></ul></li><li><a href="#step-4-deal-with-redirects">Step 4. Deal with redirects</a></li><li><a href="#conclusions">Conclusions</a></li></ul>
 
             </nav>
           </aside>
@@ -399,6 +382,10 @@
         <p>“Do you really need a single-page application for that?”</p>
 
 <h3 id="background---what-is-turbolinks">Background - What is Turbolinks?</h3>
+
+<p><em>Update 2021-02-24</em></p>
+
+<p><em>Since the writing of this blog post <a href="https://hotwire.dev">Hotwire</a> has been released. Hotwire is the new collective name for the combination of <a href="https://turbo.hotwire.dev">Turbo</a> (which used to be Turbolinks) and <a href="https://stimulus.hotwire.dev">Stimulus</a>. This new release means some of this blog post no longer is relevant. I will re-visit Turbo and Stimulus in a new blog post when I have the time. In the mean time you can have a look at the <a href="https://github.com/ActiveSolution/ActiveGameNight">source code for a demo web-application</a> I have built that uses the new versions of Turbo and Stimulus together with Giraffe/Saturn.</em></p>
 
 <p>Turbolinks is a javascript library that gives your web application the look and feel of a single-page application, without really being one. The idea is that it intercepts any navigation and instead of reloading the page at that point, it fetches the page in the background and just switches the whole html &lt;body&gt; from response with the current body. A little simplified of course.</p>
 
@@ -847,23 +834,15 @@ Albeit we had to add some event listener setup, but with the Active Patterns I f
 
 
   
-  
-  
 
   <p class="page__taxonomy">
     <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
     <span itemprop="keywords">
     
-      
-      
       <a href="/tags/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a><span class="sep">, </span>
     
-      
-      
       <a href="/tags/#turbolinks" class="page__taxonomy-item" rel="tag">turbolinks</a><span class="sep">, </span>
     
-      
-      
       <a href="/tags/#web" class="page__taxonomy-item" rel="tag">web</a>
     
     </span>
@@ -876,15 +855,11 @@ Albeit we had to add some event listener setup, but with the Active Patterns I f
 
 
   
-  
-  
 
   <p class="page__taxonomy">
     <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
     <span itemprop="keywords">
     
-      
-      
       <a href="/categories/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a>
     
     </span>
@@ -1155,11 +1130,13 @@ window.cookieconsent.initialise({
       
     
 
-    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2020 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2021 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

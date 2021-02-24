@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
   Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -83,7 +83,9 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
 
 <!-- https://t.co/dKP3o1e -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,7 +112,6 @@
     }
   </style>
 <![endif]-->
-
 
 
     <script async defer data-domain="viktorvan.github.io" src="https://plausible.io/js/plausible.js"></script>
@@ -374,34 +375,7 @@ or: How I spent my 2020 summer vacation
           <aside class="sidebar__right ">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu">
-  <li><a href="#background---why">Background - Why?</a></li>
-  <li><a href="#the-setup">The setup</a>
-    <ul>
-      <li><a href="#1-installing-ubuntu">1. Installing Ubuntu</a>
-        <ul>
-          <li><a href="#installation">Installation</a></li>
-          <li><a href="#if-using-an-sd-card--32-gb">If using an SD-card &gt; 32 GB</a></li>
-        </ul>
-      </li>
-      <li><a href="#2-update-hostname-and-setup-mdns">2. Update hostname and setup mDNS</a></li>
-      <li><a href="#3-setup-ssh-keys">3. Setup SSH keys</a></li>
-      <li><a href="#4-setup-nfs-share">4. Setup nfs-share</a>
-        <ul>
-          <li><a href="#main-node-setup">Main-node setup</a></li>
-          <li><a href="#worker-node-setup">Worker-node setup</a></li>
-        </ul>
-      </li>
-      <li><a href="#5-install-kubernetes">5. Install kubernetes</a>
-        <ul>
-          <li><a href="#connecting-nodes-to-the-cluster">Connecting nodes to the cluster</a></li>
-          <li><a href="#using-kubectl-remotely">Using kubectl remotely</a></li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li><a href="#next-steps">Next steps</a></li>
-</ul>
+              <ul class="toc__menu"><li><a href="#background---why">Background - Why?</a></li><li><a href="#the-setup">The setup</a><ul><li><a href="#1-installing-ubuntu">1. Installing Ubuntu</a><ul><li><a href="#installation">Installation</a></li><li><a href="#if-using-an-sd-card--32-gb">If using an SD-card &gt; 32 GB</a></li></ul></li><li><a href="#2-update-hostname-and-setup-mdns">2. Update hostname and setup mDNS</a></li><li><a href="#3-setup-ssh-keys">3. Setup SSH keys</a></li><li><a href="#4-setup-nfs-share">4. Setup nfs-share</a><ul><li><a href="#main-node-setup">Main-node setup</a></li><li><a href="#worker-node-setup">Worker-node setup</a></li></ul></li><li><a href="#5-install-kubernetes">5. Install kubernetes</a><ul><li><a href="#connecting-nodes-to-the-cluster">Connecting nodes to the cluster</a></li><li><a href="#using-kubectl-remotely">Using kubectl remotely</a></li></ul></li></ul></li><li><a href="#next-steps">Next steps</a></li></ul>
 
             </nav>
           </aside>
@@ -594,19 +568,13 @@ If you do not already have <code class="highlighter-rouge">kubectl</code> instal
 
 
   
-  
-  
 
   <p class="page__taxonomy">
     <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
     <span itemprop="keywords">
     
-      
-      
       <a href="/tags/#kubernetes" class="page__taxonomy-item" rel="tag">kubernetes</a><span class="sep">, </span>
     
-      
-      
       <a href="/tags/#raspberry-pi" class="page__taxonomy-item" rel="tag">raspberry-pi</a>
     
     </span>
@@ -619,15 +587,11 @@ If you do not already have <code class="highlighter-rouge">kubectl</code> instal
 
 
   
-  
-  
 
   <p class="page__taxonomy">
     <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
     <span itemprop="keywords">
     
-      
-      
       <a href="/categories/#kubernetes" class="page__taxonomy-item" rel="tag">kubernetes</a>
     
     </span>
@@ -700,7 +664,7 @@ If you do not already have <code class="highlighter-rouge">kubectl</code> instal
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          14 minute read
+          15 minute read
         
       </span>
     
@@ -896,11 +860,13 @@ window.cookieconsent.initialise({
       
     
 
-    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2020 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2021 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

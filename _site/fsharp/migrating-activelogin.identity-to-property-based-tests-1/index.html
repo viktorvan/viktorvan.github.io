@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
   Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -83,7 +83,9 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
 
 <!-- https://t.co/dKP3o1e -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,7 +112,6 @@
     }
   </style>
 <![endif]-->
-
 
 
     <script async defer data-domain="viktorvan.github.io" src="https://plausible.io/js/plausible.js"></script>
@@ -373,31 +374,7 @@
           <aside class="sidebar__right ">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu">
-  <li><a href="#background">Background</a></li>
-  <li><a href="#what-are-property-based-tests">What are property-based tests</a>
-    <ul>
-      <li><a href="#testing-by-example">Testing by example</a></li>
-      <li><a href="#testing-by-properties">Testing by properties</a></li>
-      <li><a href="#unit-testing-in-f">Unit testing in F#</a></li>
-    </ul>
-  </li>
-  <li><a href="#testing-the-parse-function">Testing the parse function</a>
-    <ul>
-      <li><a href="#the-happy-path-parsing-valid-pin-strings">The Happy Path: Parsing valid pin strings</a></li>
-      <li><a href="#creating-a-custom-generator-for-the-swedishpersonalidentitynumber-type">Creating a custom generator for the SwedishPersonalIdentityNumber type</a></li>
-      <li><a href="#using-our-custom-generator">Using our custom generator</a></li>
-      <li><a href="#adding-type-safety-to-our-generators">Adding type safety to our generators</a></li>
-      <li><a href="#valid-10-digit-strings">Valid 10 digit strings</a></li>
-      <li><a href="#other-valid-pin-strings">Other valid pin strings</a>
-        <ul>
-          <li><a href="#12-digit-strings-with-extra-noise">12 digit strings with extra “noise”</a></li>
-          <li><a href="#conclusion">Conclusion</a></li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
+              <ul class="toc__menu"><li><a href="#background">Background</a></li><li><a href="#what-are-property-based-tests">What are property-based tests</a><ul><li><a href="#testing-by-example">Testing by example</a></li><li><a href="#testing-by-properties">Testing by properties</a></li><li><a href="#unit-testing-in-f">Unit testing in F#</a></li></ul></li><li><a href="#testing-the-parse-function">Testing the parse function</a><ul><li><a href="#the-happy-path-parsing-valid-pin-strings">The Happy Path: Parsing valid pin strings</a></li><li><a href="#creating-a-custom-generator-for-the-swedishpersonalidentitynumber-type">Creating a custom generator for the SwedishPersonalIdentityNumber type</a></li><li><a href="#using-our-custom-generator">Using our custom generator</a></li><li><a href="#adding-type-safety-to-our-generators">Adding type safety to our generators</a></li><li><a href="#valid-10-digit-strings">Valid 10 digit strings</a></li><li><a href="#other-valid-pin-strings">Other valid pin strings</a><ul><li><a href="#12-digit-strings-with-extra-noise">12 digit strings with extra “noise”</a></li><li><a href="#conclusion">Conclusion</a></li></ul></li></ul></li></ul>
 
             </nav>
           </aside>
@@ -722,23 +699,15 @@ I will not go further into the details of those concepts in this blog post, but 
 
 
   
-  
-  
 
   <p class="page__taxonomy">
     <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
     <span itemprop="keywords">
     
-      
-      
       <a href="/tags/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a><span class="sep">, </span>
     
-      
-      
       <a href="/tags/#property-based-tests" class="page__taxonomy-item" rel="tag">property based tests</a><span class="sep">, </span>
     
-      
-      
       <a href="/tags/#tests" class="page__taxonomy-item" rel="tag">tests</a>
     
     </span>
@@ -751,15 +720,11 @@ I will not go further into the details of those concepts in this blog post, but 
 
 
   
-  
-  
 
   <p class="page__taxonomy">
     <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
     <span itemprop="keywords">
     
-      
-      
       <a href="/categories/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a>
     
     </span>
@@ -877,7 +842,7 @@ or: How I spent my 2020 summer vacation
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          14 minute read
+          15 minute read
         
       </span>
     
@@ -1033,11 +998,13 @@ window.cookieconsent.initialise({
       
     
 
-    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2020 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2021 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
