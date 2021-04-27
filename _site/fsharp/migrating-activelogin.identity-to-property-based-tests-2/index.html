@@ -80,6 +80,7 @@
 
 
 
+
 <!-- end _includes/seo.html -->
 
 
@@ -395,9 +396,9 @@
 
 <p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a checksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a “+” indicates that the person has turned or is turning 100 this year.</p>
 
-<p>In the last blog post we wrote some property tests for verifying the <code class="highlighter-rouge">parse</code> function for valid inputs. In this post we will handle som invalid inputs.</p>
+<p>In the last blog post we wrote some property tests for verifying the <code class="language-plaintext highlighter-rouge">parse</code> function for valid inputs. In this post we will handle som invalid inputs.</p>
 
-<p>As a reminder, this is the type signature of <code class="highlighter-rouge">parse</code>:</p>
+<p>As a reminder, this is the type signature of <code class="language-plaintext highlighter-rouge">parse</code>:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// string -&gt; Result&lt;SwedishPersonalIdentityNumber, Error&gt;</span>
 </code></pre></div></div>
@@ -411,11 +412,11 @@
     <span class="p">|&gt;</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">parse</span> <span class="o">=!</span> <span class="nc">Error</span> <span class="nc">ArgumentNullError</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>It’s when we move on to empty strings that it get’s a little bit more interesting. If we were writing normal ‘example’ based unit tests we would probably provide some example inputs like <code class="highlighter-rouge">""</code>, and maybe some examples with whitespace, <code class="highlighter-rouge">" "</code>, <code class="highlighter-rouge">"   "</code>. With property based tests we can actually do one better, and generate empty strings with different length and test with that. Maybe not a super valuable test, but it will showcase some FsCheck<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> features.</p>
+<p>It’s when we move on to empty strings that it get’s a little bit more interesting. If we were writing normal ‘example’ based unit tests we would probably provide some example inputs like <code class="language-plaintext highlighter-rouge">""</code>, and maybe some examples with whitespace, <code class="language-plaintext highlighter-rouge">" "</code>, <code class="language-plaintext highlighter-rouge">"   "</code>. With property based tests we can actually do one better, and generate empty strings with different length and test with that. Maybe not a super valuable test, but it will showcase some FsCheck<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> features.</p>
 
 <p>So we need to write a generator that returns empty strings of different lengths. We are going to use a feature of FsCheck where a generator can take a size parameter. When running the tests the test framework will begin by generating small test cases, and gradually increases the size as testing progresses.</p>
 
-<p>A generator for an empty string of random size could then look like this<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>:</p>
+<p>A generator for an empty string of random size could then look like this<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">emptyStringGen</span><span class="bp">()</span> <span class="p">=</span>
     <span class="k">type</span> <span class="nc">EmptyString</span> <span class="p">=</span> <span class="nc">EmptyString</span> <span class="k">of</span> <span class="kt">string</span>
@@ -426,7 +427,7 @@
     <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>Gen.choose generates a random integer in the range <code class="highlighter-rouge">[0,s]</code> we then <code class="highlighter-rouge">map</code> it to an emptyString with that length using our helper function <code class="highlighter-rouge">emptyStringWithLength</code>.</p>
+<p>Gen.choose generates a random integer in the range <code class="language-plaintext highlighter-rouge">[0,s]</code> we then <code class="language-plaintext highlighter-rouge">map</code> it to an emptyString with that length using our helper function <code class="language-plaintext highlighter-rouge">emptyStringWithLength</code>.</p>
 
 <p>And then we write a test with the generator:</p>
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"empty string returns parsing error"</span> 
@@ -437,7 +438,7 @@
 
 <h1 id="input-with-invalid-number-of-digits">Input with invalid number of digits</h1>
 
-<p>Another form of invalid pin strings is when there is an invalid number of digits. A pin can only have 10 or 12 digits<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. Let’s write a generator that generates a string with a random number of digits:</p>
+<p>Another form of invalid pin strings is when there is an invalid number of digits. A pin can only have 10 or 12 digits<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup>. Let’s write a generator that generates a string with a random number of digits:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">Digits</span> <span class="p">=</span> <span class="nc">Digits</span> <span class="k">of</span> <span class="kt">string</span>
 <span class="k">let</span> <span class="n">digitsGen</span><span class="bp">()</span> <span class="p">=</span>
@@ -452,13 +453,13 @@
     <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>First we create a helper function <code class="highlighter-rouge">createDigits</code> with type signature: <code class="highlighter-rouge">string list -&gt; Digits</code>, i.e. given a list of strings it will join the list and wrap it in our <code class="highlighter-rouge">Digits</code> type.</p>
+<p>First we create a helper function <code class="language-plaintext highlighter-rouge">createDigits</code> with type signature: <code class="language-plaintext highlighter-rouge">string list -&gt; Digits</code>, i.e. given a list of strings it will join the list and wrap it in our <code class="language-plaintext highlighter-rouge">Digits</code> type.</p>
 
-<p>Then we create our generator: First pick a random integer between 0 and 9 and turn it into a string. Then use the FsCheck function <code class="highlighter-rouge">Gen.listOf</code> to generate a list of those random strings. The type signature of <code class="highlighter-rouge">listOf</code> is <code class="highlighter-rouge">Gen&lt;'a&gt; -&gt; Gen&lt;'a list&gt;</code>, i.e. given a generator for a type it will return a generator for a list of that type. Finally we use our helper function <code class="highlighter-rouge">createDigits</code> to turn wrap the list of strings in the <code class="highlighter-rouge">Digits</code> type.</p>
+<p>Then we create our generator: First pick a random integer between 0 and 9 and turn it into a string. Then use the FsCheck function <code class="language-plaintext highlighter-rouge">Gen.listOf</code> to generate a list of those random strings. The type signature of <code class="language-plaintext highlighter-rouge">listOf</code> is <code class="language-plaintext highlighter-rouge">Gen&lt;'a&gt; -&gt; Gen&lt;'a list&gt;</code>, i.e. given a generator for a type it will return a generator for a list of that type. Finally we use our helper function <code class="language-plaintext highlighter-rouge">createDigits</code> to turn wrap the list of strings in the <code class="language-plaintext highlighter-rouge">Digits</code> type.</p>
 
-<p>As you can see we have not constrained the generator to return a specific number of digits at this point. <code class="highlighter-rouge">Gen.listOf</code> will generate lists of random length, including empty lists. The problem is that it will also generate lists of 10 and 12 digits that we don’t want for this test. We will handle this in the test by adding a condition to the input using the <code class="highlighter-rouge">==&gt;</code> operator from FsCheck.</p>
+<p>As you can see we have not constrained the generator to return a specific number of digits at this point. <code class="language-plaintext highlighter-rouge">Gen.listOf</code> will generate lists of random length, including empty lists. The problem is that it will also generate lists of 10 and 12 digits that we don’t want for this test. We will handle this in the test by adding a condition to the input using the <code class="language-plaintext highlighter-rouge">==&gt;</code> operator from FsCheck.</p>
 
-<p>The <code class="highlighter-rouge">==&gt;</code> operator takes a condition on the left-hand-side and a lazy<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>-expression on the right-hand-side. If the condition is true then the lazy-expression is evaluated, if it is false it will not be evaluated. In our case the left-hand-side will be some condition that we require for the test to run, e.g. the length of the string should not be 10 or 12. The right-hand-side would be the actual test to run:</p>
+<p>The <code class="language-plaintext highlighter-rouge">==&gt;</code> operator takes a condition on the left-hand-side and a lazy<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup>-expression on the right-hand-side. If the condition is true then the lazy-expression is evaluated, if it is false it will not be evaluated. In our case the left-hand-side will be some condition that we require for the test to run, e.g. the length of the string should not be 10 or 12. The right-hand-side would be the actual test to run:</p>
 
 <p>First we create a function to check if a string contains an invalid number of digits:</p>
 
@@ -529,13 +530,13 @@
     <span class="p">}</span> <span class="p">|&gt;</span> <span class="nn">Gen</span><span class="p">.</span><span class="n">map</span> <span class="nc">InvalidPinString</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>We are using a lot of the stuff we have previously learnt. We use a helper function <code class="highlighter-rouge">chooseFromArray</code>, that picks a random value from an array, to get a random from 12-digit string from the <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a> library.</p>
+<p>We are using a lot of the stuff we have previously learnt. We use a helper function <code class="language-plaintext highlighter-rouge">chooseFromArray</code>, that picks a random value from an array, to get a random from 12-digit string from the <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a> library.</p>
 
 <p>Then we create generators for invalid values for all the individual parts of the pin:</p>
 
 <p><strong>Invalid year</strong></p>
 
-<p>It turns out that the only invalid 4-digit year is 0000, so we just need to replace the valid year with “0000”<sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>.</p>
+<p>It turns out that the only invalid 4-digit year is 0000, so we just need to replace the valid year with “0000”<sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">5</a></sup>.</p>
 
 <p><strong>Invalid month</strong></p>
 
@@ -551,7 +552,7 @@
 
 <p><strong>Invalid checksum</strong></p>
 
-<p>The checksum of the pin calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a> so to generate an invalid value we can just take the valid checksum and add 1, and use the modulo operator to make sure 9 + 1 = 10 will give result in 0. Maybe we feel that this isn’t enough and that we want to test with all invalid checksums and we will do that in the next blog post, when we are testing the <code class="highlighter-rouge">create</code> function.</p>
+<p>The checksum of the pin calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a> so to generate an invalid value we can just take the valid checksum and add 1, and use the modulo operator to make sure 9 + 1 = 10 will give result in 0. Maybe we feel that this isn’t enough and that we want to test with all invalid checksums and we will do that in the next blog post, when we are testing the <code class="language-plaintext highlighter-rouge">create</code> function.</p>
 
 <p><strong>The full test</strong></p>
 
@@ -569,24 +570,24 @@
 If we actually were interested in also verifying the error messages we could split this test into separate tests for invalid year, invalid month, and so on…</p>
 
 <h1 id="conclusion">Conclusion</h1>
-<p>That’s it for this post where we have seen some more examples of how to create generators. We used sized generators, turned generators into lists, added conditions to generators, and more. In the next post we will look at writing tests for the <code class="highlighter-rouge">create</code> function which allows clients to create pins from number inputs. We will run into some new issues where we have to deal with generators that can generate too many different values to really be useful.</p>
+<p>That’s it for this post where we have seen some more examples of how to create generators. We used sized generators, turned generators into lists, added conditions to generators, and more. In the next post we will look at writing tests for the <code class="language-plaintext highlighter-rouge">create</code> function which allows clients to create pins from number inputs. We will run into some new issues where we have to deal with generators that can generate too many different values to really be useful.</p>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>See <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">part 1</a> for an introduction to the <a href="https://fscheck.github.io/FsCheck/">FsCheck</a> library. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>See <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">part 1</a> for an introduction to the <a href="https://fscheck.github.io/FsCheck/">FsCheck</a> library. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2">
-      <p>See <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">part 1</a> for an introduction to generators and fsharp unit testing in general. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:2" role="doc-endnote">
+      <p>See <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">part 1</a> for an introduction to generators and fsharp unit testing in general. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:3">
-      <p>As we saw in <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">part 1</a> anything except digits and a plus (+) delimiter for 10 digit numbers can be stripped away from the pin. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:3" role="doc-endnote">
+      <p>As we saw in <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-1/">part 1</a> anything except digits and a plus (+) delimiter for 10 digit numbers can be stripped away from the pin. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:4">
-      <p>See the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.lazy-1?view=netcore-2.2">documentation</a> for .net Lazy. <a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:4" role="doc-endnote">
+      <p>See the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.lazy-1?view=netcore-2.2">documentation</a> for .net Lazy. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:5">
-      <p>Whether it’s really a good idea to accept years from 0001 to 9999 as valid will be discussed further in part 3. <a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:5" role="doc-endnote">
+      <p>Whether it’s really a good idea to accept years from 0001 to 9999 as valid will be discussed further in part 3. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -634,6 +635,7 @@ If we actually were interested in also verifying the error messages we could spl
 
 
         
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-08-22T08:51:00+02:00">August 22, 2019</time></p>
 
 
@@ -674,6 +676,46 @@ If we actually were interested in also verifying the error messages we could spl
       <div class="grid__wrapper">
         
           
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/farmer-service-bus/" rel="permalink">Automagically manage your Azure Service Bus topics with Farmer
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…
+
+</p>
+  </article>
+</div>
+
+        
           
 
 
@@ -717,7 +759,6 @@ or: How I spent my 2020 summer vacation
 
         
           
-          
 
 
 
@@ -759,7 +800,6 @@ or: How I spent my 2020 summer vacation
 
         
           
-          
 
 
 
@@ -800,50 +840,9 @@ or: How I spent my 2020 summer vacation
 </div>
 
         
-          
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-3/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 3
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          8 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Property based tests part 3 - generators with too many output values.
-
-</p>
-  </article>
-</div>
-
-        
       </div>
     </div>
+  
   
 </div>
 

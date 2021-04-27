@@ -80,6 +80,7 @@
 
 
 
+
 <!-- end _includes/seo.html -->
 
 
@@ -402,13 +403,13 @@ or: How I spent my 2020 summer vacation</p>
 <h4 id="installation">Installation</h4>
 <p>To install Ubuntu from my mac I used the Raspberry Pi Imager, but any sd-card imager works fine. I am installing Ubuntu 20.04 LTS.</p>
 
-<p>When you first start up the Raspberry Pi after with the new Ubuntu image it will take a short while before the default <code class="highlighter-rouge">ubuntu</code> user is created. After a minute or so you should be able to login with user: <code class="highlighter-rouge">ubuntu</code>, password <code class="highlighter-rouge">ubuntu</code>. You will be prompted to change the password.</p>
+<p>When you first start up the Raspberry Pi after with the new Ubuntu image it will take a short while before the default <code class="language-plaintext highlighter-rouge">ubuntu</code> user is created. After a minute or so you should be able to login with user: <code class="language-plaintext highlighter-rouge">ubuntu</code>, password <code class="language-plaintext highlighter-rouge">ubuntu</code>. You will be prompted to change the password.</p>
 
 <h4 id="if-using-an-sd-card--32-gb">If using an SD-card &gt; 32 GB</h4>
 
 <p>Trying to use an SD-card larger than 32 GB caused me to run into some weird issues. Sometimes it seemed to work fine, but then suddenly when rebooting the Raspberry Pi just wouldn’t start. After a lot of reading I ended up <a href="https://jamesachambers.com/raspberry-pi-ubuntu-server-18-04-2-installation-guide/">on this blog post</a> that solved my issue: I had to update config.txt file in the /boot/ partition.</p>
 
-<p>So I connected the SD-card to the card-reader on my mac again, and updated <code class="highlighter-rouge">config.txt</code> to make sure it included:</p>
+<p>So I connected the SD-card to the card-reader on my mac again, and updated <code class="language-plaintext highlighter-rouge">config.txt</code> to make sure it included:</p>
 
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable audio (loads snd_bcm2835)
 </span><span class="py">dtparam</span><span class="p">=</span><span class="s">audio=on</span>
@@ -419,7 +420,7 @@ or: How I spent my 2020 summer vacation</p>
 <span class="py">armstub</span><span class="p">=</span><span class="s">armstub8-gic.bin</span>
 </code></pre></div></div>
 
-<p>If you’re using a Raspberry Pi 3, use the <code class="highlighter-rouge">[pi3]</code>-header instead.</p>
+<p>If you’re using a Raspberry Pi 3, use the <code class="language-plaintext highlighter-rouge">[pi3]</code>-header instead.</p>
 
 <p>Then your Raspberry Pi should be able to handle your large SD-card when you boot it up again.</p>
 
@@ -435,20 +436,20 @@ or: How I spent my 2020 summer vacation</p>
 <span class="err">sudo</span> <span class="err">apt-get</span> <span class="err">install</span> <span class="err">avahi-daemon</span>
 </code></pre></div></div>
 
-<p>If you’re running mac os-x the .local-domain should now just work out of the box and your raspberry pi will be reachable on <code class="highlighter-rouge">&lt;hostname&gt;.local</code> for whatever hostname you changed to in <code class="highlighter-rouge">/etc/hostname</code>. If you are running windows you need to install the bonjour-service, see the “What Do I Neeed?”-section <a href="https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/">here</a> for instructions.</p>
+<p>If you’re running mac os-x the .local-domain should now just work out of the box and your raspberry pi will be reachable on <code class="language-plaintext highlighter-rouge">&lt;hostname&gt;.local</code> for whatever hostname you changed to in <code class="language-plaintext highlighter-rouge">/etc/hostname</code>. If you are running windows you need to install the bonjour-service, see the “What Do I Neeed?”-section <a href="https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/">here</a> for instructions.</p>
 
 <h3 id="3-setup-ssh-keys">3. Setup SSH keys</h3>
 
-<p>We don’t want to be logging in with username/password all the time when accessing our Raspberry Pis, so we are going to setup ssh login. If you do not already have an ssh-key on your client computer you can create one, on a mac you would run: <code class="highlighter-rouge">ssh-keygen</code>.</p>
+<p>We don’t want to be logging in with username/password all the time when accessing our Raspberry Pis, so we are going to setup ssh login. If you do not already have an ssh-key on your client computer you can create one, on a mac you would run: <code class="language-plaintext highlighter-rouge">ssh-keygen</code>.</p>
 
 <p>Then we copy the key to the raspberry pi using ssh-copy-id:</p>
 
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">ssh-copy-id</span> <span class="err">username@remote_host</span>
 </code></pre></div></div>
 
-<p>Now verify that you can login to the Raspberry Pi using ssh: <code class="highlighter-rouge">ssh username@remote_host</code>.</p>
+<p>Now verify that you can login to the Raspberry Pi using ssh: <code class="language-plaintext highlighter-rouge">ssh username@remote_host</code>.</p>
 
-<p>If we want we can also disable username/password login altogether and only allow login with ssh keys. We do this by editing <code class="highlighter-rouge">/etc/ssh/sshd_config</code> and setting <code class="highlighter-rouge">PasswordAuthentication no</code>. For this take effect we need to restart the ssh-service: <code class="highlighter-rouge">sudo systemctl restart ssh</code></p>
+<p>If we want we can also disable username/password login altogether and only allow login with ssh keys. We do this by editing <code class="language-plaintext highlighter-rouge">/etc/ssh/sshd_config</code> and setting <code class="language-plaintext highlighter-rouge">PasswordAuthentication no</code>. For this take effect we need to restart the ssh-service: <code class="language-plaintext highlighter-rouge">sudo systemctl restart ssh</code></p>
 
 <h3 id="4-setup-nfs-share">4. Setup nfs-share</h3>
 
@@ -456,10 +457,10 @@ or: How I spent my 2020 summer vacation</p>
 
 <h4 id="main-node-setup">Main-node setup</h4>
 
-<p>First we need to find our external disk, we can do this using <code class="highlighter-rouge">sudo lsblk</code> 
+<p>First we need to find our external disk, we can do this using <code class="language-plaintext highlighter-rouge">sudo lsblk</code> 
 <img src="/assets/images/list-disks.png" alt="sudo lsblk output" /></p>
 
-<p>The disk I am looking for in this case is a 500 GB external drive, and we can see that the name is <code class="highlighter-rouge">sda</code>.</p>
+<p>The disk I am looking for in this case is a 500 GB external drive, and we can see that the name is <code class="language-plaintext highlighter-rouge">sda</code>.</p>
 
 <p>First I want to mount it locally on the main-node to path I want to call /media/expansion1:</p>
 
@@ -467,7 +468,7 @@ or: How I spent my 2020 summer vacation</p>
 <span class="err">mount</span> <span class="err">—bind</span> <span class="err">/dev/sda</span> <span class="err">/media/expansion1</span>
 </code></pre></div></div>
 
-<p>Then additionally I want to mount it at <code class="highlighter-rouge">/export/share1</code> which is going to be the path that is exported as my nfs-share.</p>
+<p>Then additionally I want to mount it at <code class="language-plaintext highlighter-rouge">/export/share1</code> which is going to be the path that is exported as my nfs-share.</p>
 
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">mkdir</span> <span class="err">/export/share1</span>
 <span class="err">mount</span> <span class="err">—bind</span> <span class="err">/media/expansion1</span> <span class="err">/export/share1</span>
@@ -478,7 +479,7 @@ or: How I spent my 2020 summer vacation</p>
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">sudo</span> <span class="err">apt</span> <span class="err">install</span> <span class="err">nfs-kernel-server</span>
 </code></pre></div></div>
 
-<p>Then we edit <code class="highlighter-rouge">/etc/exports</code> with the following:</p>
+<p>Then we edit <code class="language-plaintext highlighter-rouge">/etc/exports</code> with the following:</p>
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">/export/share1</span> <span class="err">192.168.50.200/29(rw,sync,no_subtree_check)</span>
 </code></pre></div></div>
 
@@ -493,12 +494,12 @@ or: How I spent my 2020 summer vacation</p>
 <span class="err">mount</span> <span class="err">-t</span> <span class="err">nfs</span> <span class="err">-o</span> <span class="py">proto</span><span class="p">=</span><span class="s">tcp,port=2049 192.168.50.200:/export/share1 /share1</span>
 </code></pre></div></div>
 
-<p>This will install the nfs-client, create a local path <code class="highlighter-rouge">/share1</code> and then setup a mount using nfs to bind <code class="highlighter-rouge">/export/share1</code> on the nfs-server to the local path <code class="highlighter-rouge">/share1</code>. 
-If you have any errors in your nfs-setup you will get an error when trying to run the <code class="highlighter-rouge">mount</code> command above. In that case, add the verbose flag <code class="highlighter-rouge">-v</code> to get more information. In my case it is usually an access denied-error due to me mixing up the paths I am trying to mount.</p>
+<p>This will install the nfs-client, create a local path <code class="language-plaintext highlighter-rouge">/share1</code> and then setup a mount using nfs to bind <code class="language-plaintext highlighter-rouge">/export/share1</code> on the nfs-server to the local path <code class="language-plaintext highlighter-rouge">/share1</code>. 
+If you have any errors in your nfs-setup you will get an error when trying to run the <code class="language-plaintext highlighter-rouge">mount</code> command above. In that case, add the verbose flag <code class="language-plaintext highlighter-rouge">-v</code> to get more information. In my case it is usually an access denied-error due to me mixing up the paths I am trying to mount.</p>
 
 <p>If you don’t get any error messages, go ahead and try adding and modifying a file on the nfs-share to verify the setup.</p>
 
-<p>If you were to restart the nfs-client computer at this point it would lose the connection to the nfs-share, though. And that’s not what we want, so to avoid this we can edit <a href="https://help.ubuntu.com/community/Fstab"><code class="highlighter-rouge">/etc/fstab</code></a> and add:</p>
+<p>If you were to restart the nfs-client computer at this point it would lose the connection to the nfs-share, though. And that’s not what we want, so to avoid this we can edit <a href="https://help.ubuntu.com/community/Fstab"><code class="language-plaintext highlighter-rouge">/etc/fstab</code></a> and add:</p>
 
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">192.168.50.200:/export/share1</span> <span class="err">/share1</span> <span class="err">nfs</span> <span class="err">defaults</span> <span class="err">0</span> <span class="err">0</span>
 </code></pre></div></div>
@@ -509,7 +510,7 @@ If you have any errors in your nfs-setup you will get an error when trying to ru
 <p>We are going to be installing <a href="https://microk8s.io/">microk8s</a> which is described as “The smallest, simplest, pure production K8s. For clusters, laptops, IoT and Edge, on Intel and ARM.”</p>
 
 <p>To be able to install microk8s on our Raspberry Pis there is an <a href="https://microk8s.io/docs/install-alternatives#heading--arm">additional fix we need to do:</a>
-Edit <code class="highlighter-rouge">/boot/firmware/cmdline.txt</code> and add:</p>
+Edit <code class="language-plaintext highlighter-rouge">/boot/firmware/cmdline.txt</code> and add:</p>
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">cgroup_enable</span><span class="p">=</span><span class="s">memory cgroup_memory=1</span>
 </code></pre></div></div>
 
@@ -518,7 +519,7 @@ Edit <code class="highlighter-rouge">/boot/firmware/cmdline.txt</code> and add:<
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">sudo</span> <span class="err">snap</span> <span class="err">install</span> <span class="err">microk8s</span> <span class="err">--classic</span> <span class="err">--stable</span>
 </code></pre></div></div>
 
-<p>Here I am using the <code class="highlighter-rouge">--stable</code> channel, <a href="https://microk8s.io/docs/setting-snap-channel">many others are available</a>.</p>
+<p>Here I am using the <code class="language-plaintext highlighter-rouge">--stable</code> channel, <a href="https://microk8s.io/docs/setting-snap-channel">many others are available</a>.</p>
 
 <p>Then we need to setup some permissions for microk8s:</p>
 
@@ -531,7 +532,7 @@ Edit <code class="highlighter-rouge">/boot/firmware/cmdline.txt</code> and add:<
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">microk8s.enable</span> <span class="err">helm3</span> <span class="err">storage</span> <span class="err">dns</span> <span class="err">registry</span>
 </code></pre></div></div>
 
-<p>For good measure we can reboot all the nodes at this point. After a reboot you can check the status of the microk8s installation by running <code class="highlighter-rouge">microk8s.status</code>.</p>
+<p>For good measure we can reboot all the nodes at this point. After a reboot you can check the status of the microk8s installation by running <code class="language-plaintext highlighter-rouge">microk8s.status</code>.</p>
 
 <h4 id="connecting-nodes-to-the-cluster">Connecting nodes to the cluster</h4>
 <p>To add a node to the cluster run the following command on the <em>main-node</em>:</p>
@@ -544,15 +545,15 @@ Edit <code class="highlighter-rouge">/boot/firmware/cmdline.txt</code> and add:<
 <p>Now you should have your own kubernetes cluster up and running!</p>
 
 <h4 id="using-kubectl-remotely">Using kubectl remotely</h4>
-<p>As the final step in this blog post we are going to setup <code class="highlighter-rouge">kubectl</code> on our local computer to be able to connect to our new kubernetes cluster.
-If you do not already have <code class="highlighter-rouge">kubectl</code> installed locally, <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">see instructions here</a>.</p>
+<p>As the final step in this blog post we are going to setup <code class="language-plaintext highlighter-rouge">kubectl</code> on our local computer to be able to connect to our new kubernetes cluster.
+If you do not already have <code class="language-plaintext highlighter-rouge">kubectl</code> installed locally, <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">see instructions here</a>.</p>
 
 <p>We need to get the kubectl configuration and copy it to our local computer. Login to the main node and run:</p>
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">microk8s.kubectl</span> <span class="err">config</span> <span class="err">view</span> <span class="err">--raw</span> <span class="err">&gt;</span> <span class="err">config</span>
 </code></pre></div></div>
-<p>This will save the configuration to a file <code class="highlighter-rouge">config</code>. You can now copy this file to your local kubectl configuration folder (~/.kube by default). Be careful not to overwrite any existing config files that you are using. If you need to use multiple configurations / contexts for connecting to multiple clusters, <a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">see the documentation</a>.</p>
+<p>This will save the configuration to a file <code class="language-plaintext highlighter-rouge">config</code>. You can now copy this file to your local kubectl configuration folder (~/.kube by default). Be careful not to overwrite any existing config files that you are using. If you need to use multiple configurations / contexts for connecting to multiple clusters, <a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">see the documentation</a>.</p>
 
-<p>Now it should be possible to run <code class="highlighter-rouge">kubectl</code> from your local computer. Try <code class="highlighter-rouge">kubectl get nodes</code> to list all the nodes in your cluster.</p>
+<p>Now it should be possible to run <code class="language-plaintext highlighter-rouge">kubectl</code> from your local computer. Try <code class="language-plaintext highlighter-rouge">kubectl get nodes</code> to list all the nodes in your cluster.</p>
 
 <h2 id="next-steps">Next steps</h2>
 
@@ -599,6 +600,7 @@ If you do not already have <code class="highlighter-rouge">kubectl</code> instal
 
 
         
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-09-14T17:00:00+02:00">September 14, 2020</time></p>
 
 
@@ -622,7 +624,8 @@ If you do not already have <code class="highlighter-rouge">kubectl</code> instal
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/fsharp/farmer-service-bus/" class="pagination--pager" title="Automagically manage your Azure Service Bus topics with Farmer
+">Next</a>
     
   </nav>
 
@@ -636,6 +639,47 @@ If you do not already have <code class="highlighter-rouge">kubectl</code> instal
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/farmer-service-bus/" rel="permalink">Automagically manage your Azure Service Bus topics with Farmer
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…
+
+</p>
+  </article>
+</div>
+
         
           
 
@@ -754,47 +798,6 @@ If you do not already have <code class="highlighter-rouge">kubectl</code> instal
 
 
     <p class="archive__item-excerpt" itemprop="description">Property based tests part 3 - generators with too many output values.
-
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-2/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 2
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          8 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Property based tests part 2 - More about generators.
 
 </p>
   </article>

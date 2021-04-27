@@ -80,6 +80,7 @@
 
 
 
+
 <!-- end _includes/seo.html -->
 
 
@@ -387,25 +388,25 @@
 <p>Let’s say these are our requirements:</p>
 
 <ul>
-  <li>A manager can <code class="highlighter-rouge">invite</code> a customer by registering a customer’s <code class="highlighter-rouge">email</code>.</li>
-  <li>A customer can <code class="highlighter-rouge">create</code> (and <code class="highlighter-rouge">update</code>) their <code class="highlighter-rouge">contact information</code> and <code class="highlighter-rouge">address</code>
+  <li>A manager can <code class="language-plaintext highlighter-rouge">invite</code> a customer by registering a customer’s <code class="language-plaintext highlighter-rouge">email</code>.</li>
+  <li>A customer can <code class="language-plaintext highlighter-rouge">create</code> (and <code class="language-plaintext highlighter-rouge">update</code>) their <code class="language-plaintext highlighter-rouge">contact information</code> and <code class="language-plaintext highlighter-rouge">address</code>
     <ul>
-      <li><code class="highlighter-rouge">contact information</code> has <strong>required</strong> fields: <code class="highlighter-rouge">firstName</code>, <code class="highlighter-rouge">lastName</code> and <code class="highlighter-rouge">email</code><br />
-   and an <strong>optional</strong> field: <code class="highlighter-rouge">phone number</code></li>
-      <li><code class="highlighter-rouge">address</code> has <strong>required</strong> fields <code class="highlighter-rouge">streetAddress1</code>, <code class="highlighter-rouge">zipcode</code>, <code class="highlighter-rouge">city</code>, <code class="highlighter-rouge">country</code><br />
-  and an <strong>optional</strong> field <code class="highlighter-rouge">streetAddress2</code></li>
+      <li><code class="language-plaintext highlighter-rouge">contact information</code> has <strong>required</strong> fields: <code class="language-plaintext highlighter-rouge">firstName</code>, <code class="language-plaintext highlighter-rouge">lastName</code> and <code class="language-plaintext highlighter-rouge">email</code><br />
+   and an <strong>optional</strong> field: <code class="language-plaintext highlighter-rouge">phone number</code></li>
+      <li><code class="language-plaintext highlighter-rouge">address</code> has <strong>required</strong> fields <code class="language-plaintext highlighter-rouge">streetAddress1</code>, <code class="language-plaintext highlighter-rouge">zipcode</code>, <code class="language-plaintext highlighter-rouge">city</code>, <code class="language-plaintext highlighter-rouge">country</code><br />
+  and an <strong>optional</strong> field <code class="language-plaintext highlighter-rouge">streetAddress2</code></li>
     </ul>
   </li>
-  <li>A customer can <code class="highlighter-rouge">acceptGDPR</code></li>
-  <li>A customer can <code class="highlighter-rouge">checkIn</code></li>
-  <li>When a customer has done all of the above, an administrator can <code class="highlighter-rouge">verify</code> their registration.</li>
+  <li>A customer can <code class="language-plaintext highlighter-rouge">acceptGDPR</code></li>
+  <li>A customer can <code class="language-plaintext highlighter-rouge">checkIn</code></li>
+  <li>When a customer has done all of the above, an administrator can <code class="language-plaintext highlighter-rouge">verify</code> their registration.</li>
 </ul>
 
 <p>For the sake of simplicity we will not be doing any validation of contact information and addresses other than to check that they are not empty.</p>
 
 <h1 id="using-c">Using C#</h1>
 
-<p>Let’s make a simple C# implementation<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>:</p>
+<p>Let’s make a simple C# implementation<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>:</p>
 
 <h2 id="entities">Entities</h2>
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
@@ -438,7 +439,7 @@
 </code></pre></div></div>
 
 <h2 id="domain-logic">Domain logic</h2>
-<p>And a <code class="highlighter-rouge">CustomerService</code> with our domain logic to handle the requirements:</p>
+<p>And a <code class="language-plaintext highlighter-rouge">CustomerService</code> with our domain logic to handle the requirements:</p>
 
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerService</span>
 <span class="p">{</span>
@@ -620,9 +621,9 @@
         <span class="k">else</span> <span class="n">id</span> <span class="p">|&gt;</span> <span class="nc">CustomerId</span> <span class="p">|&gt;</span> <span class="nc">Ok</span>
 </code></pre></div></div>
 
-<p>The constructors are marked as private, so you cannot create the types without calling the <code class="highlighter-rouge">create</code> functions.</p>
+<p>The constructors are marked as private, so you cannot create the types without calling the <code class="language-plaintext highlighter-rouge">create</code> functions.</p>
 
-<p>We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn’t an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>.</p>
+<p>We also want some wrapper type to prevent users from making mistakes like mixing up strings and passing a us a NoneEmptyString that isn’t an Email. Or to mixup the different type of dates that we use to indicate if a customer has accepted GDPR, checked in, etc<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">Email</span> <span class="p">=</span> <span class="nc">Email</span> <span class="k">of</span> <span class="nc">NoneEmptyString</span>
 <span class="k">type</span> <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="nc">CheckInDate</span> <span class="k">of</span> <span class="nc">DateTime</span>
@@ -655,12 +656,12 @@
 
 <p>If we consider the requirements we can see that customer can actually have only a few valid states:</p>
 <ul>
-  <li>First they are <code class="highlighter-rouge">invited</code></li>
-  <li>Then they can have <code class="highlighter-rouge">details only</code></li>
-  <li>Or they can have details and have <code class="highlighter-rouge">accepted GDPR</code></li>
-  <li>Or details and can be <code class="highlighter-rouge">checked in</code></li>
-  <li>Or they can have details and be <strong>both</strong> checked in and have accepted GDPR, let´s call that <code class="highlighter-rouge">complete</code></li>
-  <li>Finally they can be <code class="highlighter-rouge">verified</code></li>
+  <li>First they are <code class="language-plaintext highlighter-rouge">invited</code></li>
+  <li>Then they can have <code class="language-plaintext highlighter-rouge">details only</code></li>
+  <li>Or they can have details and have <code class="language-plaintext highlighter-rouge">accepted GDPR</code></li>
+  <li>Or details and can be <code class="language-plaintext highlighter-rouge">checked in</code></li>
+  <li>Or they can have details and be <strong>both</strong> checked in and have accepted GDPR, let´s call that <code class="language-plaintext highlighter-rouge">complete</code></li>
+  <li>Finally they can be <code class="language-plaintext highlighter-rouge">verified</code></li>
 </ul>
 
 <p>In the C# model above it was possible to have a customer in other states that would not be valid, e.g. there is nothing in the C# model that prevents us from creating a customer that is verified, but has not accepted GDPR. Instead we had to rely on unit tests to verify our requirements.</p>
@@ -699,7 +700,7 @@
           <span class="nc">Details</span><span class="p">:</span> <span class="nc">CustomerDetails</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">private</code> keyword in this case is making the constructors to our types private, not the types themselves. This means that it is possible for users of our code to use our types, but they cannot create them. I.e. a user cannot create a VerifiedCustomer in any other way than calling our <code class="highlighter-rouge">verify</code> function (that we will define shortly).</p>
+<p>The <code class="language-plaintext highlighter-rouge">private</code> keyword in this case is making the constructors to our types private, not the types themselves. This means that it is possible for users of our code to use our types, but they cannot create them. I.e. a user cannot create a VerifiedCustomer in any other way than calling our <code class="language-plaintext highlighter-rouge">verify</code> function (that we will define shortly).</p>
 
 <p>Additionally we want to be able to distinguish customers that are verified, unverified and active, like this:</p>
 
@@ -716,13 +717,13 @@
         <span class="p">|</span> <span class="nc">Active</span> <span class="k">of</span> <span class="nc">ActiveCustomer</span>
 </code></pre></div></div>
 
-<p>Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. It won’t be a “Service” in F# though, just a group of functions in a module. Let’s go through them each in turn.</p>
+<p>Now, we are finally ready to move on to the domain logic. I am a proponent of separating I/O from domain logic so I will assume that any database calls are handled outside of our domain logic<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup>. It won’t be a “Service” in F# though, just a group of functions in a module. Let’s go through them each in turn.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// CustomerId -&gt; Email -&gt; InvitedCustomer</span>
 <span class="k">let</span> <span class="n">invite</span> <span class="n">id</span> <span class="n">email</span> <span class="p">=</span> <span class="p">{</span> <span class="nc">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span> <span class="nc">Email</span> <span class="p">=</span> <span class="n">email</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>From the signature we can see that <code class="highlighter-rouge">invite</code> takes one <code class="highlighter-rouge">CustomerId</code>, one <code class="highlighter-rouge">Email</code> and returns an <code class="highlighter-rouge">InvitedCustomer</code>. Not much that can go wrong there, and no validation required.</p>
+<p>From the signature we can see that <code class="language-plaintext highlighter-rouge">invite</code> takes one <code class="language-plaintext highlighter-rouge">CustomerId</code>, one <code class="language-plaintext highlighter-rouge">Email</code> and returns an <code class="language-plaintext highlighter-rouge">InvitedCustomer</code>. Not much that can go wrong there, and no validation required.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// UnverifiedCustomer -&gt; CustomerDetails -&gt; ActiveCustomer</span>
 <span class="k">let</span> <span class="n">updateDetails</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">UnverifiedCustomer</span><span class="p">)</span> <span class="n">details</span> <span class="p">=</span>
@@ -736,7 +737,7 @@
         <span class="p">|</span> <span class="nc">Complete</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">Details</span> <span class="p">=</span> <span class="n">details</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>This is a bit more code, but from the signature we can see that <code class="highlighter-rouge">updateDetails</code> takes an <code class="highlighter-rouge">UnverifiedCustomer</code> some <code class="highlighter-rouge">CustomerDetails</code> and returns a customer that we now know to be in the <code class="highlighter-rouge">ActiveCustomer</code> state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will remind us if we have forgotten to handle any states.</p>
+<p>This is a bit more code, but from the signature we can see that <code class="language-plaintext highlighter-rouge">updateDetails</code> takes an <code class="language-plaintext highlighter-rouge">UnverifiedCustomer</code> some <code class="language-plaintext highlighter-rouge">CustomerDetails</code> and returns a customer that we now know to be in the <code class="language-plaintext highlighter-rouge">ActiveCustomer</code> state. We are using pattern matching to handle all the possible CustomerStates, and we get help from the compiler. It will remind us if we have forgotten to handle any states.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ActiveCustomer -&gt; AcceptDate -&gt; ActiveCustomer</span>
 <span class="k">let</span> <span class="n">acceptGDPR</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">ActiveCustomer</span><span class="p">)</span> <span class="n">date</span> <span class="p">=</span>
@@ -752,7 +753,7 @@
     <span class="p">|</span> <span class="nc">Complete</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">AcceptDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>By now it should be pretty clear from the function signature what is happening here. We take an <code class="highlighter-rouge">ActiveCustomer</code>, apply an <code class="highlighter-rouge">AcceptDate</code> and are given back a new <code class="highlighter-rouge">ActiveCustomer</code>. Again we are forced to handle all possible states.</p>
+<p>By now it should be pretty clear from the function signature what is happening here. We take an <code class="language-plaintext highlighter-rouge">ActiveCustomer</code>, apply an <code class="language-plaintext highlighter-rouge">AcceptDate</code> and are given back a new <code class="language-plaintext highlighter-rouge">ActiveCustomer</code>. Again we are forced to handle all possible states.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ActiveCustomer -&gt; CheckInDate -&gt; ActiveCustomer</span>
 <span class="k">let</span> <span class="n">checkIn</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">ActiveCustomer</span><span class="p">)</span> <span class="n">date</span> <span class="p">=</span>
@@ -768,7 +769,7 @@
     <span class="p">|</span> <span class="nc">Complete</span> <span class="n">c</span> <span class="p">-&gt;</span> <span class="nc">Complete</span> <span class="p">{</span> <span class="n">c</span> <span class="k">with</span> <span class="nc">CheckInDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>CheckIn has almost the same signature as acceptGDPR since they are almost doing the same thing. Good thing we made separate types for <code class="highlighter-rouge">AcceptDate</code> and <code class="highlighter-rouge">CheckInDate</code> so we don’t accidentally mix them up. We couldn’t do that now without getting a compiler error.</p>
+<p>CheckIn has almost the same signature as acceptGDPR since they are almost doing the same thing. Good thing we made separate types for <code class="language-plaintext highlighter-rouge">AcceptDate</code> and <code class="language-plaintext highlighter-rouge">CheckInDate</code> so we don’t accidentally mix them up. We couldn’t do that now without getting a compiler error.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ActiveCustomer -&gt; VerifiedDate -&gt; VerifiedCustomer</span>
 <span class="k">let</span> <span class="n">verify</span> <span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="nc">Complete</span><span class="p">)</span> <span class="n">date</span> <span class="p">=</span>
@@ -779,7 +780,7 @@
       <span class="nc">VerifiedDate</span> <span class="p">=</span> <span class="n">date</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>And finally <code class="highlighter-rouge">verify</code>, it takes a <code class="highlighter-rouge">Complete</code> customer and a <code class="highlighter-rouge">VerifiedDate</code> and returns a <code class="highlighter-rouge">VerifiedCustomer</code>. One requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don’t need any tests to verify that because we cannot even call this function unless we have a <code class="highlighter-rouge">Complete</code> customer.</p>
+<p>And finally <code class="language-plaintext highlighter-rouge">verify</code>, it takes a <code class="language-plaintext highlighter-rouge">Complete</code> customer and a <code class="language-plaintext highlighter-rouge">VerifiedDate</code> and returns a <code class="language-plaintext highlighter-rouge">VerifiedCustomer</code>. One requirement was that a customer needed to have accepted GDPR and checked in before we could mark them as verified. We don’t need any tests to verify that because we cannot even call this function unless we have a <code class="language-plaintext highlighter-rouge">Complete</code> customer.</p>
 
 <h2 id="testing-the-f-code">Testing the F# code</h2>
 <p>Actually, the only tests that we now need to write will be very focused on the requirements, we no longer need to worry about stuff like empty strings, or that customers must be in the correct state. The type system is enforcing all that for us.</p>
@@ -812,28 +813,28 @@
 </sub></p>
 
 <h1 id="conclusions">Conclusions</h1>
-<p>To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>. But we are accomplishing <strong>so much more</strong> in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.</p>
+<p>To be fair, at first glance it may not be obvious why the F# code is preferable. The number of lines of code is almost the same for both implementations with the F# just being slightly shorter<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup>. But we are accomplishing <strong>so much more</strong> in the F# code. It is more type safe, letting the compiler deal with things that we were forced to write unit tests for in C#.</p>
 
-<p>By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling <code class="highlighter-rouge">invite</code> will have to provide us with a valid id and email. And they will have to deal with the fact that they get an <code class="highlighter-rouge">InvitedCustomer</code> back. Or that you cannot call <code class="highlighter-rouge">verify</code> without a <code class="highlighter-rouge">Complete</code> customer. And since the constructor for the <code class="highlighter-rouge">Complete</code> state is private, the only way you can get a <code class="highlighter-rouge">Complete</code> customer is by calling our functions <code class="highlighter-rouge">updateDetails</code>, <code class="highlighter-rouge">acceptGDPR</code> and <code class="highlighter-rouge">checkIn</code>. Hopefully you can see the benefits of all this<sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>.</p>
+<p>By modeling only the possible states for a customer we make it much harder for anyone to (unintentionally) use our code in the “wrong” way. Anyone calling <code class="language-plaintext highlighter-rouge">invite</code> will have to provide us with a valid id and email. And they will have to deal with the fact that they get an <code class="language-plaintext highlighter-rouge">InvitedCustomer</code> back. Or that you cannot call <code class="language-plaintext highlighter-rouge">verify</code> without a <code class="language-plaintext highlighter-rouge">Complete</code> customer. And since the constructor for the <code class="language-plaintext highlighter-rouge">Complete</code> state is private, the only way you can get a <code class="language-plaintext highlighter-rouge">Complete</code> customer is by calling our functions <code class="language-plaintext highlighter-rouge">updateDetails</code>, <code class="language-plaintext highlighter-rouge">acceptGDPR</code> and <code class="language-plaintext highlighter-rouge">checkIn</code>. Hopefully you can see the benefits of all this<sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">5</a></sup>.</p>
 
 <p>If you want to read more about modeling your domain with F# I strongly recommend the book <a href="https://pragprog.com/book/swdddf/domain-modeling-made-functional">Domain Modeling Made Functional</a> by Scott Wlaschin.</p>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>Sure this code can be improved quite a bit, and be made more like the proposed F# solution with immutability and similar Customer states, but I want to write <strong>less</strong> code, not more. I will leave this as an exercise to the reader 😉. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>Sure this code can be improved quite a bit, and be made more like the proposed F# solution with immutability and similar Customer states, but I want to write <strong>less</strong> code, not more. I will leave this as an exercise to the reader 😉. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2">
-      <p>In “real” code we would probably add some validations here, for example to check that the email is valid email and that the dates are not in the future. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:2" role="doc-endnote">
+      <p>In “real” code we would probably add some validations here, for example to check that the email is valid email and that the dates are not in the future. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:3">
-      <p>Mark Seemann refers to this as Dependency Rejection, you really should read his <a href="https://blog.ploeh.dk/2017/02/02/dependency-rejection/">series of posts</a> on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possible. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:3" role="doc-endnote">
+      <p>Mark Seemann refers to this as Dependency Rejection, you really should read his <a href="https://blog.ploeh.dk/2017/02/02/dependency-rejection/">series of posts</a> on the subject. I could have introduced this concept in the C# code as well, but I did want to write as recognizable object oriented code as possible. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:4">
-      <p>To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#. <a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:4" role="doc-endnote">
+      <p>To be fair we have moved the database calls outside the scope of the F# solution. But also I am not counting the tests that tend to be much more verbose in C#. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:5">
-      <p>And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not. <a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:5" role="doc-endnote">
+      <p>And as an aside, I actually discovered a missing requirement when rewriting the code in F#; should it really be possible to make any changes to a customer after they have been verified? Probably not. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -879,6 +880,7 @@
 
 
         
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-03-12T22:47:02+01:00">March 12, 2019</time></p>
 
 
@@ -918,6 +920,46 @@
       <div class="grid__wrapper">
         
           
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/farmer-service-bus/" rel="permalink">Automagically manage your Azure Service Bus topics with Farmer
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…
+
+</p>
+  </article>
+</div>
+
+        
           
 
 
@@ -961,7 +1003,6 @@ or: How I spent my 2020 summer vacation
 
         
           
-          
 
 
 
@@ -1003,7 +1044,6 @@ or: How I spent my 2020 summer vacation
 
         
           
-          
 
 
 
@@ -1044,50 +1084,9 @@ or: How I spent my 2020 summer vacation
 </div>
 
         
-          
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-3/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 3
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          8 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Property based tests part 3 - generators with too many output values.
-
-</p>
-  </article>
-</div>
-
-        
       </div>
     </div>
+  
   
 </div>
 

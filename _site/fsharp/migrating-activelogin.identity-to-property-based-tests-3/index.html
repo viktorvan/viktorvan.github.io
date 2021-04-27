@@ -80,6 +80,7 @@
 
 
 
+
 <!-- end _includes/seo.html -->
 
 
@@ -395,11 +396,11 @@
 
 <p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a checksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a “+” indicates that the person has turned or is turning 100 this year.</p>
 
-<p>In the previous posts we have written property tests for valid and invalid pin numbers. In this post we will look at the <code class="highlighter-rouge">create</code> function and have to deal with ranges of inputs that are very large.</p>
+<p>In the previous posts we have written property tests for valid and invalid pin numbers. In this post we will look at the <code class="language-plaintext highlighter-rouge">create</code> function and have to deal with ranges of inputs that are very large.</p>
 
 <h2 id="the-create-function">The create function</h2>
 
-<p>The type signature of the <code class="highlighter-rouge">create</code> function is:</p>
+<p>The type signature of the <code class="language-plaintext highlighter-rouge">create</code> function is:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">SwedishPersonalIdentityNumberValues</span> <span class="p">-&gt;</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="nc">SwedishPersonalIdentityNumber</span><span class="p">,</span> <span class="nc">Error</span><span class="p">&gt;</span>
 </code></pre></div></div>
@@ -436,7 +437,7 @@
         <span class="n">result</span> <span class="o">=!</span> <span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">invalidYear</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>We get some valid input values and replace the year with an invalid year. Then we assert that <code class="highlighter-rouge">create</code> returns the expected Error. It requires us to write a generator for valid SwedishPersonalIdentityNumberValues and a generator for invalid years. They would look like this:</p>
+<p>We get some valid input values and replace the year with an invalid year. Then we assert that <code class="language-plaintext highlighter-rouge">create</code> returns the expected Error. It requires us to write a generator for valid SwedishPersonalIdentityNumberValues and a generator for invalid years. They would look like this:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidValues</span> <span class="p">=</span> <span class="nc">ValidValues</span> <span class="k">of</span> <span class="nc">SwedishPersonalIdentityNumberValues</span>
 
@@ -457,7 +458,7 @@
     <span class="p">}</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">SwedishPersonalIdentityNumberTestData.getRandom()</code> is a function from <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a><sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+<p><code class="language-plaintext highlighter-rouge">SwedishPersonalIdentityNumberTestData.getRandom()</code> is a function from <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">InvalidYear</span> <span class="p">=</span> <span class="nc">InvalidYear</span> <span class="k">of</span> <span class="kt">int</span>
 
@@ -474,11 +475,11 @@
     <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>where <code class="highlighter-rouge">outsideRange</code> is a helper function that takes a min and a max value and generates an int outside of that range. We then provide our range of valid years, and since we are using the <code class="highlighter-rouge">System.DateTime</code> type for parsing the year that will be [1, 9999].</p>
+<p>where <code class="language-plaintext highlighter-rouge">outsideRange</code> is a helper function that takes a min and a max value and generates an int outside of that range. We then provide our range of valid years, and since we are using the <code class="language-plaintext highlighter-rouge">System.DateTime</code> type for parsing the year that will be [1, 9999].</p>
 
 <h2 id="how-many-valid-input-values-are-there">How many valid input values are there?</h2>
 
-<p>Now, we can run this test, and it will pass, but let’s think about what FsCheck is doing for us here. Specifically the <code class="highlighter-rouge">InvalidYear</code> generator is a problem. By default FsCheck will try to falsify our property by generating 200 input values using our generator. How many different values can be generated by <code class="highlighter-rouge">InvalidYear</code> though? Ints outside the range [1, 9999], so that would be Int.MaxValue - Int.MinValue - 9999 = 4,294,957,296. Which is more than 200. Quite a bit more actually. When writing a test like this we are probably more worried about tests close to our limits, e.g. invalid years near 1 or near 9999. For example, if we would introduce an bug in our <code class="highlighter-rouge">create</code> function so that 10000 is a valid year this test would most likely not catch it.</p>
+<p>Now, we can run this test, and it will pass, but let’s think about what FsCheck is doing for us here. Specifically the <code class="language-plaintext highlighter-rouge">InvalidYear</code> generator is a problem. By default FsCheck will try to falsify our property by generating 200 input values using our generator. How many different values can be generated by <code class="language-plaintext highlighter-rouge">InvalidYear</code> though? Ints outside the range [1, 9999], so that would be Int.MaxValue - Int.MinValue - 9999 = 4,294,957,296. Which is more than 200. Quite a bit more actually. When writing a test like this we are probably more worried about tests close to our limits, e.g. invalid years near 1 or near 9999. For example, if we would introduce an bug in our <code class="language-plaintext highlighter-rouge">create</code> function so that 10000 is a valid year this test would most likely not catch it.</p>
 
 <p>So what do we do? Well, in this case I would say that this is probably a code smell to be using an Int32 as input for a year. Even thinking about what we are considering valid years, [1, 9999], might be too big a range for our domain. I think the earliest year for which a pin was issued was around 1860. Also it’s quite optimistic (or pessimistic 🙂) to expect this code to be running in 8000 years time. We would probably be fine if we only considered valid years in the range [1860, 2100].</p>
 
@@ -509,13 +510,13 @@
         <span class="n">result</span> <span class="o">&lt;&gt;!</span> <span class="p">(</span><span class="nc">Error</span><span class="p">(</span><span class="nc">InvalidYear</span> <span class="n">validYear</span><span class="o">))</span>
 </code></pre></div></div>
 
-<p>But we should note that even in this case it will not be enough to run the test 200 times, we must increase the number of times to run the test which is done by setting the MaxTest property of FsCheck<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>.</p>
+<p>But we should note that even in this case it will not be enough to run the test 200 times, we must increase the number of times to run the test which is done by setting the MaxTest property of FsCheck<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>.</p>
 
 <p>The tests for invalid months and days can be done in the same way as for years, so I will leave them out of this blog post. For invalid birth numbers there’s only one invalid case: 000, so I will leave that out as well.</p>
 
 <h1 id="creating-a-pin-with-an-invalid-checksum">Creating a pin with an invalid checksum</h1>
 
-<p>The checksum is a single digit [0,9] and since we have a generator for <code class="highlighter-rouge">ValidValues</code> we know which one is valid. We just need to test with all the others. So for this test we actually won’t create a generator for InvalidChecksums, instead we can calculate all invalid checksums from the valid pin like this:</p>
+<p>The checksum is a single digit [0,9] and since we have a generator for <code class="language-plaintext highlighter-rouge">ValidValues</code> we know which one is valid. We just need to test with all the others. So for this test we actually won’t create a generator for InvalidChecksums, instead we can calculate all invalid checksums from the valid pin like this:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"invalid checksum returns InvalidChecksum Error"</span> <span class="p">&lt;|</span>
     <span class="k">fun</span> <span class="p">(</span><span class="nc">ValidValues</span> <span class="n">valid</span><span class="p">)</span> <span class="p">-&gt;</span>
@@ -541,19 +542,19 @@
             <span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="n">failwith</span> <span class="s2">"Expected InvalidChecksum Error"</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>First we get all invalidChecksums by starting with a list of all digits in the range [0,9] and removing the valid checksum. We then create a list of <code class="highlighter-rouge">SwedishPersonalIdentityNumberValues</code> records where we replace the checksum with each of the invalid checksums. Then we call create on all those values to get 9 results. We return those results as tuples together with the invalid checksum to be able to assert we get the expected error. The assertion is done by first pattern matching on each result to make sure it is of type InvalidChecksum. Then we check that the invalid checksum in the error is the expected checksum.</p>
+<p>First we get all invalidChecksums by starting with a list of all digits in the range [0,9] and removing the valid checksum. We then create a list of <code class="language-plaintext highlighter-rouge">SwedishPersonalIdentityNumberValues</code> records where we replace the checksum with each of the invalid checksums. Then we call create on all those values to get 9 results. We return those results as tuples together with the invalid checksum to be able to assert we get the expected error. The assertion is done by first pattern matching on each result to make sure it is of type InvalidChecksum. Then we check that the invalid checksum in the error is the expected checksum.</p>
 
 <h1 id="conclusion">Conclusion</h1>
 
 <p>In this post we realised we need to be careful when writing generators to be aware of what their possible outputs can be. If it’s too large there is a great chance we will have flaky tests, or never find any bugs simply because the tests will not run enough times. In the next post we will look at how to write tests without repeating our production code in the test logic.</p>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>Due to GDPR and such it’s best practice to not use any ‘random’ Personal Identity Number values in your tests since the pins could actully belong to a real person. The Swedish National Tax Board that is in charge of the Personal Identity Numbers actually provide a list of valid numbers to use for testing purposes. The library <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a> provides easy access to this test data. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>Due to GDPR and such it’s best practice to not use any ‘random’ Personal Identity Number values in your tests since the pins could actully belong to a real person. The Swedish National Tax Board that is in charge of the Personal Identity Numbers actually provide a list of valid numbers to use for testing purposes. The library <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a> provides easy access to this test data. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2">
-      <p><a href="https://fscheck.github.io/FsCheck/reference/fscheck-config.html">FsCheck configuration</a> <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:2" role="doc-endnote">
+      <p><a href="https://fscheck.github.io/FsCheck/reference/fscheck-config.html">FsCheck configuration</a> <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -601,6 +602,7 @@
 
 
         
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-08-29T08:45:00+02:00">August 29, 2019</time></p>
 
 
@@ -639,6 +641,47 @@
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/farmer-service-bus/" rel="permalink">Automagically manage your Azure Service Bus topics with Farmer
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…
+
+</p>
+  </article>
+</div>
+
         
           
 
@@ -758,47 +801,6 @@ or: How I spent my 2020 summer vacation
 
 
     <p class="archive__item-excerpt" itemprop="description">Property based tests part 4 - production code repeated in tests.
-
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-2/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 2
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          8 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Property based tests part 2 - More about generators.
 
 </p>
   </article>

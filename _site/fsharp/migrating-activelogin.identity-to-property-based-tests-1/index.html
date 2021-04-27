@@ -80,6 +80,7 @@
 
 
 
+
 <!-- end _includes/seo.html -->
 
 
@@ -391,19 +392,19 @@
 
 <h1 id="background">Background</h1>
 
-<p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a <strong>C</strong>hecksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a “+” indicates that the person has turned or is turning 100 this year<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+<p>A short background on ActiveLogin.Identity; it’s a library for parsing and validating Swedish identities, such as a Personal Identity Number, let’s call it a <strong>pin</strong>. For this blog we can be satisfied with the following simplified model: the format for a pin is YYYYMMDDBBBC, i.e. <strong>Y</strong>ear, <strong>M</strong>onth, <strong>D</strong>ay, <strong>B</strong>irth number and a <strong>C</strong>hecksum. The birth number is any number three digit number from 001 to 999, the checksum is calculated using the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Luhn algorithm</a>. You can also write a pin using a 10 digit format YYMMDD-BBBC or YYMMDD+BBBC, where a “+” indicates that the person has turned or is turning 100 this year<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>.</p>
 
-<p>There are a few functions of interest in the library that we are going to focus on in this blog post: <code class="highlighter-rouge">parse</code>, <code class="highlighter-rouge">to12DigitString</code>, and <code class="highlighter-rouge">to10DigitString</code>. What they do is pretty straight forward, <code class="highlighter-rouge">parse</code> takes a string input and returns a pin or an error. The <code class="highlighter-rouge">toXXDigitString</code> takes a pin and returns its string representation.</p>
+<p>There are a few functions of interest in the library that we are going to focus on in this blog post: <code class="language-plaintext highlighter-rouge">parse</code>, <code class="language-plaintext highlighter-rouge">to12DigitString</code>, and <code class="language-plaintext highlighter-rouge">to10DigitString</code>. What they do is pretty straight forward, <code class="language-plaintext highlighter-rouge">parse</code> takes a string input and returns a pin or an error. The <code class="language-plaintext highlighter-rouge">toXXDigitString</code> takes a pin and returns its string representation.</p>
 
 <h1 id="what-are-property-based-tests">What are property-based tests</h1>
 <h2 id="testing-by-example">Testing by example</h2>
 <p>So what are property-based tests? Maybe it is easier to explain if put them in contrast with <em>normal</em> unit tests. The first test from the original code looks like this:</p>
 
-<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">[Theory]</span>
-<span class="na">[InlineData("990913+9801", 1899)]</span>
-<span class="na">[InlineData("120211+9986", 1912)]</span>
-<span class="na">[InlineData("990807-2391", 1999)]</span>
-<span class="na">[InlineData("180101-2392", 2018)]</span>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">Theory</span><span class="p">]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"990913+9801"</span><span class="p">,</span> <span class="m">1899</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"120211+9986"</span><span class="p">,</span> <span class="m">1912</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"990807-2391"</span><span class="p">,</span> <span class="m">1999</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"180101-2392"</span><span class="p">,</span> <span class="m">2018</span><span class="p">)]</span>
 <span class="k">public</span> <span class="k">void</span> <span class="nf">Parses_Year_From_10_Digit_String</span><span class="p">(</span>
     <span class="kt">string</span> <span class="n">personalIdentityNumberString</span><span class="p">,</span> 
     <span class="kt">int</span> <span class="n">expectedYear</span><span class="p">)</span>
@@ -414,7 +415,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>This looks like a normal unit test and is what we can call an <strong>example-based test</strong>. We are providing the tests with four known <strong>example</strong> inputs (through the InlineData attributes) that we expect to have a certain outcome. In this case we expect the <code class="highlighter-rouge">SwedishPersonalIdentityNumber.Parse</code> method to correctly parse the year part of the pin.</p>
+<p>This looks like a normal unit test and is what we can call an <strong>example-based test</strong>. We are providing the tests with four known <strong>example</strong> inputs (through the InlineData attributes) that we expect to have a certain outcome. In this case we expect the <code class="language-plaintext highlighter-rouge">SwedishPersonalIdentityNumber.Parse</code> method to correctly parse the year part of the pin.</p>
 
 <p>But we are only testing with four inputs which is only a small subset of the actual inputs we can expect.</p>
 
@@ -474,15 +475,15 @@ A quick note on writing unit tests in F#. My test library of choice for F# is <a
 
 <h1 id="testing-the-parse-function">Testing the parse function</h1>
 
-<p>The first function we will test is <code class="highlighter-rouge">parse</code>.</p>
+<p>The first function we will test is <code class="language-plaintext highlighter-rouge">parse</code>.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// string -&gt; Result&lt;SwedishPersonalIdentityNumber, Error&gt;</span>
 <span class="k">let</span> <span class="n">parse</span> <span class="n">str</span> <span class="p">=</span> <span class="o">...</span>
 </code></pre></div></div>
 
-<p>where <code class="highlighter-rouge">Error</code> is a discriminated union with some error cases specific to our domain.</p>
+<p>where <code class="language-plaintext highlighter-rouge">Error</code> is a discriminated union with some error cases specific to our domain.</p>
 
-<p>So it’s a function that given a string input will return a value wrapped in the built-in <code class="highlighter-rouge">Result</code>type. Result is a discriminated union that can have either an <code class="highlighter-rouge">Ok</code> value or an <code class="highlighter-rouge">Error</code>. In the F# api we are not throwing any exceptions like we did in the C# api.</p>
+<p>So it’s a function that given a string input will return a value wrapped in the built-in <code class="language-plaintext highlighter-rouge">Result</code>type. Result is a discriminated union that can have either an <code class="language-plaintext highlighter-rouge">Ok</code> value or an <code class="language-plaintext highlighter-rouge">Error</code>. In the F# api we are not throwing any exceptions like we did in the C# api.</p>
 
 <h2 id="the-happy-path-parsing-valid-pin-strings">The Happy Path: Parsing valid pin strings</h2>
 <p>In the original C# code we have several tests to verify that we can parse a valid pin. The idea is to replace them with a few of the “roundtrip” tests described above.</p>
@@ -503,20 +504,20 @@ A quick note on writing unit tests in F#. My test library of choice for F# is <a
     [16:10:46 INF] EXPECTO! 1 tests run in 00:00:00.5820007 for miscellaneous – 0 passed, 0 ignored, 0 failed, 1 errored.
 </div>
 
-<p>Which is due to the fact that FsCheck doesn’t yet know how to create the input <code class="highlighter-rouge">pin</code> for us<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>. We need to write custom generator.</p>
+<p>Which is due to the fact that FsCheck doesn’t yet know how to create the input <code class="language-plaintext highlighter-rouge">pin</code> for us<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>. We need to write custom generator.</p>
 
 <h2 id="creating-a-custom-generator-for-the-swedishpersonalidentitynumber-type">Creating a custom generator for the SwedishPersonalIdentityNumber type</h2>
 
 <p>It turns out, due to GDPR, that you should not use any ‘random’ Personal Identity Number values in your tests since the pins could actully belong to a real person. The Swedish National Tax Board that is in charge of the Personal Identity Numbers actually provide a list of valid numbers to use for testing purposes. To simplify the usage of these test numbers <a href="https://github.com/ActiveLogin/ActiveLogin.Identity">ActiveLogin.Identity</a> actually provides access to the test numbers in the package <a href="https://www.nuget.org/packages/ActiveLogin.Identity.Swedish.TestData/">ActiveLogin.Identity.Swedish.TestData</a>. So we’ll use that package to ensure we are not using any ‘real’ pin numbers.</p>
 
-<p>Using the TestData package we can get a random valid pin from: <code class="highlighter-rouge">SwedishPersonalIdentityNumberTestData.getRandom()</code>.
+<p>Using the TestData package we can get a random valid pin from: <code class="language-plaintext highlighter-rouge">SwedishPersonalIdentityNumberTestData.getRandom()</code>.
 Now let’s build our custom generator; In this case it is quite easy, we can use the generator computation expression from FsCheck and just call the getRandom-function.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Gen&lt;SwedishPersonalIdentityNumber&gt;</span>
 <span class="k">let</span> <span class="n">validPin</span><span class="bp">()</span> <span class="p">=</span> <span class="n">gen</span> <span class="p">{</span> <span class="k">return</span> <span class="nn">SwedishPersonalIdentityNumberTestData</span><span class="p">.</span><span class="n">getRandom</span><span class="bp">()</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>FsCheck actually packages a <em>generator</em> together with a <em>shrinker</em> into something called an <em>arbitrary</em> instance. The <em>shrinker</em> has the following signature: <code class="highlighter-rouge">'a -&gt; seq&lt;'a&gt;</code> and takes an input and returns new values of the same type that are in some way ‘smaller’ that the original value. The <em>shrinker</em> is used when a test fails. FsCheck will then use the shrink the input and try again until it finds the smallest value that will cause the property to fail.
+<p>FsCheck actually packages a <em>generator</em> together with a <em>shrinker</em> into something called an <em>arbitrary</em> instance. The <em>shrinker</em> has the following signature: <code class="language-plaintext highlighter-rouge">'a -&gt; seq&lt;'a&gt;</code> and takes an input and returns new values of the same type that are in some way ‘smaller’ that the original value. The <em>shrinker</em> is used when a test fails. FsCheck will then use the shrink the input and try again until it finds the smallest value that will cause the property to fail.
 I will not go further into the details of those concepts in this blog post, but feel free to take a deep dive into <a href="https://fscheck.github.io/FsCheck/TestData.html">FsCheck’s documentation on generating test data</a>. We actually don’t have to provide a shrinker, but we have to wrap our generator in the Arbitrary type like this:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Arbitrary&lt;SwedishPersonalIdentityNumber&gt;</span>
@@ -567,14 +568,14 @@ I will not go further into the details of those concepts in this blog post, but 
 
 <h2 id="adding-type-safety-to-our-generators">Adding type safety to our generators</h2>
 
-<p>The setup for the test above is fine as long as we only have one generator for <code class="highlighter-rouge">SwedishPersonalIdentityNumber</code>. If we where to have more than one generator for the same type and add both to the configuration. For example, let’s say we write two new generators to generate valid and invalid years. Both will have the type <code class="highlighter-rouge">Arbitrary&lt;int&gt;</code> and if we were to add them to the configuration:</p>
+<p>The setup for the test above is fine as long as we only have one generator for <code class="language-plaintext highlighter-rouge">SwedishPersonalIdentityNumber</code>. If we where to have more than one generator for the same type and add both to the configuration. For example, let’s say we write two new generators to generate valid and invalid years. Both will have the type <code class="language-plaintext highlighter-rouge">Arbitrary&lt;int&gt;</code> and if we were to add them to the configuration:</p>
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">config</span> <span class="p">=</span> <span class="p">{</span> <span class="nn">FsCheckConfig</span><span class="p">.</span><span class="n">defaultConfig</span> <span class="k">with</span> <span class="n">arbitrary</span> <span class="p">=</span> 
     <span class="p">[</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nc">ValidYearGenerator</span><span class="o">&gt;;</span> <span class="n">typeof</span><span class="p">&lt;</span><span class="nc">InvalidYearGenerator</span><span class="p">&gt;</span> <span class="p">]</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>then the only the second one would be used, i.e. if we wrote a property test that takes an <code class="highlighter-rouge">int</code> as an input, then all of them would be generated using the <code class="highlighter-rouge">InvalidYearGenerator</code>.</p>
+<p>then the only the second one would be used, i.e. if we wrote a property test that takes an <code class="language-plaintext highlighter-rouge">int</code> as an input, then all of them would be generated using the <code class="language-plaintext highlighter-rouge">InvalidYearGenerator</code>.</p>
 
-<p>A common approach to deal with this problem is to wrap your generators in single-case discriminated unions. Instead of writing a generator for a valid pin to be of type <code class="highlighter-rouge">Gen&lt;SwedishPersonalIdentityNumber&gt;</code> we create a new single-case DU: <code class="highlighter-rouge">type ValidPin = ValidPin of SwedishPersonalIdentityNumber</code>. Then we rewrite our generator to be of type <code class="highlighter-rouge">Gen&lt;ValidPin&gt;</code>:</p>
+<p>A common approach to deal with this problem is to wrap your generators in single-case discriminated unions. Instead of writing a generator for a valid pin to be of type <code class="language-plaintext highlighter-rouge">Gen&lt;SwedishPersonalIdentityNumber&gt;</code> we create a new single-case DU: <code class="language-plaintext highlighter-rouge">type ValidPin = ValidPin of SwedishPersonalIdentityNumber</code>. Then we rewrite our generator to be of type <code class="language-plaintext highlighter-rouge">Gen&lt;ValidPin&gt;</code>:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">ValidPin</span> <span class="p">=</span> <span class="nc">ValidPin</span> <span class="k">of</span> <span class="nc">SwedishPersonalIdentityNumber</span>
 <span class="c1">// Arbitrary&lt;ValidPin&gt;</span>
@@ -590,7 +591,7 @@ I will not go further into the details of those concepts in this blog post, but 
     <span class="p">|&gt;</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">parse</span> <span class="o">=!</span> <span class="nc">Ok</span> <span class="n">pin</span>
 </code></pre></div></div>
 
-<p>So in our test function we are deconstructing the <code class="highlighter-rouge">ValidPin</code> discriminated union directly in the function definition: <code class="highlighter-rouge">(ValidPin pin)</code>. Now when we add more generators it will be much clearer which one we are actually using in which test:</p>
+<p>So in our test function we are deconstructing the <code class="language-plaintext highlighter-rouge">ValidPin</code> discriminated union directly in the function definition: <code class="language-plaintext highlighter-rouge">(ValidPin pin)</code>. Now when we add more generators it will be much clearer which one we are actually using in which test:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">pin</span> <span class="p">-&gt;</span> <span class="o">...</span>
 </code></pre></div></div>
@@ -618,14 +619,14 @@ I will not go further into the details of those concepts in this blog post, but 
     <span class="p">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">bind</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">parse</span> <span class="o">=!</span> <span class="nc">Ok</span> <span class="n">pin</span>
 </code></pre></div></div>
 
-<p>As you can see we now have to use <code class="highlighter-rouge">Result.bind</code> and Result.<code class="highlighter-rouge">map</code> since <code class="highlighter-rouge">.to10DigitString</code> returns a Result&lt;string,Error&gt;. <code class="highlighter-rouge">to10DigitString</code> is an operation that actually can fail.</p>
+<p>As you can see we now have to use <code class="language-plaintext highlighter-rouge">Result.bind</code> and Result.<code class="language-plaintext highlighter-rouge">map</code> since <code class="language-plaintext highlighter-rouge">.to10DigitString</code> returns a Result&lt;string,Error&gt;. <code class="language-plaintext highlighter-rouge">to10DigitString</code> is an operation that actually can fail.</p>
 
 <h2 id="other-valid-pin-strings">Other valid pin strings</h2>
 
 <h3 id="12-digit-strings-with-extra-noise">12 digit strings with extra “noise”</h3>
-<p>There are some other tests in the original test suite for inputs that actually are valid. For example the parse function should be able to handle leading and trailing whitespaces. Actually if you really dive down into the requirements you will find that for 12 digit strings we should be able to parse an input as long as it contains 12 valid digits. I.e. even if there are any leading, trailing, or interspersed characters between the digits. For example if <em>“192011149255”</em> is a valid pin, then <em>”   192011149255   “</em> with leading and trailing whitespace is also valid. And taken to its extreme: <em>” a1b9c2d0e1f1g1h4i9j2k5l5m “</em> is a valid pin<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. But how can we test this?</p>
+<p>There are some other tests in the original test suite for inputs that actually are valid. For example the parse function should be able to handle leading and trailing whitespaces. Actually if you really dive down into the requirements you will find that for 12 digit strings we should be able to parse an input as long as it contains 12 valid digits. I.e. even if there are any leading, trailing, or interspersed characters between the digits. For example if <em>“192011149255”</em> is a valid pin, then <em>”   192011149255   “</em> with leading and trailing whitespace is also valid. And taken to its extreme: <em>” a1b9c2d0e1f1g1h4i9j2k5l5m “</em> is a valid pin<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup>. But how can we test this?</p>
 
-<p>We need to generate the valid input but with some noise. One way to do this is to generate a random string and then remove any digits it contains in our test. FsCheck can generate a string for us out of the box, but it will generate strings of any length and with nulls. To avoid any problems with too short strings we will write a generator that generates a string with length 100. Since we will be filtering the array for digits it is easier to keep it as a <code class="highlighter-rouge">char[]</code> for now:</p>
+<p>We need to generate the valid input but with some noise. One way to do this is to generate a random string and then remove any digits it contains in our test. FsCheck can generate a string for us out of the box, but it will generate strings of any length and with nulls. To avoid any problems with too short strings we will write a generator that generates a string with length 100. Since we will be filtering the array for digits it is easier to keep it as a <code class="language-plaintext highlighter-rouge">char[]</code> for now:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="nc">Char100</span> <span class="p">=</span> <span class="nc">Char100</span> <span class="k">of</span> <span class="kt">char</span><span class="bp">[]</span>
 
@@ -635,7 +636,7 @@ I will not go further into the details of those concepts in this blog post, but 
     <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>That is, we are using the built-in functions <code class="highlighter-rouge">arrayOfLength</code> and <code class="highlighter-rouge">generate&lt;'T&gt;</code> to generate a char[] with length 100. We then use <code class="highlighter-rouge">Gen.map</code> to turn the char[] into our <code class="highlighter-rouge">Char100</code> type.</p>
+<p>That is, we are using the built-in functions <code class="language-plaintext highlighter-rouge">arrayOfLength</code> and <code class="language-plaintext highlighter-rouge">generate&lt;'T&gt;</code> to generate a char[] with length 100. We then use <code class="language-plaintext highlighter-rouge">Gen.map</code> to turn the char[] into our <code class="language-plaintext highlighter-rouge">Char100</code> type.</p>
 
 <p>We then use it in our property test like this:</p>
 
@@ -651,7 +652,7 @@ I will not go further into the details of those concepts in this blog post, but 
         <span class="p">|&gt;</span> <span class="nn">SwedishPersonalIdentityNumber</span><span class="p">.</span><span class="n">parse</span> <span class="o">=!</span> <span class="nc">Ok</span> <span class="n">pin</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">isDigit</code> and <code class="highlighter-rouge">surroundEachChar</code> are helper functions for filtering and surrounding every character in our pin string with characters from <code class="highlighter-rouge">charsWithoutDigits</code>:</p>
+<p><code class="language-plaintext highlighter-rouge">isDigit</code> and <code class="language-plaintext highlighter-rouge">surroundEachChar</code> are helper functions for filtering and surrounding every character in our pin string with characters from <code class="language-plaintext highlighter-rouge">charsWithoutDigits</code>:</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="k">private</span> <span class="n">isDigit</span> <span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="kt">char</span><span class="p">)</span> <span class="p">=</span> <span class="s2">"0123456789"</span><span class="p">.</span><span class="nc">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
@@ -666,25 +667,25 @@ I will not go further into the details of those concepts in this blog post, but 
 
 <h3 id="conclusion">Conclusion</h3>
 
-<p>That’s almost all the tests we need for parsing valid strings. We do need tests for 10 digit strings with some random noise added, but those tests will be very similar to the tests for 12 digit strings. So I will leave those tests as an exercise to the reader.<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup></p>
+<p>That’s almost all the tests we need for parsing valid strings. We do need tests for 10 digit strings with some random noise added, but those tests will be very similar to the tests for 12 digit strings. So I will leave those tests as an exercise to the reader.<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup></p>
 
-<p>As we can see we ended up with only 4 test cases, but we are really verifying a lot with those tests. We know the <code class="highlighter-rouge">parse</code> function and to10/12digitString functions are working for valid inputs. Comparing this with C# unit test suite we have replaced about 30 unit tests. Additionally, since our property based tests are using randomly generated inputs, we are actually testing many, many more inputs than we did in the C# unit test suite.</p>
+<p>As we can see we ended up with only 4 test cases, but we are really verifying a lot with those tests. We know the <code class="language-plaintext highlighter-rouge">parse</code> function and to10/12digitString functions are working for valid inputs. Comparing this with C# unit test suite we have replaced about 30 unit tests. Additionally, since our property based tests are using randomly generated inputs, we are actually testing many, many more inputs than we did in the C# unit test suite.</p>
 
 <p>I feel we have covered enough ground in this blog post so I will stop here. In the next post we will look at the tests for invalid inputs.</p>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>So given a 12 digit pin: 191012249833 the 10 digit representation would be 101224-9833 up to year 2009, from year 2010 an onwards the 10 digit representation would be 101224+9833. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>So given a 12 digit pin: 191012249833 the 10 digit representation would be 101224-9833 up to year 2009, from year 2010 an onwards the 10 digit representation would be 101224+9833. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2">
-      <p>Actually the exception message is a bit cryptic, but it is due to the private constructor on our Year-type which is the first type it tries to create for our SwedishPersonalIdentityNumber. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:2" role="doc-endnote">
+      <p>Actually the exception message is a bit cryptic, but it is due to the private constructor on our Year-type which is the first type it tries to create for our SwedishPersonalIdentityNumber. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:3">
-      <p>It may seem overzealous to test for pins with this kind of noise. But it actually comes from some specific test cases that we had to deal with in our code base, mostly dealing with issues with how users are writing the delimiter in the pin. This is just the generalization of all those types of examples. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:3" role="doc-endnote">
+      <p>It may seem overzealous to test for pins with this kind of noise. But it actually comes from some specific test cases that we had to deal with in our code base, mostly dealing with issues with how users are writing the delimiter in the pin. This is just the generalization of all those types of examples. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:4">
-      <p>Also the real test suite has some tests for a <code class="highlighter-rouge">parseInSpecificYear</code> function which is needed due to the nature of the 10 digit format. But it only adds complexity that is not really related to property based testing so I will also leave these tests out of this blog post. <a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:4" role="doc-endnote">
+      <p>Also the real test suite has some tests for a <code class="language-plaintext highlighter-rouge">parseInSpecificYear</code> function which is needed due to the nature of the 10 digit format. But it only adds complexity that is not really related to property based testing so I will also leave these tests out of this blog post. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -732,6 +733,7 @@ I will not go further into the details of those concepts in this blog post, but 
 
 
         
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-08-12T07:45:00+02:00">August 12, 2019</time></p>
 
 
@@ -772,6 +774,46 @@ I will not go further into the details of those concepts in this blog post, but 
       <div class="grid__wrapper">
         
           
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/farmer-service-bus/" rel="permalink">Automagically manage your Azure Service Bus topics with Farmer
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…
+
+</p>
+  </article>
+</div>
+
+        
           
 
 
@@ -815,7 +857,6 @@ or: How I spent my 2020 summer vacation
 
         
           
-          
 
 
 
@@ -857,7 +898,6 @@ or: How I spent my 2020 summer vacation
 
         
           
-          
 
 
 
@@ -898,50 +938,9 @@ or: How I spent my 2020 summer vacation
 </div>
 
         
-          
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-3/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 3
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          8 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Property based tests part 3 - generators with too many output values.
-
-</p>
-  </article>
-</div>
-
-        
       </div>
     </div>
+  
   
 </div>
 

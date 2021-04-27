@@ -1,0 +1,888 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Automagically manage your Azure Service Bus topics with Farmer - Viktor Andersson</title>
+<meta name="description" content="In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…">
+
+
+  <meta name="author" content="Viktor Andersson">
+  
+  <meta property="article:author" content="Viktor Andersson">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Viktor Andersson">
+<meta property="og:title" content="Automagically manage your Azure Service Bus topics with Farmer">
+<meta property="og:url" content="https://viktorvan.github.io/fsharp/farmer-service-bus/">
+
+
+  <meta property="og:description" content="In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…">
+
+
+
+  <meta property="og:image" content="https://viktorvan.github.io/assets/images/sansebastian1.jpg">
+
+
+
+  <meta name="twitter:site" content="@Emmet_Ray">
+  <meta name="twitter:title" content="Automagically manage your Azure Service Bus topics with Farmer">
+  <meta name="twitter:description" content="In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…">
+  <meta name="twitter:url" content="https://viktorvan.github.io/fsharp/farmer-service-bus/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://viktorvan.github.io/assets/images/sansebastian1.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2021-04-27T22:46:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://viktorvan.github.io/fsharp/farmer-service-bus/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Viktor Andersson",
+      "url": "https://viktorvan.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Viktor Andersson Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <script async defer data-domain="viktorvan.github.io" src="https://plausible.io/js/plausible.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script> 
+<script>
+    document.addEventListener("click", function(event) {
+        if (event.target.closest('a[href="https://github.com/viktorvan"]'))
+        {
+            plausible('GithubProfile')
+        }
+        if (event.target.closest('a[href="https://twitter.com/Emmet_Ray"]'))
+        {
+            plausible('TwitterProfile')
+        }
+        if (event.target.closest('a[href="https://www.linkedin.com/in/viktorand/"]'))
+        {
+            plausible('LinkedInProfile')
+        }
+    });
+</script>
+<link rel="stylesheet" href="style.css">
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Viktor Andersson
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/assets/images/sansebastian1.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          Automagically manage your Azure Service Bus topics with Farmer
+
+        
+      </h1>
+      
+        <p class="page__lead">In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…
+
+</p>
+      
+      
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/bio-photo-blue.jpeg" alt="Viktor Andersson" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Viktor Andersson</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software developer, beekeeper and F# enthusiast</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Stockholm, Sweden</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:v.andersson@me.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/viktorvan" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/viktorand/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Automagically manage your Azure Service Bus topics with Farmer">
+    <meta itemprop="description" content="In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…">
+    <meta itemprop="datePublished" content="2021-04-27T22:46:00+02:00">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#background">Background</a></li><li><a href="#enter-farmer">Enter Farmer</a></li><li><a href="#another-problem-of-using-json-arm-templates">Another problem of using json arm-templates</a></li><li><a href="#the-benefits-of-using-a-real-programming-language">The benefits of using a ‘real’ programming language</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <p>In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…</p>
+
+<h2 id="background">Background</h2>
+
+<p>Although I do value what arm-templates bring to the table with repeatable infrastructure deployments, it does not really deliver on the promise of infrastructure as code. Mostly because the arm-template json is not a real programming language but rather a pretty horrible language to do any actual coding in.</p>
+
+<p>In our current Azure Service Bus setup we are using quite a lot of topics and subscriptions. We have adopted a one-to-one relationship between our messages and topics. A topic can then have one or more subscribers (in our case an Azure Function). 
+For example a <code class="language-plaintext highlighter-rouge">BlogPostCreated</code> message is sent to a topic with the same name and will be consumed by the subscribers <code class="language-plaintext highlighter-rouge">UpdateBlogPostSearchIndex</code> and <code class="language-plaintext highlighter-rouge">NotifyBlogSubscribers</code>.</p>
+
+<p>The json for creating a service bus namespace with a single topic and two subscriptions in an arm-template is quite verbose, and comes to about 50 lines of json:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dependsOn"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"westeurope"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-service-bus"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"sku"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Standard"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"tier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Standard"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Microsoft.ServiceBus/namespaces"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dependsOn"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"[resourceId('Microsoft.ServiceBus/namespaces', 'my-service-bus')]"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-service-bus/BlogPostCreated"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"defaultMessageTimeToLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P14D"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"duplicateDetectionHistoryTimeWindow"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT10M"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"enablePartitioning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"requiresDuplicateDetection"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Microsoft.ServiceBus/namespaces/topics"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dependsOn"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"[resourceId('Microsoft.ServiceBus/namespaces/topics', 'my-service-bus', 'BlogPostCreated')]"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-service-bus/BlogPostCreated/UpdateBlogPostSearchIndex"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"deadLetteringOnMessageExpiration"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"duplicateDetectionHistoryTimeWindow"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT10M"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lockDuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT5M"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"maxDeliveryCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"requiresDuplicateDetection"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Microsoft.ServiceBus/namespaces/topics/subscriptions"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dependsOn"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"[resourceId('Microsoft.ServiceBus/namespaces/topics', 'my-service-bus', 'BlogPostCreated')]"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-service-bus/BlogPostCreated/NotifyBlogSubscribers"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"deadLetteringOnMessageExpiration"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"duplicateDetectionHistoryTimeWindow"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT10M"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lockDuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT5M"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"maxDeliveryCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"requiresDuplicateDetection"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Microsoft.ServiceBus/namespaces/topics/subscriptions"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="enter-farmer">Enter Farmer</h2>
+
+<p><a href="https://compositionalit.github.io/farmer/">Farmer</a>, according to its own description, is “a .NET domain-specific-language (DSL) for rapidly generating Azure Resource Manager (ARM) templates.”</p>
+
+<p>With Farmer’s DSL we can re-write the json above to</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">serviceBus</span> <span class="p">{</span>
+    <span class="n">name</span> <span class="s2">"my-service-bus"</span>
+    <span class="n">sku</span> <span class="nn">ServiceBus</span><span class="p">.</span><span class="nn">Sku</span><span class="p">.</span><span class="nc">Standard</span>
+    <span class="n">add_topics</span> <span class="p">[</span>
+        <span class="n">topic</span> <span class="p">{</span>
+            <span class="n">name</span> <span class="n">topicName</span>
+            <span class="n">message_ttl</span> <span class="p">(</span><span class="mi">14</span><span class="p">&lt;</span><span class="nc">Days</span><span class="o">&gt;)</span>
+            <span class="n">duplicate_detection_minutes</span> <span class="mi">10</span>
+            <span class="n">enable_partition</span>
+            <span class="n">add_subscriptions</span> <span class="p">[</span>
+                <span class="n">subscription</span> <span class="p">{</span>
+                    <span class="n">name</span> <span class="s2">"UpdateBlogPostSearchIndex"</span>
+                    <span class="n">lock_duration_minutes</span> <span class="mi">5</span>
+                    <span class="n">enable_dead_letter_on_message_expiration</span>
+                    <span class="n">max_delivery_count</span> <span class="mi">10</span>
+                    <span class="n">duplicate_detection_minutes</span> <span class="mi">10</span>
+                <span class="p">}</span>
+                <span class="n">subscription</span> <span class="p">{</span>
+                    <span class="n">name</span> <span class="s2">"NotifyBlogSubscribers"</span>
+                    <span class="n">lock_duration_minutes</span> <span class="mi">5</span>
+                    <span class="n">enable_dead_letter_on_message_expiration</span>
+                    <span class="n">max_delivery_count</span> <span class="mi">10</span>
+                    <span class="n">duplicate_detection_minutes</span> <span class="mi">10</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Since we know there’s going to be many more topics and subscriptions, let’s extract that part to an array where we can add all our topics and subscriptions:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nc">Topics</span> <span class="p">=</span>
+    <span class="k">let</span> <span class="n">all</span> <span class="p">=</span> 
+        <span class="p">[|</span>
+            <span class="o">{|</span> <span class="nc">Topic</span> <span class="p">=</span> <span class="s2">"BlogPostCreated"</span>
+               <span class="nc">Subscriptions</span> <span class="p">=</span> <span class="p">[|</span> <span class="s2">"UpdateBlogPostSearchIndex"</span><span class="p">;</span> <span class="s2">"NotifyBlogSubscribers"</span> <span class="p">|]</span> <span class="o">|}</span>
+            <span class="c1">// ... and many more</span>
+        <span class="p">|]</span>
+
+<span class="n">serviceBus</span> <span class="p">{</span>
+    <span class="n">name</span> <span class="s2">"my-service-bus"</span>
+    <span class="n">sku</span> <span class="nn">ServiceBus</span><span class="p">.</span><span class="nn">Sku</span><span class="p">.</span><span class="nc">Standard</span>
+    <span class="n">add_topics</span> 
+        <span class="p">[</span> <span class="k">for</span> <span class="n">ts</span> <span class="k">in</span> <span class="nn">Topics</span><span class="p">.</span><span class="n">all</span> <span class="k">do</span>
+            <span class="n">topic</span> <span class="p">{</span>
+                <span class="n">name</span> <span class="n">ts</span><span class="p">.</span><span class="nc">Topic</span>
+                <span class="n">message_ttl</span> <span class="p">(</span><span class="mi">14</span><span class="p">&lt;</span><span class="nc">Days</span><span class="o">&gt;)</span>
+                <span class="n">duplicate_detection_minutes</span> <span class="mi">10</span>
+                <span class="n">enable_partition</span>
+                <span class="n">add_subscriptions</span> 
+                    <span class="p">[</span> <span class="k">for</span> <span class="n">subscriptionName</span> <span class="k">in</span> <span class="n">ts</span><span class="p">.</span><span class="nc">Subscriptions</span> <span class="k">do</span>
+                        <span class="n">subscription</span> <span class="p">{</span>
+                            <span class="n">name</span> <span class="n">subscriptionName</span>
+                            <span class="n">lock_duration_minutes</span> <span class="mi">5</span>
+                            <span class="n">enable_dead_letter_on_message_expiration</span>
+                            <span class="n">max_delivery_count</span> <span class="mi">10</span>
+                            <span class="n">duplicate_detection_minutes</span> <span class="mi">10</span>
+                        <span class="o">}]</span>
+            <span class="o">}]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>With the move from json to Farmer above we managed to reduce the amount of code for our full service bus configuration (~30 topics) with ~1000 lines.</p>
+
+<h2 id="another-problem-of-using-json-arm-templates">Another problem of using json arm-templates</h2>
+
+<p>Both the infrastructure code (the json template) and our Azure Functions application need to know about the topic and subscription names. Additionally, the <code class="language-plaintext highlighter-rouge">ServiceBusTrigger</code> attribute we use for the azure function input binding, requires the topic and subscription name to be known at compile time:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nf">Function</span><span class="p">(</span><span class="s">"UpdateBlogPostSearchIndex"</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">RunUpdateBlogPostSearchIndex</span><span class="p">(</span>
+    <span class="p">[</span><span class="nf">ServiceBusTrigger</span><span class="p">(</span><span class="s">"BlogPostCreated"</span><span class="p">,</span> <span class="s">"UpdateBlogPostSearchIndex"</span><span class="p">,</span> <span class="n">Connection</span> <span class="p">=</span> <span class="s">"&lt;connection-string&gt;"</span><span class="p">)]</span><span class="n">Message</span> <span class="n">message</span><span class="p">,</span> <span class="n">FunctionContext</span> <span class="n">executionContext</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// code, code, code...</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Previously we didn’t really solve this in a nice way, and ended up having the topic and subscription names duplicated in the arm-template parameters and the application code in the Azure Function App. If you needed to change the name of a topic or subscription you had to remember to do so in both places.</p>
+
+<h2 id="the-benefits-of-using-a-real-programming-language">The benefits of using a ‘real’ programming language</h2>
+
+<p>When you realise that Farmer is just .NET code and that you can have your infrastructure code interop with your application code this opens up a whole new can of worms. So when our Farmer code needs to add all the topics and subscriptions it just need to find all the usages of the <code class="language-plaintext highlighter-rouge">ServiceBusTrigger</code> attribute, and that’s not too hard to do with a bit of reflection:</p>
+
+<div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">open</span> <span class="nn">System</span><span class="p">.</span><span class="nc">Reflection</span>
+<span class="k">open</span> <span class="nn">Microsoft</span><span class="p">.</span><span class="nn">Azure</span><span class="p">.</span><span class="nn">Functions</span><span class="p">.</span><span class="nc">Worker</span>
+
+<span class="k">module</span> <span class="nc">Topics</span> <span class="p">=</span>
+    <span class="k">let</span> <span class="n">all</span> <span class="p">=</span>
+        <span class="n">typeof</span><span class="p">&lt;</span><span class="nc">MyFunctionApp</span><span class="o">&gt;.</span><span class="nn">Assembly</span><span class="p">.</span><span class="nc">GetTypes</span><span class="bp">()</span>
+        <span class="p">|&gt;</span> <span class="nn">Array</span><span class="p">.</span><span class="n">choose</span> 
+            <span class="p">(</span><span class="k">fun</span> <span class="n">typ</span> <span class="p">-&gt;</span> 
+                <span class="n">typ</span><span class="p">.</span><span class="nc">GetCustomAttribute</span><span class="p">&lt;</span><span class="nc">ServiceBusTriggerAttribute</span><span class="o">&gt;()</span> 
+                <span class="p">|&gt;</span> <span class="nn">Option</span><span class="p">.</span><span class="n">ofObj</span><span class="p">)</span>
+        <span class="p">|&gt;</span> <span class="nn">Array</span><span class="p">.</span><span class="n">groupBy</span> <span class="p">(</span><span class="k">fun</span> <span class="n">attribute</span> <span class="p">-&gt;</span> <span class="n">attribute</span><span class="p">.</span><span class="nc">TopicName</span><span class="p">)</span>
+        <span class="p">|&gt;</span> <span class="nn">Array</span><span class="p">.</span><span class="n">map</span> 
+            <span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">grouping</span><span class="p">)</span> <span class="p">-&gt;</span> 
+                <span class="k">let</span> <span class="n">subscriptions</span> <span class="p">=</span> <span class="n">grouping</span> <span class="p">|&gt;</span> <span class="nn">Array</span><span class="p">.</span><span class="n">map</span> <span class="p">(</span><span class="k">fun</span> <span class="n">attribute</span> <span class="p">-&gt;</span> <span class="n">attribute</span><span class="p">.</span><span class="nc">SubscriptionName</span><span class="p">)</span>
+                <span class="o">{|</span> <span class="nc">Topic</span> <span class="p">=</span> <span class="n">topic</span><span class="p">;</span> <span class="nc">Subscriptions</span> <span class="p">=</span> <span class="n">subscriptions</span> <span class="o">|})</span>
+</code></pre></div></div>
+
+<p>So now we have, not only reduced our arm-template configuration by 1000+ lines of code, we have also the added benefit of always having the infrastructure deployment code being in sync with the application code. If you make a change to a topic or subscription in the application code the Farmer deployment will find out about it automagically!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#infrastructure-as-code" class="page__taxonomy-item" rel="tag">infrastructure-as-code</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#fsharp" class="page__taxonomy-item" rel="tag">fsharp</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-04-27T22:46:00+02:00">April 27, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?via=Emmet_Ray&text=Automagically+manage+your+Azure+Service+Bus+topics+with+Farmer%20https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Ffarmer-service-bus%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Ffarmer-service-bus%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fviktorvan.github.io%2Ffsharp%2Ffarmer-service-bus%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/kubernetes/kubernetes-on-raspberry-pi/" class="pagination--pager" title="Running kubernetes on Raspberry Pi
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/kubernetes/kubernetes-on-raspberry-pi/" rel="permalink">Running kubernetes on Raspberry Pi
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          7 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">“Do you really need a cloud for that?”
+or: How I spent my 2020 summer vacation
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/safe-stack-turbolinks/" rel="permalink">Using Turbolinks with the SAFE web stack
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          15 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">“Do you really need a single-page application for that?”
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-4/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 4
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          11 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Property based tests part 4 - production code repeated in tests.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-3/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 3
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Property based tests part 3 - generators with too many output values.
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
+<script>
+window.cookieconsent.initialise({
+  "palette": {
+    "popup": {
+      "background": "#343c66",
+      "text": "#cfcfe8"
+    },
+    "button": {
+      "background": "transparent",
+      "text": "#f71559",
+      "border": "#f71559"
+    }
+  },
+  "position": "bottom-right"
+}); -->
+<!-- </script> -->
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/Emmet_Ray" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <li><a href="/terms" rel="nofollow noopener noreferrer"><i class="fas fa-link" aria-hidden="true"></i> Privacy policy</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Viktor Andersson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

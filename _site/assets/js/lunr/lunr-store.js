@@ -40,4 +40,10 @@ var store = [{
         "tags": ["kubernetes","raspberry-pi"],
         "url": "/kubernetes/kubernetes-on-raspberry-pi/",
         "teaser": null
+      },{
+        "title": "Automagically manage your Azure Service Bus topics with Farmer",
+        "excerpt":"In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some… Background Although I do value what arm-templates bring to the table with repeatable infrastructure deployments, it does not really deliver on...","categories": ["fsharp"],
+        "tags": ["infrastructure-as-code"],
+        "url": "/fsharp/farmer-service-bus/",
+        "teaser": null
       }]

@@ -80,6 +80,7 @@
 
 
 
+
 <!-- end _includes/seo.html -->
 
 
@@ -399,7 +400,7 @@
 
 <h1 id="hard-to-test-properties">“Hard to test properties”</h1>
 
-<p>The final group of tests I will discuss in this series of blog posts is tests where we would like to repeat the logic from the production code in the test just to figure out what the expected result should be. For example, since the first 8 digits (or 6 in the 10-digit version) of the swedish personal identity number corresponds to your date of birth (most of the time<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>) the Active.Identity library provides a helper function to get a person’s age given an identity number. Let’s write a test for that function.</p>
+<p>The final group of tests I will discuss in this series of blog posts is tests where we would like to repeat the logic from the production code in the test just to figure out what the expected result should be. For example, since the first 8 digits (or 6 in the 10-digit version) of the swedish personal identity number corresponds to your date of birth (most of the time<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>) the Active.Identity library provides a helper function to get a person’s age given an identity number. Let’s write a test for that function.</p>
 
 <h2 id="getting-a-persons-age-from-a-pin">Getting a persons age from a pin</h2>
 
@@ -417,41 +418,41 @@
     <span class="k">else</span> <span class="nc">None</span>
 </code></pre></div></div>
 
-<p>Now, if we were going to tests this function using an example based unit test, it wouldn’t be so hard. We would just take some examples where we know what the expected age should be and test with that; from the C# test suite<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>:</p>
+<p>Now, if we were going to tests this function using an example based unit test, it wouldn’t be so hard. We would just take some examples where we know what the expected age should be and test with that; from the C# test suite<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>:</p>
 
-<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">[Theory]</span>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">Theory</span><span class="p">]</span>
 <span class="c1">// Birth non leap year, before "leap day"</span>
-<span class="na">[InlineData("201701052399", "20180104", 0)]</span>
-<span class="na">[InlineData("201701052399", "20180105", 1)]</span>
-<span class="na">[InlineData("201701052399", "20190104", 1)]</span>
-<span class="na">[InlineData("201701052399", "20190105", 2)]</span>
-<span class="na">[InlineData("201701052399", "20200104", 2)]</span>
-<span class="na">[InlineData("201701052399", "20200105", 3)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201701052399"</span><span class="p">,</span> <span class="s">"20180104"</span><span class="p">,</span> <span class="m">0</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201701052399"</span><span class="p">,</span> <span class="s">"20180105"</span><span class="p">,</span> <span class="m">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201701052399"</span><span class="p">,</span> <span class="s">"20190104"</span><span class="p">,</span> <span class="m">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201701052399"</span><span class="p">,</span> <span class="s">"20190105"</span><span class="p">,</span> <span class="m">2</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201701052399"</span><span class="p">,</span> <span class="s">"20200104"</span><span class="p">,</span> <span class="m">2</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201701052399"</span><span class="p">,</span> <span class="s">"20200105"</span><span class="p">,</span> <span class="m">3</span><span class="p">)]</span>
 
 <span class="c1">// Birth non leap year, after "leap day"</span>
-<span class="na">[InlineData("201703052397", "20180304", 0)]</span>
-<span class="na">[InlineData("201703052397", "20180305", 1)]</span>
-<span class="na">[InlineData("201703052397", "20190304", 1)]</span>
-<span class="na">[InlineData("201703052397", "20190305", 2)]</span>
-<span class="na">[InlineData("201703052397", "20200304", 2)]</span>
-<span class="na">[InlineData("201703052397", "20200305", 3)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201703052397"</span><span class="p">,</span> <span class="s">"20180304"</span><span class="p">,</span> <span class="m">0</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201703052397"</span><span class="p">,</span> <span class="s">"20180305"</span><span class="p">,</span> <span class="m">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201703052397"</span><span class="p">,</span> <span class="s">"20190304"</span><span class="p">,</span> <span class="m">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201703052397"</span><span class="p">,</span> <span class="s">"20190305"</span><span class="p">,</span> <span class="m">2</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201703052397"</span><span class="p">,</span> <span class="s">"20200304"</span><span class="p">,</span> <span class="m">2</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201703052397"</span><span class="p">,</span> <span class="s">"20200305"</span><span class="p">,</span> <span class="m">3</span><span class="p">)]</span>
 
 <span class="c1">// Birth leap year, after leap day</span>
-<span class="na">[InlineData("201603102383", "20170309", 0)]</span>
-<span class="na">[InlineData("201603102383", "20170310", 1)]</span>
-<span class="na">[InlineData("201603102383", "20180309", 1)]</span>
-<span class="na">[InlineData("201603102383", "20180310", 2)]</span>
-<span class="na">[InlineData("201603102383", "20190309", 2)]</span>
-<span class="na">[InlineData("201603102383", "20190310", 3)]</span>
-<span class="na">[InlineData("201603102383", "20200309", 3)]</span>
-<span class="na">[InlineData("201603102383", "20200310", 4)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20170309"</span><span class="p">,</span> <span class="m">0</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20170310"</span><span class="p">,</span> <span class="m">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20180309"</span><span class="p">,</span> <span class="m">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20180310"</span><span class="p">,</span> <span class="m">2</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20190309"</span><span class="p">,</span> <span class="m">2</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20190310"</span><span class="p">,</span> <span class="m">3</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20200309"</span><span class="p">,</span> <span class="m">3</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201603102383"</span><span class="p">,</span> <span class="s">"20200310"</span><span class="p">,</span> <span class="m">4</span><span class="p">)]</span>
 
 <span class="c1">// Birth leap year, on leap day</span>
-<span class="na">[InlineData("201602292383", "20160229", 0)]</span>
-<span class="na">[InlineData("201602292383", "20170228", 0)]</span>
-<span class="na">[InlineData("201602292383", "20170301", 1)]</span>
-<span class="na">[InlineData("201602292383", "20200228", 3)]</span>
-<span class="na">[InlineData("201602292383", "20200229", 4)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201602292383"</span><span class="p">,</span> <span class="s">"20160229"</span><span class="p">,</span> <span class="m">0</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201602292383"</span><span class="p">,</span> <span class="s">"20170228"</span><span class="p">,</span> <span class="m">0</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201602292383"</span><span class="p">,</span> <span class="s">"20170301"</span><span class="p">,</span> <span class="m">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201602292383"</span><span class="p">,</span> <span class="s">"20200228"</span><span class="p">,</span> <span class="m">3</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="s">"201602292383"</span><span class="p">,</span> <span class="s">"20200229"</span><span class="p">,</span> <span class="m">4</span><span class="p">)]</span>
 <span class="k">public</span> <span class="k">void</span> <span class="nf">GetAgeHint_Handles_LeapYears_Correctly</span><span class="p">(</span><span class="kt">string</span> <span class="n">personalIdentityNumber</span><span class="p">,</span> <span class="kt">string</span> <span class="n">actualDate</span><span class="p">,</span> <span class="kt">int</span> <span class="n">expectedAge</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="c1">// Arrange</span>
@@ -494,7 +495,7 @@
     <span class="p">}</span> <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>The 10-digit format actually breaks down for ages &gt; 199<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup> so we will limit our generator to only yield ages in the range [0,199]. For the months we pick any number of months from 0 to 11, so the person has not aged a full year. And in the same way we don’t want the person to have aged a full month in days, so we pick any day in the range [0,27] since the shortest month has 28 days.</p>
+<p>The 10-digit format actually breaks down for ages &gt; 199<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> so we will limit our generator to only yield ages in the range [0,199]. For the months we pick any number of months from 0 to 11, so the person has not aged a full year. And in the same way we don’t want the person to have aged a full month in days, so we pick any day in the range [0,27] since the shortest month has 28 days.</p>
 
 <p>We can then write our property test.</p>
 
@@ -512,7 +513,7 @@
             <span class="nn">Hints</span><span class="p">.</span><span class="n">getAgeHintOnDate</span> <span class="n">checkDate</span> <span class="n">pin</span> <span class="o">=!</span> <span class="nc">Some</span> <span class="n">years</span>
 </code></pre></div></div>
 
-<p>We have added a condition to the input value using the <code class="highlighter-rouge">==&gt;</code> operator from FsCheck that we discussed in <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/">Part 2 - More about generators</a> to not run the test for leap days. We then extract the date of birth. We add the expected age to the date of birth and then use that as the date on which to check the age of the person. In this way we are testing the business logic calculate a person’s age, but we do not need to repeat any code from the production code.</p>
+<p>We have added a condition to the input value using the <code class="language-plaintext highlighter-rouge">==&gt;</code> operator from FsCheck that we discussed in <a href="https://viktorvan.github.io/fsharp/migrating-activelogin.identity-to-property-based-tests-2/">Part 2 - More about generators</a> to not run the test for leap days. We then extract the date of birth. We add the expected age to the date of birth and then use that as the date on which to check the age of the person. In this way we are testing the business logic calculate a person’s age, but we do not need to repeat any code from the production code.</p>
 
 <p>Next we need to do the same thing for people born on leap days. For this test we also need a generator for leap day pins. We could try and use the same conditional approach as above, i.e.:</p>
 
@@ -551,7 +552,7 @@
     <span class="p">|&gt;</span> <span class="nn">Arb</span><span class="p">.</span><span class="n">fromGen</span>
 </code></pre></div></div>
 
-<p>We use a helper function <code class="highlighter-rouge">isLeapDay</code> to filter out the leap day pins, then wrap them in our single case discriminated union LeapDayPin. The test will look exactly like the test for non leap days except for the calculation of check date where we need to account for the leap day.</p>
+<p>We use a helper function <code class="language-plaintext highlighter-rouge">isLeapDay</code> to filter out the leap day pins, then wrap them in our single case discriminated union LeapDayPin. The test will look exactly like the test for non leap days except for the calculation of check date where we need to account for the leap day.</p>
 
 <div class="language-fsharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">testProp</span> <span class="s2">"A person born on a leap day also ages by years counting from their date of birth"</span>
     <span class="p">&lt;|</span> <span class="k">fun</span> <span class="p">(</span><span class="nc">LeapDayPin</span> <span class="n">pin</span><span class="p">,</span> <span class="nc">Age</span> <span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">months</span><span class="p">,</span> <span class="n">days</span><span class="o">))</span> <span class="p">-&gt;</span>
@@ -599,7 +600,7 @@
     <span class="p">]</span>
 </code></pre></div></div>
 
-<p>This test will fail as long as the new implementation is not faster than the old function. I am showing the full test setup here because it is important to remember to run any performance tests in sequence using <code class="highlighter-rouge">testSequenced</code>. By default Expecto will run all tests in parallel which will not work with performance tests.</p>
+<p>This test will fail as long as the new implementation is not faster than the old function. I am showing the full test setup here because it is important to remember to run any performance tests in sequence using <code class="language-plaintext highlighter-rouge">testSequenced</code>. By default Expecto will run all tests in parallel which will not work with performance tests.</p>
 
 <h1 id="conclusions">Conclusions</h1>
 
@@ -609,20 +610,20 @@
 
 <p>Besides having less tests to maintain I also discovered two bugs in the process of writing the new tests. Having to think of properties of your code can give you some useful insights.</p>
 
-<p>This codebase was pretty well suited to be tested by properties, and I imagine that will not be the case for all types of code. Without experience it can take some time to express your requirements as properties. For example the test for <code class="highlighter-rouge">getAgeHintOnDate</code> above did actually take me a few nights to figure out and get right. So I am not advocating that you <strong>have</strong> to replace all your tests with property based tests. Example based unit tests are better than <strong>no</strong> tests.</p>
+<p>This codebase was pretty well suited to be tested by properties, and I imagine that will not be the case for all types of code. Without experience it can take some time to express your requirements as properties. For example the test for <code class="language-plaintext highlighter-rouge">getAgeHintOnDate</code> above did actually take me a few nights to figure out and get right. So I am not advocating that you <strong>have</strong> to replace all your tests with property based tests. Example based unit tests are better than <strong>no</strong> tests.</p>
 
 <p>So if you are struggling to write property tests at first, go ahead and write normal example based unit tests. Then, later, when you realise that some requirements can be expressed as a testable property, do a refactoring and replace the unit tests with property tests!</p>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>This is true in most cases, but not always. The identity numbers for any given day can actually run out and then you would be “moved” to another nearby day within the same month. The functions the <a href="">Active.Identity</a> uses to determine date of birth and age are therefore placed in a <code class="highlighter-rouge">Hints</code> namespace to make it clear that the results must not be used as an absolute truth. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>This is true in most cases, but not always. The identity numbers for any given day can actually run out and then you would be “moved” to another nearby day within the same month. The functions the <a href="">Active.Identity</a> uses to determine date of birth and age are therefore placed in a <code class="language-plaintext highlighter-rouge">Hints</code> namespace to make it clear that the results must not be used as an absolute truth. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2">
-      <p>There is a wrapper we are not seeing here that handles the conversion of age from <code class="highlighter-rouge">int option</code> to int when calling from C#. It makes the conversion of <code class="highlighter-rouge">None</code> to 0. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:2" role="doc-endnote">
+      <p>There is a wrapper we are not seeing here that handles the conversion of age from <code class="language-plaintext highlighter-rouge">int option</code> to int when calling from C#. It makes the conversion of <code class="language-plaintext highlighter-rouge">None</code> to 0. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:3">
-      <p>In the 10-digit format YYMMDD-bbbc the delimiter changes to a <strong>+</strong> the year you turn 100. But there is no delimiter change when your age changes from 199 to 200. For historical reasons 😉. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:3" role="doc-endnote">
+      <p>In the 10-digit format YYMMDD-bbbc the delimiter changes to a <strong>+</strong> the year you turn 100. But there is no delimiter change when your age changes from 199 to 200. For historical reasons 😉. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -670,6 +671,7 @@
 
 
         
+
   <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-09-05T17:00:00+02:00">September 5, 2019</time></p>
 
 
@@ -708,6 +710,47 @@
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/fsharp/farmer-service-bus/" rel="permalink">Automagically manage your Azure Service Bus topics with Farmer
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">In this blog post I will show how we reduced our 1000+ lines of Azure Service Bus arm-template configuration to just a few lines of F#. And then some…
+
+</p>
+  </article>
+</div>
+
         
           
 
@@ -827,47 +870,6 @@ or: How I spent my 2020 summer vacation
 
 
     <p class="archive__item-excerpt" itemprop="description">Property based tests part 3 - generators with too many output values.
-
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/fsharp/migrating-activelogin.identity-to-property-based-tests-2/" rel="permalink">Migrating a C# test suite to property based tests in F# - part 2
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          8 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Property based tests part 2 - More about generators.
 
 </p>
   </article>
