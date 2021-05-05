@@ -181,17 +181,20 @@ open System.Reflection
 open Microsoft.Azure.Functions.Worker
 
 module Topics =
-    let all =
-        typeof<MyFunctionApp>.Assembly.GetTypes()
-        |> Array.choose 
-            (fun typ -> 
-                typ.GetCustomAttribute<ServiceBusTriggerAttribute>() 
-                |> Option.ofObj)
-        |> Array.groupBy (fun attribute -> attribute.TopicName)
-        |> Array.map 
-            (fun (topic, grouping) -> 
-                let subscriptions = grouping |> Array.map (fun attribute -> attribute.SubscriptionName)
-                {| Topic = topic; Subscriptions = subscriptions |})
+    let getAzureFunctions (t: Type) = 
+        let hasFunctionAttribute (m: MethodInfo) = m.GetCustomAttribute<FunctionAttribute>() |> isNull |> not
+        t.GetMethods()
+        |> Array.filter hasFunctionAttribute
+    let getServiceBusTriggerAttributes (m: MethodInfo) =
+        m.GetParameters()
+        |> Array.choose (fun p -> p.GetCustomAttribute<ServiceBusTriggerAttribute>() |> Option.ofObj)
+
+    typeof<MyFunctionApp>.Assembly.GetTypes()
+    |> Array.collect getAzureFunctions
+    |> Array.collect getServiceBusTriggerAttributes
+    |> Array.map (fun attribute -> {| Topic = attribute.TopicName; Subscription = attribute.SubscriptionName |})
+    |> Array.groupBy (fun st -> st.Topic)
+    |> Array.map (fun (topic, grouping) -> topic, grouping |> Array.map (fun st -> st.Subscription))
 ```
 
 So now we have, not only reduced our arm-template configuration by 1000+ lines of code, we have also the added benefit of always having the infrastructure deployment code being in sync with the application code. If you make a change to a topic or subscription in the application code the Farmer deployment will find out about it automagically!
